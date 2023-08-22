@@ -1,4 +1,4 @@
-#include "../headers/vec3.h"
+#include "../headers/Vec3.h"
 #include <math.h>
 #include <iostream>
 
