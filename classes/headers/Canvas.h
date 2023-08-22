@@ -2,11 +2,14 @@
 
 class Canvas {
     private:
-    int wJanela, hJanela;
+    int wCanvas, hCanvas;
 
     public:
     SDL_Color **cores;
-    Canvas(int wJanela, int hJanela); 
+    double dX, dY;
+    Canvas(int wCanvas, int hCanvas, double dX, double dY); 
 
-    void PintarCanvas(SDL_Color cor);
+    void pintarTodoCanvas(SDL_Color cor);
+    void pintarCanvas(int x, int y, SDL_Color cor);
+
 };

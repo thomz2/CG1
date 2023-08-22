@@ -1,3 +1,4 @@
+#pragma once
 #include "../headers/Vec3.h"
 
 class Ray {
