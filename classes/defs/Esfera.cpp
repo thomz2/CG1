@@ -12,13 +12,15 @@ Vec3 Esfera::getW(Vec3 Pin) {
 
 bool Esfera::intersecta(Ray raycaster) {
 
+    Vec3 w = this->getW(raycaster.Pinicial);
+
     double a = raycaster.direcao.prodEscalar(raycaster.direcao);
     
-    double bbarra = this->getW(raycaster.Pinicial).prodEscalar(raycaster.direcao);
+    double bbarra = w.prodEscalar(raycaster.direcao);
 
     double b = 2 * bbarra;
 
-    double c = this->getW(raycaster.Pinicial).prodEscalar(raycaster.Pinicial) - this->raio*this->raio;
+    double c = w.prodEscalar(w) - this->raio*this->raio;
 
     double D = bbarra*bbarra - c;
 

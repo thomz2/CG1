@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const int wJanela = 800, hJanela = 600;
+const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 
 void initializeSDLAndWindow (
     SDL_Window** window,
@@ -32,11 +32,13 @@ int main ( int argc, char *argv[] ) {
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
     SDL_Renderer *renderer;
 
-    initializeSDLAndWindow(&window, &renderer, wJanela, hJanela);
+    const int wJanela = 1600 / 2, hJanela = 1200 / 2;
 
-    const double dJanela = 1000;
-    const double rEsfera = 20;
-    const double zCentroEsfera = - (dJanela + rEsfera) - 600; // sempre diminuindo um valor
+    initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    const double dJanela = 30;
+    const double rEsfera = 2050;
+    const double zCentroEsfera = - (dJanela + rEsfera) - 5; // sempre diminuindo um valor
 
     Vec3 centroJanela(0, 0, -dJanela);
     Vec3 olhoPintor(0, 0, 0);
@@ -45,23 +47,21 @@ int main ( int argc, char *argv[] ) {
 
     Esfera esfera(Vec3(0, 0, zCentroEsfera), rEsfera);
 
-    const double nCol = wJanela / 1;
-    const double nLin = hJanela / 1;
+    const int nCol = 800;
+    const int nLin = 600;
 
-    const double Dx = wJanela / nCol;
-    const double Dy = hJanela / nLin;
+    const int Dx = wJanela / nCol;
+    const int Dy = hJanela / nLin;
 
-    Canvas meuCanvas(wJanela, hJanela, 1, 1);
+    Canvas meuCanvas(nLin, nCol, 1, 1);
 
     for (int l = 0; l < nLin; ++l) {
         
-        // double y = hJanela/2 - Dy/2 - l*Dy;
-        int y = l;
+        double y = hJanela/2 - Dy/2 - l*Dy;
         
         for (int c = 0; c < nCol; ++c) {
 
-            // double x = -wJanela/2 + Dx/2 + c*Dx;
-            int x = c;
+            double x = -wJanela/2 + Dx/2 + c*Dx;
 
             Vec3 PosJanela(x, y, -dJanela);
             Vec3 direcao = (PosJanela - olhoPintor).norm();
@@ -69,42 +69,20 @@ int main ( int argc, char *argv[] ) {
 
             // cor[x][y] <- raycasting(raio, cenario)
             if (esfera.intersecta(raycaster)) {
-                meuCanvas.pintarCanvas(x, y, corEsfera);
-
-                // cout << "POS ESFERA: " << x << " " << y << endl;
-
-                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 1);
-            } else {
-                SDL_SetRenderDrawColor(renderer, 100, 100, 100, 1);
-            }
-
-                SDL_RenderDrawPoint(renderer, (int)x, (int)y);
-
-
-            // Dx * Dy pixels para pintar
-            // for (int xi = 0; xi < Dx; ++xi) {
-            //     for (int yj = 0; yj < Dy; ++yj) {
-                    
-            //     }
-            // }
-
+                meuCanvas.pintarCanvas(l, c, corEsfera);
+            } 
         }
     }
 
-    for (int x = 0; x < 800; x++) {
-        for (int y = 0; y < 600; y++) {
-            SDL_RenderDrawPoint(renderer, x, y);
+    for (int l = 0; l < nLin; ++l) {
+        for (int c = 0; c < nCol; ++c) {
+            SDL_Color cor = meuCanvas.cores[l][c];
+
+            SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+            SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
         }
     }
 
-    // usar no loop
-    // const double x = - wJanela/2 + Dx/2  + c*Dx;
-    // const double y =   hJanela/2 - Dy/2  - l*Dy;
-
-
-    // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 1);
-    // SDL_RenderDrawPoint(renderer, 45, 59);
-    // SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer); // usar no final para pintar
 
     if ( window = nullptr ) {
@@ -113,10 +91,18 @@ int main ( int argc, char *argv[] ) {
     }
 
     SDL_Event windowEvent;
-
     while (true) {
         if ( SDL_PollEvent(&windowEvent) ) {
             if (SDL_QUIT == windowEvent.type) { break; }
+        }
+        else if (windowEvent.type == SDLK_a) { // esquerda
+            // Um evento de tecla foi pressionado
+            SDL_Keycode key = windowEvent.key.keysym.sym;
+            esfera.PCentro.x += 100;
+
+            
+            
+            // Adicione aqui outras ações para teclas específicas
         }
     }
 
