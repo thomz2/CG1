@@ -7,9 +7,10 @@ class Canvas {
     public:
     SDL_Color **cores;
     double dX, dY;
-    Canvas(int wCanvas, int hCanvas, double dX, double dY); 
+    Canvas(int hCanvas, int wCanvas, double dX, double dY); 
 
     void pintarTodoCanvas(SDL_Color cor);
-    void pintarCanvas(int x, int y, SDL_Color cor);
+    void pintarCanvas(int linha, int coluna, SDL_Color cor);
 
+    // void atualizarCanvas(Scene &cena)
 };

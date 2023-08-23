@@ -1,31 +1,34 @@
+// TODO: implementar destrutores nas classes
+
 #include <iostream>
 #include <SDL2/SDL.h>
-#include "classes/headers/Vec3.h"
+#include "classes/headers/math/Vec3.h"
 #include "classes/headers/Canvas.h"
-#include "classes/headers/Esfera.h"
+#include "classes/headers/primitives/Esfera.h"
 #include "classes/headers/Ray.h"
+#include "classes/headers/Scene.h"
 
 using namespace std;
 
 const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 
-void initializeSDLAndWindow (
-    SDL_Window** window,
-    SDL_Renderer** renderer,
-    int width,
-    int height
-) {
-    SDL_Init (SDL_INIT_EVERYTHING);
+// void initializeSDLAndWindow (
+//     SDL_Window** window,
+//     SDL_Renderer** renderer,
+//     int width,
+//     int height
+// ) {
+//     SDL_Init (SDL_INIT_EVERYTHING);
 
-    // SDL_CreateWindowAndRenderer (
-    //     800*4, 600*4, 0, &window, &renderer
-    // );
-    // SDL_RenderSetScale(renderer, 4, 4);
+//     // SDL_CreateWindowAndRenderer (
+//     //     800*4, 600*4, 0, &window, &renderer
+//     // );
+//     // SDL_RenderSetScale(renderer, 4, 4);
 
-    SDL_CreateWindowAndRenderer (
-        width, height, 0, window, renderer
-    );
-}
+//     SDL_CreateWindowAndRenderer (
+//         width, height, 0, window, renderer
+//     );
+// }
 
 int main ( int argc, char *argv[] ) {
 
@@ -34,7 +37,8 @@ int main ( int argc, char *argv[] ) {
 
     const int wJanela = 1600 / 2, hJanela = 1200 / 2;
 
-    initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
+    // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
+    Scene *cenario = new Scene(window, renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     const double dJanela = 30;
     const double rEsfera = 2050;
@@ -45,7 +49,9 @@ int main ( int argc, char *argv[] ) {
 
     SDL_Color corEsfera = {255, 0, 0, 255};
 
-    Esfera esfera(Vec3(0, 0, zCentroEsfera), rEsfera);
+    // TODO: objeto tendo id e cor (mudar classes objeto e esfera)
+    // OK pelo visto, testar depois
+    Esfera esfera(0, corEsfera, Vec3(0, 0, zCentroEsfera), rEsfera);
 
     const int nCol = 800;
     const int nLin = 600;
@@ -53,7 +59,8 @@ int main ( int argc, char *argv[] ) {
     const int Dx = wJanela / nCol;
     const int Dy = hJanela / nLin;
 
-    Canvas meuCanvas(nLin, nCol, 1, 1);
+    // Canvas meuCanvas(nLin, nCol, Dx, Dy);
+    cenario->setCanvas(nLin, nCol, Dx, Dy);
 
     for (int l = 0; l < nLin; ++l) {
         

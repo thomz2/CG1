@@ -1,9 +1,15 @@
-#include "../headers/Esfera.h"
+#include <SDL2/SDL.h>
+#include "../headers/primitives/Esfera.h"
+#include "../headers/primitives/Objeto.h"
 #include "../headers/Ray.h"
+#include "../headers/math/Vec3.h"
 
 using namespace std;
 
-Esfera::Esfera(Vec3 PCentro, double raio) : PCentro(PCentro), raio(raio) {}
+Esfera::Esfera(int id, SDL_Color cor, Vec3 PCentro, double raio) : 
+    Objeto(id, cor), PCentro(PCentro), raio(raio) {
+
+}
 
 // Pin = olho observador
 Vec3 Esfera::getW(Vec3 Pin) {

@@ -1,6 +1,6 @@
 #include <iostream>
 // #include <SDL2/SDL.h>
-#include "classes/headers/vec3.h"
+#include "classes/headers/math/Vec3.h"
 
 using namespace std;
 
