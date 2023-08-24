@@ -89,7 +89,7 @@ int main ( int argc, char *argv[] ) {
 
     for (int l = 0; l < nLin; ++l) {
         for (int c = 0; c < nCol; ++c) {
-            SDL_Color cor = cenario->canvas->cores[c][l];
+            SDL_Color cor = cenario->canvas->cores[l][c];
 
             SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
             SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta

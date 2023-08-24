@@ -2,20 +2,20 @@
 
 using namespace std;
 
-Canvas::Canvas(int hCanvas, int wCanvas, double dX, double dY) : 
-    wCanvas(wCanvas), hCanvas(hCanvas), dX(dX), dY(dY) {
-    this->cores = new SDL_Color*[wCanvas];
-    for (int i = 0; i < wCanvas; ++i) {
-        this->cores[i] = new SDL_Color[hCanvas];   
-        for (int j = 0; j < hCanvas; ++j) {
+Canvas::Canvas(int nLin, int nCol, double dX, double dY) : 
+    nCol(nCol), nLin(nLin), dX(dX), dY(dY) {
+    this->cores = new SDL_Color*[nLin];
+    for (int i = 0; i < nLin; ++i) {
+        this->cores[i] = new SDL_Color[nCol];   
+        for (int j = 0; j < nCol; ++j) {
             this->cores[i][j] = {100, 100, 100, 255}; // COR PADRAO
         }    
     }
 }
 
 void Canvas::pintarTodoCanvas(SDL_Color cor) {
-    for (int i = 0; i < wCanvas; ++i) {
-        for (int j = 0; j < hCanvas; ++j) {
+    for (int i = 0; i < nLin; ++i) {
+        for (int j = 0; j < nCol; ++j) {
             this->cores[i][j] = cor;
         }
     }

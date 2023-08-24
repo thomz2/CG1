@@ -44,20 +44,20 @@ vector<Objeto*> Scene::intersectaObjetos(Ray raycaster) {
 
 void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
-    const int hJanela = this->canvas->dY * this->canvas->hCanvas; 
-    const int wJanela = this->canvas->dX * this->canvas->wCanvas;
+    const int hJanela = this->canvas->dY * this->canvas->nLin; 
+    const int wJanela = this->canvas->dX * this->canvas->nCol;
 
     const int Dy = this->canvas->dY;
     const int Dx = this->canvas->dX;
 
     cout << "CANVAS: h,w: [ " << hJanela << " " << wJanela << " ] Dy, Dx: [ " << Dy << " " << Dx << " ]\n";  
-    cout << "LOOP: " << this->canvas->hCanvas << " por " << this->canvas->wCanvas << endl;
+    cout << "LOOP: " << this->canvas->nLin << " por " << this->canvas->nCol << endl;
 
-    for (int l = 0; l < this->canvas->hCanvas; l++) {
+    for (int l = 0; l < this->canvas->nLin; l++) {
 
         double y = hJanela/2 - Dy/2 - l*Dy;
 
-        for (int c = 0; c < this->canvas->wCanvas; c++) {
+        for (int c = 0; c < this->canvas->nCol; c++) {
 
             double x = -wJanela/2 + Dx/2 + c*Dx;
 
