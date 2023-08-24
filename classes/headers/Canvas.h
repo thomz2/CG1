@@ -1,12 +1,12 @@
+#pragma once
 #include <SDL2/SDL.h>
 
 class Canvas {
-    private:
-    int wCanvas, hCanvas;
 
     public:
     SDL_Color **cores;
     double dX, dY;
+    int hCanvas, wCanvas;
     Canvas(int hCanvas, int wCanvas, double dX, double dY); 
 
     void pintarTodoCanvas(SDL_Color cor);

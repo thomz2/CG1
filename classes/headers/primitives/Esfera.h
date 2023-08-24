@@ -1,4 +1,6 @@
-#include "./math/Vec3.h"
+#pragma once
+
+#include "../math/Vec3.h"
 #include "./Objeto.h"
 #include "../Ray.h"
 

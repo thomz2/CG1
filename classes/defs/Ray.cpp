@@ -1,4 +1,4 @@
-#include "../headers/vec3.h"
+#include "../headers/math/Vec3.h"
 #include "../headers/Ray.h"
 
 using namespace std;

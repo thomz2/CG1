@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
-#include "../headers/primitives/Esfera.h"
-#include "../headers/primitives/Objeto.h"
-#include "../headers/Ray.h"
-#include "../headers/math/Vec3.h"
+#include "../../headers/primitives/Esfera.h"
+#include "../../headers/primitives/Objeto.h"
+#include "../../headers/Ray.h"
+#include "../../headers/math/Vec3.h"
 
 using namespace std;
 
