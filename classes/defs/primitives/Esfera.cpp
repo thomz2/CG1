@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <math.h>
 #include "../../headers/primitives/Esfera.h"
 #include "../../headers/primitives/Objeto.h"
 #include "../../headers/Ray.h"
@@ -16,19 +17,27 @@ Vec3 Esfera::getW(Vec3 Pin) {
     return Pin - this->PCentro;
 }
 
-bool Esfera::intersecta(Ray raycaster) {
+// TODO: ajeitar isso aqui depois
+optional<double> Esfera::intersecta(Ray raycaster) {
 
     Vec3 w = this->getW(raycaster.Pinicial);
 
-    double a = raycaster.direcao.prodEscalar(raycaster.direcao);
+    double a = raycaster.direcao.dot(raycaster.direcao);
     
-    double bbarra = w.prodEscalar(raycaster.direcao);
+    double bbarra = w.dot(raycaster.direcao);
 
     double b = 2 * bbarra;
 
-    double c = w.prodEscalar(w) - this->raio*this->raio;
+    double c = w.dot(w) - (this->raio*this->raio);
 
-    double D = bbarra*bbarra - c;
+    // double D = bbarra*bbarra - c;
+    double D = pow(b, 2) - 4 * a * c;
 
-    return D >= 0 ? true : false; 
+    double t1 = (-b - sqrt(D)) / (2*a); 
+    double t2 = (-b + sqrt(D)) / (2*a);
+
+    if (D >= 0) 
+        return t1 > t2 ? t2 : t1; // retorna a distancia mais perto 
+    else 
+        return nullopt;
 }

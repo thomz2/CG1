@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "classes/headers/math/Vec3.h"
 #include "classes/headers/primitives/Esfera.h"
+#include "classes/headers/primitives/Cilindro.h"
 #include "classes/headers/Canvas.h"
 #include "classes/headers/Ray.h"
 #include "classes/headers/Scene.h"
@@ -35,23 +36,27 @@ int main ( int argc, char *argv[] ) {
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
     SDL_Renderer *renderer;
 
-    const int wJanela = 1600 / 2, hJanela = 1200 / 2;
+    const int wJanela = 1600, hJanela = 1200;
 
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    const double dJanela = 30;
-    const double rEsfera = 2050;
-    const double zCentroEsfera = - (dJanela + rEsfera) - 5; // sempre diminuindo um valor
+    const double dJanela = 4000;
+    const double rEsfera = 100;
+    const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
     Vec3 centroJanela(0, 0, -dJanela);
     Vec3 olhoPintor(0, 0, 0);
 
     SDL_Color corEsfera = {255, 0, 0, 255};
+    SDL_Color cor2 = {0, 255, 0, 255};
+    // SDL_Color corEsfera2 = {0, 255, 0, 255};
 
     // TODO: objeto tendo id e cor (mudar classes objeto e esfera)
     // OK pelo visto, testar depois
-    Esfera* esfera = new Esfera(0, corEsfera, Vec3(0, 0, zCentroEsfera), rEsfera);
+    Esfera* esfera = new Esfera(0, corEsfera, Vec3(0, 0, zCentroEsfera), 300);
+    Cilindro* cilindro = new Cilindro(1, cor2, Vec3(0, 0, zCentroEsfera), Vec3(500, 0, zCentroEsfera), 250);
+    // Esfera* esfera2 = new Esfera(1, corEsfera2, Vec3(0, 1, zCentroEsfera), rEsfera - 30);
 
     const int nCol = 800;
     const int nLin = 600;
@@ -59,30 +64,11 @@ int main ( int argc, char *argv[] ) {
     const int Dx = wJanela / nCol;
     const int Dy = hJanela / nLin;
 
+    cenario->objetos.push_back(cilindro);
     cenario->objetos.push_back(esfera);
+    // cenario->objetos.push_back(esfera2);
 
-    // Canvas meuCanvas(nLin, nCol, Dx, Dy);
     cenario->setCanvas(nLin, nCol, Dx, Dy);
-    // hJanela = nLin * Dy
-
-    // for (int l = 0; l < nLin; ++l) {
-        
-    //     double y = hJanela/2 - Dy/2 - l*Dy;
-        
-    //     for (int c = 0; c < nCol; ++c) {
-
-    //         double x = -wJanela/2 + Dx/2 + c*Dx;
-
-    //         Vec3 PosJanela(x, y, -dJanela);
-    //         Vec3 direcao = (PosJanela - olhoPintor).norm();
-    //         Ray raycaster(olhoPintor, direcao);
-
-    //         // cor[x][y] <- raycasting(raio, cenario)
-    //         if (esfera.intersecta(raycaster)) {
-    //             meuCanvas.pintarCanvas(l, c, corEsfera);
-    //         } 
-    //     }
-    // }
 
     cout << "indo pintar canvas\n";
     cenario->pintarCanvas(dJanela, olhoPintor);

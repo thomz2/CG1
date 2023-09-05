@@ -38,12 +38,17 @@ double Vec3::prodEscalar(Vec3& other) {
     return other.x*x + other.y*y + other.z*z;
 }
 
-// OK
+// MESMA COISA DO DE CIMA
+double Vec3::dot(Vec3& other) {
+    return other.x*x + other.y*y + other.z*z;
+}
+
+// comprimento do vetor ||v||
 double Vec3::modulo() {
     return sqrt(pow(x,2)+pow(y,2)+pow(z,2));
 }
 
-// OK
+// vetor unitario
 Vec3 Vec3::norm() {
     // double mod = this->modulo()
     return *this / this->modulo();

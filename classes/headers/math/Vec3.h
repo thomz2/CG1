@@ -16,6 +16,7 @@ class Vec3 {
     Vec3 operator*(Vec3& other); // prod vetorial
     
     double prodEscalar(Vec3& other); // prod escalar
+    double dot(Vec3& other); // prod escalar
     double modulo(); // comprimento do vetor
 
     Vec3 norm();

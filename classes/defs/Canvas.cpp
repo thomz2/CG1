@@ -1,4 +1,5 @@
 #include "../headers/Canvas.h"
+#include <optional>
 
 using namespace std;
 
@@ -24,4 +25,14 @@ void Canvas::pintarTodoCanvas(SDL_Color cor) {
 void Canvas::pintarCanvas(int linha, int coluna, SDL_Color cor) {
     this->cores[linha][coluna] = cor;
 }
+
+void Canvas::pintarCanvas(int linha, int coluna, optional<SDL_Color> cor) {
+    
+    if (cor.has_value()) { 
+        this->cores[linha][coluna] = cor.value();
+    } else {
+        this->cores[linha][coluna] = {100, 100, 100, 255}; // COR PADRAO
+    }
+}
+
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include <optional>
 
 class Canvas {
 
@@ -11,6 +12,7 @@ class Canvas {
 
     void pintarTodoCanvas(SDL_Color cor);
     void pintarCanvas(int linha, int coluna, SDL_Color cor);
+    void pintarCanvas(int linha, int coluna, std::optional<SDL_Color> cor);
 
     // void atualizarCanvas(Scene &cena)
 };

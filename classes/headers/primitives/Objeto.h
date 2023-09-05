@@ -1,6 +1,8 @@
 #pragma once
 
+#include <optional>
 #include <SDL2/SDL.h>
+#include <optional>
 #include "../Ray.h"
 
 class Objeto {
@@ -8,10 +10,12 @@ class Objeto {
 public:
 
     int id;
-    SDL_Color cor;
+    std::optional<SDL_Color> cor;
 
     Objeto(int id, SDL_Color cor);
 
-    virtual bool intersecta(Ray raycaster) = 0;
+    Objeto(int id);
+
+    virtual std::optional<double> intersecta(Ray raycaster) = 0;
 };
 

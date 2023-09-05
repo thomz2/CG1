@@ -1,6 +1,9 @@
 #include "../headers/Scene.h"
 #include <iostream>
 #include <set>
+#include <limits.h>
+#include <utility>
+#include <map>
 
 using namespace std;
 
@@ -26,20 +29,42 @@ bool Scene::setCanvas(int nLin, int nCol, double dX, double dY) {
     return true;
 }
 
-vector<Objeto*> Scene::intersectaObjetos(Ray raycaster) {
+// ORDEM DE COLOCADA NO CENARIO
+pair<vector<Objeto*>, map<int, double>> Scene::intersectaObjetos(Ray raycaster) {
     vector <Objeto*> intersectados;
-    set <int> id_intersectados;
-
+    map<int, double> id_dist_intersectados; // id e distancia
+    
     for (auto *obj : this->objetos) {
-        if (obj->intersecta(raycaster) && id_intersectados.count(obj->id) == 0) {
+        if (obj->intersecta(raycaster).has_value() && id_dist_intersectados.count(obj->id) == 0) {
             intersectados.push_back(obj);
-            id_intersectados.insert(obj->id);
+            id_dist_intersectados[obj->id] = obj->intersecta(raycaster).value();
 
             // cout << "Objeto de id " << obj->id << " adicionado!\n";
         }
     }
 
-    return intersectados; 
+    return { intersectados, id_dist_intersectados }; 
+}
+
+// PEGAR O OBJETO MAIS PERTO
+Objeto* Scene::firstObj(Ray raycaster) {
+
+    Objeto* menordistObj = nullptr;
+    double menordist = INT_FAST32_MAX;
+
+    for (auto *obj : this->objetos) {
+        auto intersecao = obj->intersecta(raycaster);
+        
+        if (intersecao.has_value()) {
+            double datual = intersecao.value();
+            if (datual < menordist) {
+                menordist = datual;
+                menordistObj = obj;
+            }
+        }
+    }
+
+    return menordistObj;
 }
 
 void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
@@ -62,22 +87,30 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
             double x = -wJanela/2 + Dx/2 + c*Dx;
 
             Vec3 PosJanela(x, y, -dJanela);
-            Vec3 direcao = (PosJanela - olhoPintor).norm();
+            Vec3 direcao = (PosJanela - olhoPintor).norm(); // vetor unitario aki
             Ray raycaster(olhoPintor, direcao);
 
-            vector<Objeto*> objetos_intersecs = this->intersectaObjetos(raycaster); 
+            // vector<Objeto*> objetos_intersecs = (this->intersectaObjetos(raycaster)).first; 
 
-            // if (objetos_intersecs.size() != 0) {
-            //     cout << "[" << l << "]" << "[" << c << "]: "; 
-            //     cout << "TAMANHO objetos intersectados: " << objetos_intersecs.size() << endl; 
+            // for (auto* obj : objetos_intersecs) {
+            //     this->canvas->pintarCanvas(l, c, obj->cor);
             // }
 
-            // if (objetos_intersecs.size() != 0)
-            //     std::cout << objetos_intersecs[0]->cor.r << std::endl;
+            Objeto* maisPerto = this->firstObj(raycaster);
+            if (maisPerto != nullptr) {
+                this->canvas->pintarCanvas(l, c, maisPerto->cor);
+                
+                // DEBUG
+                if (l == (int)(this->canvas->nLin / 2) &&  c == (int)(this->canvas->nCol / 2)) {
+                    pair<vector<Objeto*>, map<int, double>> meudebug = this->intersectaObjetos(raycaster);
+                    vector<Objeto*> objetos_intersecs = meudebug.first;
+                    map<int, double> distancias = meudebug.second;
 
-            for (auto* obj : objetos_intersecs) {
-                this->canvas->pintarCanvas(l, c, obj->cor);
-                // cout << "PINTANDO COR: " << obj->cor.r << endl;
+                    for (auto* obj : objetos_intersecs) {
+                        // this->canvas->pintarCanvas(l, c, obj->cor);d
+                        cout << obj->id << ": " << distancias[obj->id] << endl;
+                    }
+                }
             }
 
         }

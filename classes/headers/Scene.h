@@ -2,12 +2,15 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include <math.h>
+#include <utility>
 #include "Canvas.h"
 #include "primitives/Objeto.h"
 #include "math/Vec3.h"
 #include "Ray.h"
+#include <map>
 
-using std::vector;
+using namespace std;
 
 class Scene {
 
@@ -28,7 +31,8 @@ class Scene {
     public: 
     bool setCanvas(int nLin, int nCol, double dX, double dY);
 
-    vector<Objeto*> intersectaObjetos(Ray raycaster);
+    pair<vector<Objeto*>, map<int, double>> intersectaObjetos(Ray raycaster); // TODO: colocar ordem de intersecção
+    Objeto* firstObj(Ray raycaster);
 
     void pintarCanvas(double dJanela, Vec3& olhoPintor);
 };
