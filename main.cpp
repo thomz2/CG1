@@ -5,6 +5,7 @@
 #include "classes/headers/math/Vec3.h"
 #include "classes/headers/primitives/Esfera.h"
 #include "classes/headers/primitives/Cilindro.h"
+#include "classes/headers/primitives/Cone.h"
 #include "classes/headers/Canvas.h"
 #include "classes/headers/Ray.h"
 #include "classes/headers/Scene.h"
@@ -48,15 +49,19 @@ int main ( int argc, char *argv[] ) {
     Vec3 centroJanela(0, 0, -dJanela);
     Vec3 olhoPintor(0, 0, 0);
 
-    SDL_Color corEsfera = {255, 0, 0, 255};
-    SDL_Color cor2 = {0, 255, 0, 255};
-    // SDL_Color corEsfera2 = {0, 255, 0, 255};
+    SDL_Color corVermelha = {255, 0, 0, 255};
+    SDL_Color corVerde = {0, 255, 0, 255};
+    SDL_Color corAzul = {0, 0, 255, 255};
 
     // TODO: objeto tendo id e cor (mudar classes objeto e esfera)
     // OK pelo visto, testar depois
-    Esfera* esfera = new Esfera(0, corEsfera, Vec3(0, 0, zCentroEsfera), 300);
-    Cilindro* cilindro = new Cilindro(1, cor2, Vec3(0, 0, zCentroEsfera), Vec3(500, 0, zCentroEsfera), 250);
+    // Esfera* esfera = new Esfera(0, corEsfera, Vec3(0, 0, zCentroEsfera), 300);
+    // Cilindro* cilindro = new Cilindro(1, cor2, Vec3(0, 0, zCentroEsfera), Vec3(500, 0, zCentroEsfera), 250);
     // Esfera* esfera2 = new Esfera(1, corEsfera2, Vec3(0, 1, zCentroEsfera), rEsfera - 30);
+    Cone* cone = new Cone(2, corVerde, Vec3(0, 0, zCentroEsfera), Vec3(250, 0, zCentroEsfera - 1), 250);
+    Cone* cone2 = new Cone(3, corVermelha, Vec3(200, 0, zCentroEsfera), Vec3(490, 0, zCentroEsfera - 1), 250);
+    Cone* cone3 = new Cone(4, corAzul, Vec3(480, 0, zCentroEsfera), Vec3(730, 0, zCentroEsfera - 1), 250);
+
 
     const int nCol = 800;
     const int nLin = 600;
@@ -64,9 +69,12 @@ int main ( int argc, char *argv[] ) {
     const int Dx = wJanela / nCol;
     const int Dy = hJanela / nLin;
 
-    cenario->objetos.push_back(cilindro);
-    cenario->objetos.push_back(esfera);
+    // cenario->objetos.push_back(cilindro);
+    // cenario->objetos.push_back(esfera);
     // cenario->objetos.push_back(esfera2);
+    cenario->objetos.push_back(cone);
+    cenario->objetos.push_back(cone2);
+    cenario->objetos.push_back(cone3);
 
     cenario->setCanvas(nLin, nCol, Dx, Dy);
 

@@ -51,6 +51,12 @@ optional<double> Cilindro::intersecta(Ray raycaster) {
     double dist1 = proj1.modulo();
     double dist2 = proj2.modulo();
 
+    // Vec3 aux1 = Pint1 - this->Cb;
+    // Vec3 aux2 = Pint2 - this->Cb;
+
+    // double distaux1 = dc.dot(aux1);
+    // double distaux2 = dc.dot(aux2);
+
     if (proj1.dot(this->d) > 0 && dist1 < this->h) { // se uma distancia existe
         // if (dist2 > 0 && dist2 < this->h && t2 < t1) return t2; // se a outra tbm existe
         if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) return t2; // se a outra tbm existe
@@ -59,5 +65,13 @@ optional<double> Cilindro::intersecta(Ray raycaster) {
     // else if (dist2 > 0 && dist2 < this->h) return t2; // se apenas a segunda existe
     else if (proj2.dot(this->d) > 0 && dist2 < this->h) return t2; // se apenas a segunda existe
     
+    // if (distaux1 <= h && distaux1 >= 0 && distaux2 <= h && distaux2 >= 0) {
+    //     return t2 < t1 ? t2 : t1; 
+    // } else if (distaux1 <= h && distaux1 >= 0) {
+    //     return t1;
+    // } else if (distaux2 <= h && distaux2 >= 0) {
+    //     return t2;
+    // } 
+
     return nullopt;
 }
