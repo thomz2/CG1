@@ -24,11 +24,12 @@ Vec3 Vec3::operator/(double num) {
     return Vec3(x / num, y / num, z / num);
 }
 
+// OPERADOR ARROBA
 Vec3 Vec3::operator|(Vec3& other) {
     return Vec3(other.x*x,other.y*y,other.z*z);
 }
 
-// OK
+// PROD VETORIAL
 Vec3 Vec3::operator*(Vec3& other) {
     return Vec3( ((y*other.z)-(z*other.y)) , ((z*other.x)-(x*other.z)) , ((x*other.y)-(y*other.x)) );
 }

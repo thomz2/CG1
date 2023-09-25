@@ -14,5 +14,5 @@ class Cilindro : public ObjetoComposto {
     Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r);
     
     Vec3 getW(Vec3 Pin);
-    std::optional<double> intersecta(Ray raycaster) override;
+    std::optional<LPointGetType> intersecta(Ray raycaster) override;
 };

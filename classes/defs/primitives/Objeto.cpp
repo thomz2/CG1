@@ -5,8 +5,10 @@
 
 using namespace std;
 
-Objeto::Objeto(int id, SDL_Color cor) : id(id), cor(cor) {}
+Objeto::Objeto(int id, SDL_Color cor, BaseMaterial material) : id(id), cor(cor), material(BaseMaterial()) {}
 
-Objeto::Objeto(int id) : id(id), cor(std::nullopt) {};
+Objeto::Objeto(int id, SDL_Color cor) : id(id), cor(cor), material(BaseMaterial()) {}
+
+Objeto::Objeto(int id) : id(id), cor(std::nullopt), material(BaseMaterial()) {};
 
 // bool Objeto::intersecta(Ray raycaster) const {};

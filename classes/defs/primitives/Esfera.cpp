@@ -4,13 +4,15 @@
 #include "../../headers/primitives/Objeto.h"
 #include "../../headers/Ray.h"
 #include "../../headers/math/Vec3.h"
+#include "../../headers/materiais/BaseMaterial.h"
 
 using namespace std;
 
-Esfera::Esfera(int id, SDL_Color cor, Vec3 PCentro, double raio) : 
-    Objeto(id, cor), PCentro(PCentro), raio(raio) {
+Esfera::Esfera(int id, SDL_Color cor, Vec3 PCentro, double raio, BaseMaterial material) : 
+    Objeto(id, cor, material), PCentro(PCentro), raio(raio) {}
 
-}
+Esfera::Esfera(int id, SDL_Color cor, Vec3 PCentro, double raio) : 
+    Objeto(id, cor), PCentro(PCentro), raio(raio) {}
 
 // Pin = olho observador
 Vec3 Esfera::getW(Vec3 Pin) {
@@ -18,7 +20,7 @@ Vec3 Esfera::getW(Vec3 Pin) {
 }
 
 // TODO: ajeitar isso aqui depois
-optional<double> Esfera::intersecta(Ray raycaster) {
+optional<LPointGetType> Esfera::intersecta(Ray raycaster) {
 
     Vec3 w = this->getW(raycaster.Pinicial);
 
@@ -36,8 +38,18 @@ optional<double> Esfera::intersecta(Ray raycaster) {
     double t1 = (-b - sqrt(D)) / (2*a); 
     double t2 = (-b + sqrt(D)) / (2*a);
 
+    double tint;
+
     if (D >= 0) 
-        return t1 > t2 ? t2 : t1; // retorna a distancia mais perto 
+        tint = (t1 > t2 ? t2 : t1); // distancia mais perto 
     else 
         return nullopt;
+
+    Vec3 direcaodottint = raycaster.direcao * tint; 
+    Vec3 Pint           = direcaodottint + raycaster.Pinicial;
+    Vec3 normContato    = (Pint - PCentro).norm();
+
+                      // tint, normalcontato, poscontato
+    return LPointGetType(tint, normContato, Pint);
+
 }

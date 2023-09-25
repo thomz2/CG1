@@ -19,7 +19,7 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r) : ObjetoComposto(i
 
 }
 
-optional<double> Cone::intersecta(Ray raycaster) {
+optional<LPointGetType> Cone::intersecta(Ray raycaster) {
 
     Vec3 dr = raycaster.direcao, v = this->Vt - raycaster.Pinicial, n = this->d, Po = raycaster.Pinicial;
     double cost = this->h / sqrt(pow(this->h,2) + pow(this->r,2)); 
@@ -35,6 +35,11 @@ optional<double> Cone::intersecta(Ray raycaster) {
 
     double t1 = (-b - sqrt(D)) / (2*a); 
     double t2 = (-b + sqrt(D)) / (2*a);
+    
+    // condição do a = 0, ver melhor depois
+    if (a == 0) {
+        t1 = t2 = (-c) / (2*b);
+    }
 
     Vec3 Pint1 = (dr*t1) + Po;
     Vec3 Pint2 = (dr*t2) + Po;
@@ -47,17 +52,22 @@ optional<double> Cone::intersecta(Ray raycaster) {
     double dist1 = n.dot(aux1);
     double dist2 = n.dot(aux2);
 
-    // // if (dist1 <= h && dist1 >= 0) {
-    // //     if (dist2 <= h && dist2 >= 0 && t2 < t1) return t2;
-    // //     else return t1;
-    // // } else if (dist2 <= h && dist2 >= 0) return t2;
+    // if (dist1 <= h && dist1 >= 0) {
+    //     if (dist2 <= h && dist2 >= 0 && t2 < t1) return t2;
+    //     else return t1;
+    // } else if (dist2 <= h && dist2 >= 0) return t2;
 
     if (dist1 <= h && dist1 >= 0 && dist2 <= h && dist2 >= 0) {
-        return t2 < t1 ? t2 : t1; 
+        // return t2 < t1 ? t2 : t1; 
+        return t2 < t1 ? 
+            LPointGetType(t2, Vec3(), Vec3()) : 
+            LPointGetType(t1, Vec3(), Vec3()); 
     } else if (dist1 <= h && dist1 >= 0) {
-        return t1;
+        // return t1;
+        return LPointGetType(t1, Vec3(), Vec3()); 
     } else if (dist2 <= h && dist2 >= 0) {
-        return t2;
+        // return t2;
+        return LPointGetType(t2, Vec3(), Vec3()); 
     } 
 
     return nullopt;

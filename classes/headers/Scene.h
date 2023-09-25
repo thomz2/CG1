@@ -9,9 +9,12 @@
 #include "math/Vec3.h"
 #include "Ray.h"
 #include <map>
+#include "luzes/Luz.h"
+#include "types/LPointGetType.h"
 
 using namespace std;
 
+// TODO: falta especificar algumas funcoes
 class Scene {
 
     public:
@@ -23,6 +26,7 @@ class Scene {
     Canvas *canvas;
 
     std::vector<Objeto*> objetos;
+    std::vector<Luz*>    luzes;
 
     Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height);
 
@@ -32,7 +36,7 @@ class Scene {
     bool setCanvas(int nLin, int nCol, double dX, double dY);
 
     pair<vector<Objeto*>, map<int, double>> intersectaObjetos(Ray raycaster); // TODO: colocar ordem de intersecção
-    Objeto* firstObj(Ray raycaster);
+    optional<pair<Objeto*, LPointGetType>> firstObj(Ray raycaster);
 
     void pintarCanvas(double dJanela, Vec3& olhoPintor);
 };
