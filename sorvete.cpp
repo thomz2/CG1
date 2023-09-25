@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 #include "classes/headers/math/Vec3.h"
 #include "classes/headers/primitives/Esfera.h"
-// #include "classes/headers/primitives/Cilindro.h"
-// #include "classes/headers/primitives/Cone.h"
+#include "classes/headers/primitives/Cilindro.h"
+#include "classes/headers/primitives/Cone.h"
 #include "classes/headers/Canvas.h"
 #include "classes/headers/Ray.h"
 #include "classes/headers/Scene.h"
@@ -56,11 +56,11 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corBiscoito = {224, 179, 134, 255};
     SDL_Color corChocolate = {128, 90, 70, 255};
 
-    Luz* luzTeste = new Luz(Vec3(100, 4000, 100), Vec3(0.5, 0.5, 0.5));
+    Luz* luzTeste = new Luz(Vec3(100, 4000, 100), Vec3(1, 1, 1));
 
-    // Cone* casca = new Cone(2, corBiscoito, Vec3(0, -100, zCentroEsfera), Vec3(0, -500, zCentroEsfera - 10), 250);
+    Cone* casca = new Cone(2, corBiscoito, Vec3(0, -100, zCentroEsfera), Vec3(0, -500, zCentroEsfera - 10), 250);
     Esfera* bolasorvete = new Esfera(5, corVermelha, Vec3(0, 50, zCentroEsfera +1), 250, BaseMaterial());
-    // Cilindro* canudo = new Cilindro(6, corBiscoito, Vec3(0, 0, zCentroEsfera), Vec3(-300, 400, zCentroEsfera +200), 15);
+    Cilindro* canudo = new Cilindro(6, corBiscoito, Vec3(0, 0, zCentroEsfera), Vec3(-300, 400, zCentroEsfera +200), 15);
 
 
     const int nCol = 800;
@@ -69,9 +69,9 @@ int main ( int argc, char *argv[] ) {
     const int Dx = wJanela / nCol;
     const int Dy = hJanela / nLin;
 
-    // cenario->objetos.push_back(casca);
+    cenario->objetos.push_back(casca);
     cenario->objetos.push_back(bolasorvete);
-    // cenario->objetos.push_back(canudo);
+    cenario->objetos.push_back(canudo);
 
     cenario->luzes.push_back(luzTeste);
 

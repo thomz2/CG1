@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <utility>
 #include <map>
+#include <math.h>
 
 using namespace std;
 
@@ -141,12 +142,12 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
                         Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
 
-                        double f_dif = lv.dot(normal);
+                        double f_dif = max(0.0, lv.dot(normal));
                         // double f_esp = pow(vv.dot(rv), maisPerto->material);
-                        double f_esp = pow(vv.dot(rv), 1);
+                        double f_esp = pow(max(0.0, vv.dot(rv)), 20);
 
-                        if (f_dif < 0) f_dif = 0;
-                        if (f_esp < 0) f_esp = 0;
+                        // if (f_dif < 0) f_dif = 0;
+                        // if (f_esp < 0) f_esp = 0;
 
                         // usando operador @ (|)
                         Vec3 aux1 = ((maisPerto->material.getRugosidade()) * f_dif);
@@ -163,7 +164,7 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         if (intensidadeCor.y > 1) intensidadeCor.y = 1;
                         if (intensidadeCor.z > 1) intensidadeCor.z = 1;
 
-                        // OPERADOR @ OU PROD VETORIAL
+                        // OPERADOR @
                         corNova = corNova | intensidadeCor;
 
                         SDL_Color corNovaPintar = {
