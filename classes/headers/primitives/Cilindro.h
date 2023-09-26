@@ -3,7 +3,9 @@
 #include <optional>
 #include "../math/Vec3.h"
 #include "./ObjetoComposto.h"
+#include "../types/LPointGetType.h"
 #include "../Ray.h"
+#include "../materiais/BaseMaterial.h"
 
 class Cilindro : public ObjetoComposto {
 
@@ -12,6 +14,7 @@ class Cilindro : public ObjetoComposto {
     double r, h;
 
     Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r);
+    Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMaterial material);
     
     Vec3 getW(Vec3 Pin);
     std::optional<LPointGetType> intersecta(Ray raycaster) override;

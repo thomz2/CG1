@@ -17,6 +17,16 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r) : ObjetoCo
     // TODO: Instanciar faces nos subobjetos
 };
 
+Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), Ct(Ct), r(r) {
+
+    Vec3 dif = Ct - Cb;
+
+    this->h = dif.modulo(); // altura = comprimento do vetor diferença
+    this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
+
+    // TODO: Instanciar faces nos subobjetos
+};
+
 Vec3 Cilindro::getW(Vec3 Pin) {
     return Pin - this->Cb;
 }

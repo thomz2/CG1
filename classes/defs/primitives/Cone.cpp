@@ -19,6 +19,18 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r) : ObjetoComposto(i
 
 }
 
+Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), Vt(Vt), r(r) {
+    
+    Vec3 dif = Vt - Cb;
+    
+    // mesma coisa do cilindro
+    this->h = dif.modulo();
+    this->d = dif.norm();
+    
+    // TODO: Instanciar faces nos subobjetos
+
+}
+
 optional<LPointGetType> Cone::intersecta(Ray raycaster) {
 
     Vec3 dr = raycaster.direcao, v = this->Vt - raycaster.Pinicial, n = this->d, Po = raycaster.Pinicial;

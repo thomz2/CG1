@@ -146,7 +146,7 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
                         double f_dif = max(0.0, lv.dot(normal));
                         // double f_esp = pow(vv.dot(rv), maisPerto->material);
-                        double f_esp = pow(max(0.0, vv.dot(rv)), 20);
+                        double f_esp = pow(max(0.0, vv.dot(rv)), maisPerto->material.getM());
 
                         // if (f_dif < 0) f_dif = 0;
                         // if (f_esp < 0) f_esp = 0;
