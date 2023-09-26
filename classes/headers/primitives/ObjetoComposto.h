@@ -4,6 +4,7 @@
 #include <vector>
 #include "../Ray.h"
 #include "./Objeto.h"
+#include "../materiais/BaseMaterial.h"
 
 class ObjetoComposto : public Objeto {
 
@@ -13,4 +14,5 @@ public:
 
     ObjetoComposto(int id);
     ObjetoComposto(int id, SDL_Color cor);
+    ObjetoComposto(int id, SDL_Color cor, BaseMaterial material);
 };

@@ -136,6 +136,8 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     Vec3 normal          = retorno.normalContato.norm();
                     double tint          = retorno.tint;
 
+                    Vec3 intensidadeCor = Vec3(0.2, 0.2, 0.2); // luz ambiente
+
                     // fazer loop da luz
                     for (Luz* luz : luzes) {
                         Vec3 lv = (luz->posicao - ponto_mais_prox).norm();
@@ -158,7 +160,8 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     
                         // TODO: implementar intensidade ambiente
                         // Vec3 intesidade = this->ambient + iDif + iEsp;
-                        Vec3 intensidadeCor = Vec3(0.2, 0.2, 0.2) + iDif + iEsp;
+                        Vec3 anterior = intensidadeCor;
+                        intensidadeCor = anterior + iDif + iEsp;
 
                         if (intensidadeCor.x > 1) intensidadeCor.x = 1;
                         if (intensidadeCor.y > 1) intensidadeCor.y = 1;

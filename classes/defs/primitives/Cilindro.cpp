@@ -48,6 +48,9 @@ optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
     Vec3 proj1 = dc * (v1.dot(dc));
     Vec3 proj2 = dc * (v2.dot(dc));
 
+    Vec3 hv1 = v1 - proj1; // vetor h != unidade h
+    Vec3 hv2 = v2 - proj2; // vetor h != unidade h
+
     double dist1 = proj1.modulo();
     double dist2 = proj2.modulo();
 
@@ -60,14 +63,14 @@ optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
     if (proj1.dot(this->d) > 0 && dist1 < this->h) { // se uma distancia existe
         // if (dist2 > 0 && dist2 < this->h && t2 < t1) return t2; // se a outra tbm existe
         // if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) return t2; // se a outra tbm existe
-        if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) return LPointGetType(t2, Vec3(), Vec3()); // se a outra tbm existe
+        if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) return LPointGetType(t2, hv2, Pint2); // se a outra tbm existe
         
         // else return t1; // se apenas a primeira existe
-        else return LPointGetType(t1, Vec3(), Vec3()); // se apenas a primeira existe
+        else return LPointGetType(t1, hv1, Pint1); // se apenas a primeira existe
     } 
     // else if (dist2 > 0 && dist2 < this->h) return t2; // se apenas a segunda existe
     // else if (proj2.dot(this->d) > 0 && dist2 < this->h) return t2; // se apenas a segunda existe
-    else if (proj2.dot(this->d) > 0 && dist2 < this->h) return LPointGetType(t2, Vec3(), Vec3()); // se apenas a segunda existe
+    else if (proj2.dot(this->d) > 0 && dist2 < this->h) return LPointGetType(t2, hv2, Pint2); // se apenas a segunda existe
     
     // if (distaux1 <= h && distaux1 >= 0 && distaux2 <= h && distaux2 >= 0) {
     //     return t2 < t1 ? t2 : t1; 
