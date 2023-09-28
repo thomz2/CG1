@@ -35,7 +35,7 @@ class Scene {
     public: 
     bool setCanvas(int nLin, int nCol, double dX, double dY);
 
-    pair<vector<Objeto*>, map<int, double>> intersectaObjetos(Ray raycaster); // TODO: colocar ordem de intersecção
+    vector  <pair<Objeto*, LPointGetType>> intersectaObjetos(Ray raycaster); // TODO: colocar ordem de intersecção
     optional<pair<Objeto*, LPointGetType>> firstObj(Ray raycaster);
 
     void pintarCanvas(double dJanela, Vec3& olhoPintor);

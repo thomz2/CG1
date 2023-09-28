@@ -5,6 +5,8 @@
 #include <utility>
 #include <map>
 #include <math.h>
+#include <queue>
+#include <set>
 
 using namespace std;
 
@@ -49,6 +51,40 @@ pair<vector<Objeto*>, map<int, double>> Scene::intersectaObjetos(Ray raycaster) 
     return { intersectados, id_dist_intersectados }; 
 }
 */
+
+// DO MAIS PERTO AO MAIS LONGE
+vector <pair<Objeto*, LPointGetType>> Scene::intersectaObjetos(Ray raycaster) {
+
+    using ObjetoDistanciaPair = pair<Objeto*, LPointGetType>;
+
+    struct ComparadorPares {
+        bool operator()(const ObjetoDistanciaPair& a, const ObjetoDistanciaPair& b) const {
+            return a.second.tint > b.second.tint; // Comparar com base nas distâncias
+        }
+    };
+
+    priority_queue<ObjetoDistanciaPair, vector<ObjetoDistanciaPair>, ComparadorPares> objetosOrdenados;
+    vector <pair<Objeto*, LPointGetType>> intersectados;
+
+    for (Objeto *obj : this->objetos) {
+        // pode intersectar o mesmo obj mais de uma vez?
+        if (obj->intersecta(raycaster).has_value()) {
+            LPointGetType distanciaEEtc = obj->intersecta(raycaster).value();
+            objetosOrdenados.push({obj, distanciaEEtc});
+        }
+    }
+
+    while (!objetosOrdenados.empty()) {
+        const ObjetoDistanciaPair& par = objetosOrdenados.top();
+        intersectados.push_back(par);
+        objetosOrdenados.pop();
+    }
+    
+    return intersectados;
+
+}
+
+
 
 // REFATORAR CODIGO RUIM
 // PEGAR O OBJETO MAIS PERTO
@@ -186,14 +222,15 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     // DEBUG
                     if (l == (int)(this->canvas->nLin / 2) &&  c == (int)(this->canvas->nCol / 2)) {
                         // pair<vector<Objeto*>, map<int, double>> meudebug = this->intersectaObjetos(raycaster);
-                        optional<pair<Objeto*, LPointGetType>> meudebug = this->firstObj(raycaster);
-                        Objeto* objeto_intersec = meudebug.value().first;
-                        // map<int, double> distancias = meudebug.second;
+                        // optional<pair<Objeto*, LPointGetType>> meudebug = this->firstObj(raycaster);
 
-                        // for (auto* obj : objetos_intersecs) {
+                        vector<pair<Objeto*, LPointGetType>> meudebug = this->intersectaObjetos(raycaster);
+
+
+                        for (auto par : meudebug) {
                             // this->canvas->pintarCanvas(l, c, obj->cor);d
-                        cout << objeto_intersec->id << ": " << meudebug.value().second.tint << endl;
-                        // }
+                            cout << par.first->id << ':' << par.second.tint << endl;
+                        }
                     }
                 }
             }
