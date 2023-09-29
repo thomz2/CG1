@@ -57,12 +57,12 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corBiscoito = {224, 179, 134, 255};
     SDL_Color corChocolate = {128, 90, 70, 255};
 
-    Luz* luzTeste = new Luz(Vec3(2300, 4000, 100), Vec3(1, 1, 1));
+    Luz* luzTeste = new Luz(Vec3(100, 4000, 100), Vec3(1, 1, 1));
     Luz* luzTeste2 = new Luz(Vec3(100, -4000, 100), Vec3(2, 2, 2));
 
     Esfera* bola = new Esfera(1, corVerde, Vec3(0, 0, zCentroEsfera - 300), 300, MaterialTarefa());
     Cone* cone = new Cone(2, corVermelha, Vec3(0, -100, zCentroEsfera), Vec3(0, 100, zCentroEsfera), 250, MaterialTarefa());
-    Cilindro* cilindro = new Cilindro(3, corAzul, Vec3(0, -100, zCentroEsfera + 200), Vec3(0, 100, zCentroEsfera + 200), 50, MaterialTarefa());
+    Cilindro* cilindro = new Cilindro(3, corAzul, Vec3(0, 0, zCentroEsfera), Vec3(100, 100, zCentroEsfera + 200), 150, MaterialTarefa());
 
 
     const int nCol = 800;
@@ -71,8 +71,8 @@ int main ( int argc, char *argv[] ) {
     const int Dx = wJanela / nCol;
     const int Dy = hJanela / nLin;
 
-    cenario->objetos.push_back(bola);
-    cenario->objetos.push_back(cone);
+    // cenario->objetos.push_back(bola);
+    // cenario->objetos.push_back(cone);
     cenario->objetos.push_back(cilindro);
 
     cenario->luzes.push_back(luzTeste);

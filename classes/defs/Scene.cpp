@@ -180,6 +180,19 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
                         Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
 
+                        // checando sombra
+                        Ray raisombra = Ray(luz->posicao, lv * (-1));
+                        double L = (luz->posicao - ponto_mais_prox).modulo();
+                        bool temSombra = false;
+                        for (auto* objeto : this->objetos) {
+                            optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
+                            if (interseccao.has_value() && interseccao.value().tint < L - 0.000000001) {
+                                temSombra = true; break;
+                            }
+                        }
+
+                        if (temSombra) break;
+
                         double f_dif = max(0.0, lv.dot(normal));
                         // double f_esp = pow(vv.dot(rv), maisPerto->material);
                         double f_esp = pow(max(0.0, vv.dot(rv)), maisPerto->material.getM());
@@ -203,21 +216,19 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         if (intensidadeCor.y > 1) intensidadeCor.y = 1;
                         if (intensidadeCor.z > 1) intensidadeCor.z = 1;
 
-                        // OPERADOR @
-                        corNova = corNova | intensidadeCor;
-
-                        SDL_Color corNovaPintar = {
-                            corNova.x,
-                            corNova.y,
-                            corNova.z,
-                            255 // ver isso dps
-                        };
-
-                        this->canvas->pintarCanvas(l, c, corNovaPintar);
-
                     }
 
+                    // OPERADOR @
+                    corNova = corNova | intensidadeCor;
 
+                    SDL_Color corNovaPintar = {
+                        corNova.x,
+                        corNova.y,
+                        corNova.z,
+                        255 // ver isso dps
+                    };
+
+                    this->canvas->pintarCanvas(l, c, corNovaPintar);
                     
                     // DEBUG
                     if (l == (int)(this->canvas->nLin / 2) &&  c == (int)(this->canvas->nCol / 2)) {
