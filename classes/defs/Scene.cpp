@@ -186,7 +186,7 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         bool temSombra = false;
                         for (auto* objeto : this->objetos) {
                             optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
-                            if (interseccao.has_value() && interseccao.value().tint < L - 0.000000001) {
+                            if (interseccao.has_value() && objeto->id != maisPerto->id && interseccao.value().tint < L) {
                                 temSombra = true; break;
                             }
                         }
