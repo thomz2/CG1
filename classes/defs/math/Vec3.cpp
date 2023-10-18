@@ -10,17 +10,29 @@ Vec3::Vec3(double x, double y, double z) : x(x), y(y), z(z) {}
 Vec3 Vec3::operator+(Vec3& other) {
     return Vec3(x + other.x, y + other.y, z + other.z);
 }
+Vec3 Vec3::add(Vec3& other) {
+    return Vec3(x + other.x, y + other.y, z + other.z);
+}
 
 Vec3 Vec3::operator-(Vec3& other) {
+    return Vec3(x - other.x, y - other.y, z - other.z);
+}
+Vec3 Vec3::sub(Vec3& other) {
     return Vec3(x - other.x, y - other.y, z - other.z);
 }
 
 Vec3 Vec3::operator*(double num) {
     return Vec3(x * num, y * num, z * num);
 }
+Vec3 Vec3::mult(double num) {
+    return Vec3(x * num, y * num, z * num);
+}
 
 // OK
 Vec3 Vec3::operator/(double num) {
+    return Vec3(x / num, y / num, z / num);
+}
+Vec3 Vec3::div(double num) {
     return Vec3(x / num, y / num, z / num);
 }
 

@@ -231,7 +231,7 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     this->canvas->pintarCanvas(l, c, corNovaPintar);
                     
                     // DEBUG
-                    if (l == (int)(this->canvas->nLin / 2) &&  c == (int)(this->canvas->nCol / 2)) {
+                    if (l == (int)(this->canvas->nLin / 2 - 100) &&  c == (int)(this->canvas->nCol / 2 - 100)) {
                         // pair<vector<Objeto*>, map<int, double>> meudebug = this->intersectaObjetos(raycaster);
                         // optional<pair<Objeto*, LPointGetType>> meudebug = this->firstObj(raycaster);
 

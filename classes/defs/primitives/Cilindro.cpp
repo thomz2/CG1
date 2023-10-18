@@ -4,6 +4,7 @@
 #include "../../headers/primitives/Objeto.h"
 #include "../../headers/Ray.h"
 #include "../../headers/math/Vec3.h"
+#include "../../headers/primitives/Circulo.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r) : ObjetoCo
     this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
 
     // TODO: Instanciar faces nos subobjetos
+    this->circuloTopo = new Circulo(10000 + id, cor, BaseMaterial(), Ct);
+    this->circuloBase = new Circulo(10000 + id, cor, BaseMaterial(), Cb);
 };
 
 Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), Ct(Ct), r(r) {
@@ -25,13 +28,49 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMateri
     this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
 
     // TODO: Instanciar faces nos subobjetos
+    this->circuloTopo = new Circulo(10000 + id, cor, material, Ct);
+    this->circuloBase = new Circulo(10000 + id, cor, material, Cb);
 };
 
 Vec3 Cilindro::getW(Vec3 Pin) {
     return Pin - this->Cb;
 }
 
+optional<LPointGetType> Cilindro::intersectaFace(Ray raycaster) {
+
+}
+
+/*
+interseccoes: 
+
+base e face (ver qual ta mais perto)
+topo e face (ver qual ta mais perto)
+face somente 
+base e topo (apenas ver qual ta mais perto, nao precisa calcular face)
+*/ 
+
 optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
+
+    // // checar interseccao das bases
+    // optional<LPointGetType> intersectCT = this->circuloTopo->intersecta(raycaster);
+    // optional<LPointGetType> intersectCB = this->circuloBase->intersecta(raycaster);
+
+    // // caso em que o raio intersecta as duas bases -o=o->
+    // if (intersectCB.has_value() && intersectCT.has_value()) {
+
+    // } else {
+         
+    //     if (intersectCB.has_value()) { // caso em que intersecta base e face
+        
+    //     } else if (intersectCT.has_value()) { // caso em que intersecta topo e face
+        
+    //     } else { // caso em que intersecta face apenas
+
+    //     }
+
+    // } 
+
+
 
     Vec3 dr = raycaster.direcao, w = this->getW(raycaster.Pinicial), dc = this->d;
 
