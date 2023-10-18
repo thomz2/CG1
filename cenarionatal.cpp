@@ -60,10 +60,10 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corAzul = {0, 0, 255, 255};
     SDL_Color corBiscoito = {224, 179, 134, 255};
     SDL_Color corChocolate = {128, 90, 70, 255};
-    SDL_Color corAzulMeleca = {112, 146, 190, 255};
+    SDL_Color corAzulMeleca = {128, 152, 182, 255};
     SDL_Color corMarromPiso = {128, 64, 0, 255};
 
-    Luz* luzTeste = new Luz(Vec3(2300, 4000, 100), Vec3(1, 1, 1));
+    Luz* luzTeste = new Luz(Vec3(-2000, 3000, 100), Vec3(1, 1, 1));
     Luz* luzTeste2 = new Luz(Vec3(100, -4000, 100), Vec3(2, 2, 2));
 
     Plano* parede = new Plano(10, corAzulMeleca, MaterialTarefa(), Vec3(0,0,zCentroEsfera - 3300), Vec3(0,0,1));
@@ -80,7 +80,8 @@ int main ( int argc, char *argv[] ) {
         // 1 -1
     };
     // mudar esse abaixo para cilindro
-    Circulo* baseMesa = new Circulo(5, corChocolate, BaseMaterial(), Vec3(-350, -200, zCentroEsfera + 200), Vec3(0,1,0), 400);
+    // Circulo* baseMesa = new Circulo(5, corChocolate, BaseMaterial(), Vec3(-350, -200, zCentroEsfera + 200), Vec3(0,1,0), 400);
+    Cilindro* baseMesa = new Cilindro(5, corChocolate, Vec3(-350, -200, zCentroEsfera + 200), Vec3(-350, -100, zCentroEsfera + 200), 400);
     
     Cilindro* tronco = new Cilindro(6, corMarromPiso, Vec3(500, -400, zCentroEsfera + 200), Vec3(500, -100, zCentroEsfera + 200), 60);
     Cone* folhas[] = {
@@ -92,6 +93,53 @@ int main ( int argc, char *argv[] ) {
     // Esfera* bola = new Esfera(1, corVerde, Vec3(0, 0, zCentroEsfera - 300), 300, MaterialTarefa());
     // Cone* cone = new Cone(2, corVermelha, Vec3(0, -100, zCentroEsfera), Vec3(0, 100, zCentroEsfera), 250, MaterialTarefa());
 
+    // BONECO DE NEVE
+
+    const double rEsferaSnowMan        = 150;
+    const double constanteDeIrPDireita = 120;  // pro x
+    const double constanteDeIrPBaixo   = -150; // pro y
+    const double constanteDeIrPtras    = -300; // pro z (adicionar ao zCentroEsfera)
+
+    SDL_Color corEsferaBranca = {255, 255, 255, 255};
+    SDL_Color corEsferaPreto = {0, 0, 0, 255};
+    SDL_Color corEsferaLaranja = {255, 165, 0, 255};
+    SDL_Color corEsferaVermelhoEscuro = {139, 0, 0, 255};
+    SDL_Color corEsferaVermelhoClaro = {255, 105, 97, 255};
+
+    Esfera* esfera = new Esfera(0, corEsferaBranca, Vec3(0 + constanteDeIrPDireita, -100 + constanteDeIrPBaixo, zCentroEsfera), rEsferaSnowMan);
+    Esfera* esfera2 = new Esfera(1, corEsferaBranca, Vec3(0 + constanteDeIrPDireita, 150 + constanteDeIrPBaixo, zCentroEsfera), rEsferaSnowMan - 35);
+
+    Esfera* botoes[] = {
+        new Esfera(2, corEsferaVermelhoEscuro, Vec3(0 + constanteDeIrPDireita, -25 + constanteDeIrPBaixo, zCentroEsfera +125), 17),
+        new Esfera(3, corEsferaVermelhoEscuro, Vec3(0 + constanteDeIrPDireita, -100 + constanteDeIrPBaixo, zCentroEsfera +140), 17),
+        new Esfera(4, corEsferaVermelhoEscuro, Vec3(0 + constanteDeIrPDireita, -175 + constanteDeIrPBaixo, zCentroEsfera +125), 17)
+    };
+
+    // Esfera* nariz = new Esfera(5, corEsferaLaranja, Vec3(0 + constanteDeIrPDireita, 150 + constanteDeIrPBaixo, zCentroEsfera +135), 15);
+    Cone* nariz = new Cone(5, corEsferaLaranja, Vec3(0 + constanteDeIrPDireita, 150 + constanteDeIrPBaixo, zCentroEsfera +110), Vec3(0 + constanteDeIrPDireita, 150 + constanteDeIrPBaixo, zCentroEsfera +160), 15);
+
+    Esfera* olhos[] = {
+        new Esfera(6, corEsferaPreto, Vec3(-50 + constanteDeIrPDireita, 200 + constanteDeIrPBaixo, zCentroEsfera +100), 15),
+        new Esfera(7, corEsferaPreto, Vec3(50 + constanteDeIrPDireita, 200 + constanteDeIrPBaixo, zCentroEsfera +100), 15)
+    };
+
+    Esfera* boca[] = {
+        new Esfera(10, corEsferaPreto, Vec3(-60 + constanteDeIrPDireita, 110 + constanteDeIrPBaixo, zCentroEsfera +100), 13),
+        new Esfera(11, corEsferaPreto, Vec3(-30 + constanteDeIrPDireita, 100 + constanteDeIrPBaixo, zCentroEsfera +100), 13),
+        new Esfera(12, corEsferaPreto, Vec3(0 + constanteDeIrPDireita, 95 + constanteDeIrPBaixo, zCentroEsfera +100), 13),
+        new Esfera(13, corEsferaPreto, Vec3(30 + constanteDeIrPDireita, 100 + constanteDeIrPBaixo, zCentroEsfera +100), 13),
+        new Esfera(14, corEsferaPreto, Vec3(60 + constanteDeIrPDireita, 110 + constanteDeIrPBaixo, zCentroEsfera +100), 13)
+    };
+
+    Esfera* bochechas[] = {
+        new Esfera(15, corEsferaVermelhoClaro, Vec3(-50 + constanteDeIrPDireita, 150 + constanteDeIrPBaixo, zCentroEsfera +50), 13),
+        new Esfera(16, corEsferaVermelhoClaro, Vec3(50 + constanteDeIrPDireita, 150 + constanteDeIrPBaixo, zCentroEsfera +50), 13)
+    };
+
+    Cilindro* chapeu[] = {
+        new Cilindro(17, corEsferaPreto, Vec3(0 + constanteDeIrPDireita, 290 + constanteDeIrPBaixo, zCentroEsfera), Vec3(0 + constanteDeIrPDireita, 400 + constanteDeIrPBaixo, zCentroEsfera), 105),
+        new Cilindro(18, corEsferaPreto, Vec3(0 + constanteDeIrPDireita, 240 + constanteDeIrPBaixo, zCentroEsfera), Vec3(0 + constanteDeIrPDireita, 290 + constanteDeIrPBaixo, zCentroEsfera), 165)
+    };
 
     const int nCol = 800;
     const int nLin = 600;
@@ -115,6 +163,27 @@ int main ( int argc, char *argv[] ) {
         cenario->objetos.push_back(folhas[i]);
     }
 
+    cenario->objetos.push_back(esfera);
+    cenario->objetos.push_back(esfera2);
+
+    for (int i = 0; i < 3; ++i) {
+        cenario->objetos.push_back(botoes[i]);
+    }
+
+    cenario->objetos.push_back(nariz);
+
+    for (int i = 0; i < 2; ++i) {
+        cenario->objetos.push_back(olhos[i]);
+        // cenario->objetos.push_back(brilhos[i]);
+        cenario->objetos.push_back(bochechas[i]);
+        cenario->objetos.push_back(chapeu[i]);
+        // cenario->objetos.push_back(bracos[i]);
+    }
+
+    for (int i = 0; i < 5; ++i) {
+        cenario->objetos.push_back(boca[i]);
+    }
+
     cenario->luzes.push_back(luzTeste);
     // cenario->luzes.push_back(luzTeste2);
 
@@ -131,6 +200,8 @@ int main ( int argc, char *argv[] ) {
             SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
         }
     }
+
+    
     
     cout << "Fim da pintura" << endl;
 

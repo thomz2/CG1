@@ -16,8 +16,8 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r) : ObjetoCo
     this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
 
     // TODO: Instanciar faces nos subobjetos
-    this->circuloTopo = new Circulo(10000 + id, cor, BaseMaterial(), Ct);
-    this->circuloBase = new Circulo(10000 + id, cor, BaseMaterial(), Cb);
+    this->circuloTopo = new Circulo(10000 + id, cor, BaseMaterial(), Ct, dif, r);
+    this->circuloBase = new Circulo(10000 + id, cor, BaseMaterial(), Cb, Cb - Ct, r);
 };
 
 Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), Ct(Ct), r(r) {
@@ -28,8 +28,8 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMateri
     this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
 
     // TODO: Instanciar faces nos subobjetos
-    this->circuloTopo = new Circulo(10000 + id, cor, material, Ct);
-    this->circuloBase = new Circulo(10000 + id, cor, material, Cb);
+    this->circuloTopo = new Circulo(10000 + id, cor, material, Ct, dif, r);
+    this->circuloBase = new Circulo(10000 + id, cor, material, Cb, Cb - Ct, r);
 };
 
 Vec3 Cilindro::getW(Vec3 Pin) {
@@ -37,41 +37,6 @@ Vec3 Cilindro::getW(Vec3 Pin) {
 }
 
 optional<LPointGetType> Cilindro::intersectaFace(Ray raycaster) {
-
-}
-
-/*
-interseccoes: 
-
-base e face (ver qual ta mais perto)
-topo e face (ver qual ta mais perto)
-face somente 
-base e topo (apenas ver qual ta mais perto, nao precisa calcular face)
-*/ 
-
-optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
-
-    // // checar interseccao das bases
-    // optional<LPointGetType> intersectCT = this->circuloTopo->intersecta(raycaster);
-    // optional<LPointGetType> intersectCB = this->circuloBase->intersecta(raycaster);
-
-    // // caso em que o raio intersecta as duas bases -o=o->
-    // if (intersectCB.has_value() && intersectCT.has_value()) {
-
-    // } else {
-         
-    //     if (intersectCB.has_value()) { // caso em que intersecta base e face
-        
-    //     } else if (intersectCT.has_value()) { // caso em que intersecta topo e face
-        
-    //     } else { // caso em que intersecta face apenas
-
-    //     }
-
-    // } 
-
-
-
     Vec3 dr = raycaster.direcao, w = this->getW(raycaster.Pinicial), dc = this->d;
 
     double a = dr.dot(dr) - pow((dr.dot(dc)), 2);
@@ -103,31 +68,65 @@ optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
     double dist1 = proj1.modulo();
     double dist2 = proj2.modulo();
 
-    // Vec3 aux1 = Pint1 - this->Cb;
-    // Vec3 aux2 = Pint2 - this->Cb;
-
-    // double distaux1 = dc.dot(aux1);
-    // double distaux2 = dc.dot(aux2);
-
     if (proj1.dot(this->d) > 0 && dist1 < this->h) { // se uma distancia existe
-        // if (dist2 > 0 && dist2 < this->h && t2 < t1) return t2; // se a outra tbm existe
-        // if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) return t2; // se a outra tbm existe
-        if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) return LPointGetType(t2, hv2, Pint2); // se a outra tbm existe
+
+        if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) 
+            return LPointGetType(t2, hv2, Pint2); // se a outra tbm existe
         
-        // else return t1; // se apenas a primeira existe
         else return LPointGetType(t1, hv1, Pint1); // se apenas a primeira existe
     } 
-    // else if (dist2 > 0 && dist2 < this->h) return t2; // se apenas a segunda existe
-    // else if (proj2.dot(this->d) > 0 && dist2 < this->h) return t2; // se apenas a segunda existe
+
     else if (proj2.dot(this->d) > 0 && dist2 < this->h) return LPointGetType(t2, hv2, Pint2); // se apenas a segunda existe
-    
-    // if (distaux1 <= h && distaux1 >= 0 && distaux2 <= h && distaux2 >= 0) {
-    //     return t2 < t1 ? t2 : t1; 
-    // } else if (distaux1 <= h && distaux1 >= 0) {
-    //     return t1;
-    // } else if (distaux2 <= h && distaux2 >= 0) {
-    //     return t2;
-    // } 
 
     return nullopt;
+}
+
+/*
+interseccoes: 
+
+base e face (ver qual ta mais perto)
+topo e face (ver qual ta mais perto)
+face somente 
+base e topo (apenas ver qual ta mais perto, nao precisa calcular face)
+*/ 
+optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
+
+    // checar interseccao das bases
+    optional<LPointGetType> intersectCT = this->circuloTopo->intersecta(raycaster);
+    optional<LPointGetType> intersectCB = this->circuloBase->intersecta(raycaster);
+
+    // caso em que o raio intersecta as duas bases -o=o->
+    if (intersectCB.has_value() && intersectCT.has_value()) {
+
+        // circulo da base aparece primeiro?         
+        // se nao aparece, o circulo do topo aparece primeiro
+        return intersectCB.value().tint < intersectCT.value().tint ? intersectCB.value() : intersectCT.value();
+
+    } else {
+        
+        // casos em que possivelmente a face eh intersectada
+        optional<LPointGetType> intersectFace = this->intersectaFace(raycaster);
+        if (!intersectFace.has_value()) return nullopt; // nao intersectou o topo e a base e nem a face, entao nao paro por aqui
+
+        if (intersectCB.has_value()) { // caso em que intersecta base e face
+
+            // circulo da base aparece primeiro?
+            // se nao aparece, a face aparece primeiro
+            return intersectCB.value().tint < intersectFace.value().tint ? intersectCB.value() : intersectFace.value();
+
+        } else if (intersectCT.has_value()) { // caso em que intersecta topo e face
+
+            // circulo do topo aparece primeiro?
+            // se nao aparece, a face aparece primeiro
+            return intersectCT.value().tint < intersectFace.value().tint ? intersectCT.value() : intersectFace.value();
+
+        } else { // caso em que intersecta face apenas
+            return intersectFace.value();
+        }
+
+    } 
+
+    // caso nao de certo, retorna nada (nunca chega aqui)
+    return nullopt;
+    
 }
