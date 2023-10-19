@@ -16,6 +16,7 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r) : ObjetoComposto(i
     this->d = dif.norm();
     
     // TODO: Instanciar faces nos subobjetos
+    this->base = new Circulo(10000 + id, cor, BaseMaterial(), Cb, Cb - Vt, r);
 
 }
 
@@ -28,10 +29,10 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r, BaseMaterial mater
     this->d = dif.norm();
     
     // TODO: Instanciar faces nos subobjetos
-
+    this->base = new Circulo(10000 + id, cor, material, Cb, Cb - Vt, r);
 }
 
-optional<LPointGetType> Cone::intersecta(Ray raycaster) {
+optional<LPointGetType> Cone::intersectaFace(Ray raycaster) {
 
     Vec3 dr = raycaster.direcao, v = this->Vt - raycaster.Pinicial, n = this->d, Po = raycaster.Pinicial;
     Vec3 vv = Vec3(-dr.x, -dr.y, -dr.z);
@@ -86,4 +87,23 @@ optional<LPointGetType> Cone::intersecta(Ray raycaster) {
     } 
 
     return nullopt;
+}
+
+optional<LPointGetType> Cone::intersecta(Ray raycaster) {
+
+    optional<LPointGetType> intersectCB = this->base->intersecta(raycaster);
+    optional<LPointGetType> intersectFace = this->intersectaFace(raycaster);
+    
+    // se nao passou por nenhum retorna logo
+    if (!intersectCB.has_value() && !intersectFace.has_value()) 
+        return nullopt; 
+    
+    if (intersectFace.has_value() && !intersectCB.has_value()) {
+        return intersectFace;
+    } else if (intersectFace.has_value() && intersectCB.has_value()) {
+        return intersectFace.value().tint < intersectCB.value().tint ? intersectFace : intersectCB;
+    } else if (!intersectFace.has_value() && intersectCB.has_value()) {
+        return intersectCB;
+    }
+    
 }
