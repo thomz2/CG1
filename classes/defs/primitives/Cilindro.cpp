@@ -32,6 +32,18 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMateri
     this->circuloBase = new Circulo(10000 + id, cor, material, Cb, Cb - Ct, r);
 };
 
+Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio) : ObjetoComposto(id, cor), Cb(Cb), d(direcao), h(altura), r(raio) {
+    this->Ct = Cb.add(direcao.mult(altura));
+    this->circuloTopo = new Circulo(10000 + id, cor, material, Ct, Ct - Cb, r);
+    this->circuloBase = new Circulo(10000 + id, cor, material, Cb, Cb - Ct, r);    
+}
+
+Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), d(direcao), h(altura), r(raio) {
+    this->Ct = Cb.add(direcao.mult(altura));
+    this->circuloTopo = new Circulo(10000 + id, cor, material, Ct, Ct - Cb, r);
+    this->circuloBase = new Circulo(10000 + id, cor, material, Cb, Cb - Ct, r);    
+}
+
 Vec3 Cilindro::getW(Vec3 Pin) {
     return Pin - this->Cb;
 }
