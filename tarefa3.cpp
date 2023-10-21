@@ -14,39 +14,21 @@
 
 using namespace std;
 
-const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
-
-// void initializeSDLAndWindow (
-//     SDL_Window** window,
-//     SDL_Renderer** renderer,
-//     int width,
-//     int height
-// ) {
-//     SDL_Init (SDL_INIT_EVERYTHING);
-
-//     // SDL_CreateWindowAndRenderer (
-//     //     800*4, 600*4, 0, &window, &renderer
-//     // );
-//     // SDL_RenderSetScale(renderer, 4, 4);
-
-//     SDL_CreateWindowAndRenderer (
-//         width, height, 0, window, renderer
-//     );
-// }
+const int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
 
 int main ( int argc, char *argv[] ) {
 
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
     SDL_Renderer *renderer;
 
-    const int wJanela = 1600, hJanela = 1200;
+    const int wJanela = 60, hJanela = 60;
 
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3));
 
-    const double dJanela = 4000;
-    const double rEsfera = 100;
-    const double zCentroEsfera = - (dJanela + rEsfera) - 250; // sempre diminuindo um valor
+    const double dJanela = 30;
+    const double rEsfera = 40;
+    const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
     Vec3 centroJanela(0, 0, -dJanela);
     Vec3 olhoPintor(0, 0, 0);
@@ -54,29 +36,35 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corVermelha = {255, 0, 0, 255};
     SDL_Color corVerde = {0, 255, 0, 255};
     SDL_Color corAzul = {0, 0, 255, 255};
-    SDL_Color corBiscoito = {224, 179, 134, 255};
-    SDL_Color corChocolate = {128, 90, 70, 255};
 
-    Luz* luzTeste = new Luz(Vec3(2300, 4000, 100), Vec3(1, 1, 1));
-    Luz* luzTeste2 = new Luz(Vec3(100, -4000, 100), Vec3(2, 2, 2));
+    Esfera* esfera = new Esfera(0, corVermelha, Vec3(0, 0, -100), rEsfera, MaterialTarefa());
+    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -55, 0), Vec3(0, 1, 0));
+    Plano* planoDeFundo = new Plano(6, corVerde, BaseMaterial(Vec3(0.3, 0.3, 0.7), Vec3(0, 0, 0), Vec3(0.3, 0.3, 0.7), 1), Vec3(0, 0, -200), Vec3(0, 0, 1));
+    
+    // Cilindro* cilindro = new Cilindro(1, cor2, Vec3(0, 0, zCentroEsfera), Vec3(500, 0, zCentroEsfera), 250);
+    // Esfera* esfera2 = new Esfera(1, corEsfera2, Vec3(0, 1, zCentroEsfera), rEsfera - 30);
+    // Cone* cone = new Cone(2, corVerde, Vec3(0, 0, zCentroEsfera), Vec3(250, 0, zCentroEsfera - 1), 250);
+    // Cone* cone2 = new Cone(3, corVermelha, Vec3(200, 0, zCentroEsfera), Vec3(490, 0, zCentroEsfera - 1), 250);
+    // Cone* cone3 = new Cone(4, corAzul, Vec3(480, 0, zCentroEsfera), Vec3(730, 0, zCentroEsfera - 1), 250);
 
-    Esfera* bola = new Esfera(1, corVerde, Vec3(0, 0, zCentroEsfera - 300), 300, MaterialTarefa());
-    Cone* cone = new Cone(2, corVermelha, Vec3(0, -100, zCentroEsfera), Vec3(0, 100, zCentroEsfera), 250, MaterialTarefa());
-    Cilindro* cilindro = new Cilindro(3, corAzul, Vec3(0, -100, zCentroEsfera + 200), Vec3(0, 100, zCentroEsfera + 200), 50, MaterialTarefa());
+    Luz* luzPontual = new Luz(Vec3(0, 60, -30), Vec3(0.7, 0.7, 0.7));
 
-
-    const int nCol = 800;
-    const int nLin = 600;
+    const int nCol = 500;
+    const int nLin = 500;
 
     const double Dx = (double)wJanela / (double)nCol;
     const double Dy = (double)hJanela / (double)nLin;
 
-    cenario->objetos.push_back(bola);
-    cenario->objetos.push_back(cone);
-    cenario->objetos.push_back(cilindro);
+    // cenario->objetos.push_back(cilindro);
+    cenario->objetos.push_back(esfera);
+    cenario->objetos.push_back(chao);
+    cenario->objetos.push_back(planoDeFundo);
+    // cenario->objetos.push_back(esfera2);
+    // cenario->objetos.push_back(cone);
+    // cenario->objetos.push_back(cone2);
+    // cenario->objetos.push_back(cone3);
 
-    cenario->luzes.push_back(luzTeste);
-    // cenario->luzes.push_back(luzTeste2);
+    cenario->luzes.push_back(luzPontual);
 
     cenario->setCanvas(nLin, nCol, Dx, Dy);
 

@@ -144,8 +144,8 @@ int main ( int argc, char *argv[] ) {
     const int nCol = 800;
     const int nLin = 600;
 
-    const int Dx = wJanela / nCol;
-    const int Dy = hJanela / nLin;
+    const double Dx = (double)wJanela / (double)nCol;
+    const double Dy = (double)hJanela / (double)nLin;
 
     cenario->objetos.push_back(parede);
     cenario->objetos.push_back(piso);

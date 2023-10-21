@@ -28,7 +28,10 @@ class Scene {
     std::vector<Objeto*> objetos;
     std::vector<Luz*>    luzes;
 
+    Vec3 luzAmbiente;
+
     Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height);
+    Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height, Vec3 luzAmbiente);
 
     private: void initializeSDLandWindow(int width, int height);
 

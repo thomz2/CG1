@@ -10,8 +10,17 @@
 
 using namespace std;
 
+// TODO: colocar luz ambiente como parametro e colocar padrao tbm
 Scene::Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height) :
-    window(window), renderer(renderer), width(width), height(height) {
+    window(window), renderer(renderer), width(width), height(height), luzAmbiente(Vec3(0.4, 0.4, 0.4)) {
+    this->initializeSDLandWindow(width, height);
+    this->canvas = nullptr;
+    this->objetos = {};
+    this->luzes = {};
+}
+
+Scene::Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height, Vec3 luzAmbiente) :
+    window(window), renderer(renderer), width(width), height(height), luzAmbiente(luzAmbiente) {
     this->initializeSDLandWindow(width, height);
     this->canvas = nullptr;
     this->objetos = {};
@@ -117,18 +126,18 @@ optional<pair<Objeto*, LPointGetType>> Scene::firstObj(Ray raycaster) {
     if (menordistObj == nullptr) return nullopt;
     
     return  make_pair(menordistObj, 
-        //            tint, normalcontato, posicaocontato
+        //            tint,        normalcontato,               posicaocontato
         LPointGetType(infos->tint, infos->normalContato, infos->posContato));
 }
 
 //TODO: FALTA SO FAZER OS CALCULOS AQUI
 void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
-    const int hJanela = this->canvas->dY * this->canvas->nLin; 
-    const int wJanela = this->canvas->dX * this->canvas->nCol;
+    const double hJanela = this->canvas->dY * this->canvas->nLin; 
+    const double wJanela = this->canvas->dX * this->canvas->nCol;
 
-    const int Dy = this->canvas->dY;
-    const int Dx = this->canvas->dX;
+    const double Dy = this->canvas->dY;
+    const double Dx = this->canvas->dX;
 
     cout << "CANVAS: h,w: [ " << hJanela << " " << wJanela << " ] Dy, Dx: [ " << Dy << " " << Dx << " ]\n";  
     cout << "LOOP: " << this->canvas->nLin << " por " << this->canvas->nCol << endl;
@@ -172,7 +181,8 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     Vec3 normal          = retorno.normalContato.norm();
                     double tint          = retorno.tint;
 
-                    Vec3 intensidadeCor = Vec3(0.2, 0.2, 0.2); // luz ambiente
+                    // Vec3 intensidadeCor = Vec3(0.2, 0.2, 0.2); // luz ambiente
+                    Vec3 intensidadeCor = maisPerto->material.getKAmbiente() | luzAmbiente;
 
                     // fazer loop da luz
                     for (Luz* luz : luzes) {
@@ -191,7 +201,7 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                             }
                         }
 
-                        if (temSombra) break;
+                        if (temSombra) break; // se tem sombra, nao calcula luz
 
                         double f_dif = max(0.0, lv.dot(normal));
                         // double f_esp = pow(vv.dot(rv), maisPerto->material);
@@ -222,9 +232,9 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     corNova = corNova | intensidadeCor;
 
                     SDL_Color corNovaPintar = {
-                        corNova.x,
-                        corNova.y,
-                        corNova.z,
+                        (Uint8)corNova.x,
+                        (Uint8)corNova.y,
+                        (Uint8)corNova.z,
                         255 // ver isso dps
                     };
 
@@ -232,6 +242,19 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     
                     // DEBUG
                     if (l == (int)(this->canvas->nLin / 2 - 100) &&  c == (int)(this->canvas->nCol / 2 - 100)) {
+                        // pair<vector<Objeto*>, map<int, double>> meudebug = this->intersectaObjetos(raycaster);
+                        // optional<pair<Objeto*, LPointGetType>> meudebug = this->firstObj(raycaster);
+
+                        vector<pair<Objeto*, LPointGetType>> meudebug = this->intersectaObjetos(raycaster);
+
+
+                        for (auto par : meudebug) {
+                            // this->canvas->pintarCanvas(l, c, obj->cor);d
+                            cout << par.first->id << ':' << par.second.tint << endl;
+                        }
+                    }
+
+                    if (l == (int)(this->canvas->nLin / 2 + 100) &&  c == (int)(this->canvas->nCol / 2 + 100)) {
                         // pair<vector<Objeto*>, map<int, double>> meudebug = this->intersectaObjetos(raycaster);
                         // optional<pair<Objeto*, LPointGetType>> meudebug = this->firstObj(raycaster);
 

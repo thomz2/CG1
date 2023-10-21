@@ -105,5 +105,7 @@ optional<LPointGetType> Cone::intersecta(Ray raycaster) {
     } else if (!intersectFace.has_value() && intersectCB.has_value()) {
         return intersectCB;
     }
+
+    return nullopt; // nao eh pra chegar aqui
     
 }
