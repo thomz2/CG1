@@ -37,11 +37,12 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corVerde = {0, 255, 0, 255};
     SDL_Color corAzul = {0, 0, 255, 255};
 
-    Esfera* esfera = new Esfera(0, corVermelha, Vec3(0, 0, -100), rEsfera, MaterialTarefa());
+    Esfera* esfera = new Esfera(0, corVermelha, Vec3(0, 0, -100), rEsfera, BaseMaterial());
     Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -55, 0), Vec3(0, 1, 0));
     Plano* planoDeFundo = new Plano(6, corVerde, BaseMaterial(Vec3(0.3, 0.3, 0.7), Vec3(0, 0, 0), Vec3(0.3, 0.3, 0.7), 1), Vec3(0, 0, -200), Vec3(0, 0, 1));
     
     Cilindro* cilindro = new Cilindro(1, corVerde, Vec3(0, 0, -100), Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)), 3 * rEsfera, rEsfera/3, BaseMaterial(Vec3(0.2, 0.3, 0.8), Vec3(0.2, 0.3, 0.8), Vec3(0.2, 0.3, 0.8), 10));
+    Cone* cone = new Cone(1, corAzul, cilindro->Ct, Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)), 1.5 * rEsfera / 3, (1.5)*rEsfera, BaseMaterial(Vec3(0.8, 0.3, 0.2), Vec3(0.8, 0.3, 0.2), Vec3(0.8, 0.3, 0.2), 10));
     // Esfera* esfera2 = new Esfera(1, corEsfera2, Vec3(0, 1, zCentroEsfera), rEsfera - 30);
     // Cone* cone = new Cone(2, corVerde, Vec3(0, 0, zCentroEsfera), Vec3(250, 0, zCentroEsfera - 1), 250);
     // Cone* cone2 = new Cone(3, corVermelha, Vec3(200, 0, zCentroEsfera), Vec3(490, 0, zCentroEsfera - 1), 250);
@@ -60,6 +61,7 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(planoDeFundo);
     cenario->objetos.push_back(cilindro);
+    cenario->objetos.push_back(cone);
     // cenario->objetos.push_back(esfera2);
     // cenario->objetos.push_back(cone);
     // cenario->objetos.push_back(cone2);

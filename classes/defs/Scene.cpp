@@ -1,5 +1,6 @@
 #include "../headers/Scene.h"
 #include <iostream>
+#include <algorithm>
 #include <set>
 #include <limits.h>
 #include <utility>
@@ -204,7 +205,7 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         if (temSombra) break; // se tem sombra, nao calcula luz
 
                         double f_dif = max(0.0, lv.dot(normal));
-                        // double f_esp = pow(vv.dot(rv), maisPerto->material);
+                        // double f_esp = pow(vv.dot(rv), maisPerto->material.getM());
                         double f_esp = pow(max(0.0, vv.dot(rv)), maisPerto->material.getM());
 
                         // if (f_dif < 0) f_dif = 0;
@@ -237,6 +238,13 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         (Uint8)corNova.z,
                         255 // ver isso dps
                     };
+
+                    // SDL_Color corNovaPintar;
+
+                    // intensidadeCor = (intensidadeCor * 255);
+                    // corNovaPintar.r = clamp(intensidadeCor.x, 0.0, 255.0);
+                    // corNovaPintar.g = clamp(intensidadeCor.y, 0.0, 255.0);
+                    // corNovaPintar.b = clamp(intensidadeCor.z, 0.0, 255.0);
 
                     this->canvas->pintarCanvas(l, c, corNovaPintar);
                     

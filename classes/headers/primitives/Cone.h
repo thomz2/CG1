@@ -17,6 +17,8 @@ class Cone : public ObjetoComposto {
 
     Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r);
     Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r, BaseMaterial material);
+    Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio);
+    Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material);
 
     std::optional<LPointGetType> intersectaFace(Ray raycaster);
     std::optional<LPointGetType> intersecta(Ray raycaster) override;

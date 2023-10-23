@@ -32,6 +32,16 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r, BaseMaterial mater
     this->base = new Circulo(10000 + id, cor, material, Cb, Cb - Vt, r);
 }
 
+Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio) : ObjetoComposto(id, cor), Cb(Cb), d(direcao), h(altura), r(raio){
+    this->Vt = Cb.add(direcao.mult(altura));
+    this->base = new Circulo(10000+ id, cor, BaseMaterial(), Cb, Cb - Vt, raio);
+}
+
+Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), d(direcao), h(altura), r(raio) {
+    this->Vt = Cb.add(direcao.mult(altura));
+    this->base = new Circulo(10000 + id, cor, material, Cb, Cb - Vt, raio);
+}
+
 optional<LPointGetType> Cone::intersectaFace(Ray raycaster) {
 
     Vec3 dr = raycaster.direcao, v = this->Vt - raycaster.Pinicial, n = this->d, Po = raycaster.Pinicial;
