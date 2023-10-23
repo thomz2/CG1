@@ -42,7 +42,7 @@ int main ( int argc, char *argv[] ) {
     const int wJanela = 60, hJanela = 60;
 
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3));
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.6, 0.6, 0.6));
 
     const double dJanela = 30;
     const double rEsfera = 40;

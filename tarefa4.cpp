@@ -18,6 +18,10 @@ const int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
 
 int main ( int argc, char *argv[] ) {
 
+    MaterialTarefa material = MaterialTarefa();
+    cout << material.getRefletividade() << endl;
+
+
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
     SDL_Renderer *renderer;
 
@@ -37,7 +41,7 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corVerde = {0, 255, 0, 255};
     SDL_Color corAzul = {0, 0, 255, 255};
 
-    Esfera* esfera = new Esfera(0, corVermelha, Vec3(0, 0, -100), rEsfera, BaseMaterial());
+    Esfera* esfera = new Esfera(0, corVermelha, Vec3(0, 0, -100), rEsfera, MaterialTarefa());
     Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -55, 0), Vec3(0, 1, 0));
     Plano* planoDeFundo = new Plano(6, corVerde, BaseMaterial(Vec3(0.3, 0.3, 0.7), Vec3(0, 0, 0), Vec3(0.3, 0.3, 0.7), 1), Vec3(0, 0, -200), Vec3(0, 0, 1));
     

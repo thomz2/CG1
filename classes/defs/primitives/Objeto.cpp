@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Objeto::Objeto(int id, SDL_Color cor, BaseMaterial material) : id(id), cor(cor), material(BaseMaterial()) {}
+Objeto::Objeto(int id, SDL_Color cor, BaseMaterial material) : id(id), cor(cor), material(material) {}
 
 Objeto::Objeto(int id, SDL_Color cor) : id(id), cor(cor), material(BaseMaterial()) {}
 

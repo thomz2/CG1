@@ -163,7 +163,6 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
             optional<pair<Objeto*, LPointGetType>> par = this->firstObj(raycaster);
             
-            // PAREI AQUI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Objeto* maisPerto = nullptr;
             if (par.has_value()){
                 maisPerto = par.value().first;
@@ -223,14 +222,33 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         Vec3 anterior = intensidadeCor;
                         intensidadeCor = anterior + iDif + iEsp;
 
+
                         if (intensidadeCor.x > 1) intensidadeCor.x = 1;
                         if (intensidadeCor.y > 1) intensidadeCor.y = 1;
                         if (intensidadeCor.z > 1) intensidadeCor.z = 1;
 
+                        // DEBUG DE OBJETOS QUE ESTAO NO CENTRO
+                        if (l == (int)(this->canvas->nLin / 2) &&  c == (int)(this->canvas->nCol / 2)) {
+                            cout << "MATERIAL: " << maisPerto->material.getRugosidade() << ' ' << maisPerto->material.getRefletividade() << ' ' << maisPerto->material.getKAmbiente() << ' ' << maisPerto->material.getM() << endl;
+                            cout << "AUX1" << aux1 << endl;
+                            cout << "AUX2" << aux2 << endl;
+                            cout << "IDif" << iDif << endl;
+                            cout << "IEsp" << iEsp << endl;
+                            cout << "INTENSIDADECOR" << intensidadeCor << endl;
+                        }
+
                     }
 
+
                     // OPERADOR @
-                    corNova = corNova | intensidadeCor;
+                    // corNova = corNova | intensidadeCor;
+                    corNova = intensidadeCor * 255;
+
+                    Vec3 corNovaPintarTeste = Vec3(
+                        (Uint8)corNova.x,
+                        (Uint8)corNova.y,
+                        (Uint8)corNova.z
+                    );
 
                     SDL_Color corNovaPintar = {
                         (Uint8)corNova.x,
@@ -238,6 +256,14 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         (Uint8)corNova.z,
                         255 // ver isso dps
                     };
+
+                    // DEBUG DE OBJETOS QUE ESTAO NO CENTRO
+                    if (l == (int)(this->canvas->nLin / 2) &&  c == (int)(this->canvas->nCol / 2)) {
+                        cout << endl << "MATERIAL KAMBIENTE: " << maisPerto->material.getKAmbiente() << endl;
+                        cout << "LUZ AMBIENTE: " << luzAmbiente << endl;
+                        cout << "KAMBIENTE ARROBA LUZAMBIENTE: " << (maisPerto->material.getKAmbiente() | luzAmbiente) << endl;
+                        cout << "COR RESULTANTE: " << corNovaPintarTeste << endl << endl;
+                    }
 
                     // SDL_Color corNovaPintar;
 

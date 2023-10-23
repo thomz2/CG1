@@ -1,8 +1,14 @@
 #include <iostream>
 #include <SDL2/SDL.h>
-// #include <SDL2/SDL.h>
 #include "classes/headers/math/Vec3.h"
-
+#include "classes/headers/primitives/Esfera.h"
+#include "classes/headers/primitives/Cilindro.h"
+#include "classes/headers/primitives/Cone.h"
+#include "classes/headers/Canvas.h"
+#include "classes/headers/Ray.h"
+#include "classes/headers/Scene.h"
+#include "classes/headers/materiais/BaseMaterial.h"
+#include "classes/headers/materiais/MaterialTarefa.h"
 using namespace std;
 
 int main () {
@@ -14,8 +20,11 @@ int main () {
     // cout << novovetor.prodEscalar(novovetor2) << endl; // OK
     // cout << novovetor * novovetor2 << endl;
 
-    SDL_Color cor = {100, 100, 100, 100};
+    // SDL_Color cor = {100, 100, 100, 100};
     // cout << cor.r << endl;
+
+    MaterialTarefa material = MaterialTarefa();
+    cout << material.getRefletividade() << endl;
 
     return 0;
 }

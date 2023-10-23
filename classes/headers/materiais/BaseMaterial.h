@@ -5,13 +5,12 @@
 
 class BaseMaterial {
  
-private:
+public:
     Vec3 RUGOSIDADE;
     Vec3 REFLETIVIDADE;
     Vec3 KAMBIENTE;
     double M;
 
-public:
     BaseMaterial();
     BaseMaterial(Vec3 RUGOSIDADE, Vec3 REFLETIVIDADE, Vec3 KAMBIENTE, double M);
     BaseMaterial(Vec3 RUGOSIDADE, Vec3 REFLETIVIDADE, double M);
