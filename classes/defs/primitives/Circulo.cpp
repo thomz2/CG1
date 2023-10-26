@@ -11,6 +11,10 @@ Circulo::Circulo(int id, SDL_Color cor, BaseMaterial material, Vec3 centro, doub
 Circulo::Circulo(int id, SDL_Color cor, BaseMaterial material, Vec3 centro) : 
     Plano(id, cor, material, centro) {};
 
+void Circulo::update(Vec3 centro, Vec3 n) {
+    this->Ppi = centro;
+    this->n = n;
+}
 
 void Circulo::setRaio(double raio) {
     this->raio = raio;

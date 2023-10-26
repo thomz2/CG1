@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r) : ObjetoComposto(id, cor), Cb(Cb), Vt(Vt), r(r) {
+Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r) : Objeto(id, cor), Cb(Cb), Vt(Vt), r(r) {
     
     Vec3 dif = Vt - Cb;
     
@@ -20,7 +20,7 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r) : ObjetoComposto(i
 
 }
 
-Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), Vt(Vt), r(r) {
+Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r, BaseMaterial material) : Objeto(id, cor, material), Cb(Cb), Vt(Vt), r(r) {
     
     Vec3 dif = Vt - Cb;
     
@@ -32,12 +32,12 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 Vt, double r, BaseMaterial mater
     this->base = new Circulo(10000 + id, cor, material, Cb, Cb - Vt, r);
 }
 
-Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio) : ObjetoComposto(id, cor), Cb(Cb), d(direcao), h(altura), r(raio){
+Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio) : Objeto(id, cor), Cb(Cb), d(direcao), h(altura), r(raio){
     this->Vt = Cb.add(direcao.mult(altura));
     this->base = new Circulo(10000+ id, cor, BaseMaterial(), Cb, Cb - Vt, raio);
 }
 
-Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), d(direcao), h(altura), r(raio) {
+Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material) : Objeto(id, cor, material), Cb(Cb), d(direcao), h(altura), r(raio) {
     this->Vt = Cb.add(direcao.mult(altura));
     this->base = new Circulo(10000 + id, cor, material, Cb, Cb - Vt, raio);
 }

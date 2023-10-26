@@ -8,7 +8,7 @@
 #include "../materiais/BaseMaterial.h"
 #include "./Circulo.h"
 
-class Cone : public ObjetoComposto {
+class Cone : public Objeto {
     public:
     Vec3 Cb, Vt, d;
     double r, h;

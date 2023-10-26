@@ -11,9 +11,6 @@
 #include "classes/headers/Scene.h"
 #include "classes/headers/materiais/BaseMaterial.h"
 #include "classes/headers/materiais/MaterialTarefa.h"
-#include "classes/headers/math/Transformations.h"
-#include "classes/headers/math/Mat4.h"
-#include "classes/headers/math/Vec4.h"
 
 using namespace std;
 
@@ -31,7 +28,7 @@ int main ( int argc, char *argv[] ) {
     const int wJanela = 60, hJanela = 60;
 
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3));
+    Scene cenario = Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3));
 
     const double dJanela = 30;
     const double rEsfera = 40;
@@ -55,9 +52,15 @@ int main ( int argc, char *argv[] ) {
     // Cone* cone2 = new Cone(3, corVermelha, Vec3(200, 0, zCentroEsfera), Vec3(490, 0, zCentroEsfera - 1), 250);
     // Cone* cone3 = new Cone(4, corAzul, Vec3(480, 0, zCentroEsfera), Vec3(730, 0, zCentroEsfera - 1), 250);
 
-    Cilindro* cilindro2 = new Cilindro(10, corVermelha, Vec3(0, -30, -100), Vec3(0, 30, -100), 25, MaterialTarefa());
-
     Luz* luzPontual = new Luz(Vec3(0, 60, -30), Vec3(0.7, 0.7, 0.7));
+
+    ObjetoComposto* tudoDoCenario = new ObjetoComposto(20);
+
+    tudoDoCenario->subObjetos.push_back(esfera);
+    tudoDoCenario->subObjetos.push_back(chao);
+    tudoDoCenario->subObjetos.push_back(planoDeFundo);
+    tudoDoCenario->subObjetos.push_back(cilindro);
+    tudoDoCenario->subObjetos.push_back(cone);
 
     const int nCol = 500;
     const int nLin = 500;
@@ -65,52 +68,43 @@ int main ( int argc, char *argv[] ) {
     const double Dx = (double)wJanela / (double)nCol;
     const double Dy = (double)hJanela / (double)nLin;
 
-    cenario->objetos.push_back(cilindro2);
+    cenario.objetos.push_back(tudoDoCenario);
 
+    // cenario->objetos.push_back(cilindro);
     // cenario->objetos.push_back(esfera);
     // cenario->objetos.push_back(chao);
     // cenario->objetos.push_back(planoDeFundo);
     // cenario->objetos.push_back(cilindro);
+    // cenario->objetos.push_back(cone);
     // cenario->objetos.push_back(esfera2);
     // cenario->objetos.push_back(cone);
     // cenario->objetos.push_back(cone2);
     // cenario->objetos.push_back(cone3);
 
-    cenario->luzes.push_back(luzPontual);
+    cenario.luzes.push_back(luzPontual);
 
-    cenario->setCanvas(nLin, nCol, Dx, Dy);
+    cenario.setCanvas(nLin, nCol, Dx, Dy);
 
-    while (true) {
+    cout << "indo pintar canvas\n";
+    cenario.pintarCanvas(dJanela, olhoPintor);
 
-        Vec4 Cbnovo = Vec3(cilindro2->Cb);
-        Vec4 Ctnovo = Vec3(cilindro2->Ct);
+    for (int l = 0; l < nLin; ++l) {
+        for (int c = 0; c < nCol; ++c) {
+            SDL_Color cor = cenario.canvas->cores[l][c];
 
-        Cbnovo = Cbnovo.apply(Transformations::rotateZAroundPointDegrees(1, Vec3(0, 0, -90)).apply(Transformations::rotateXAroundPointDegrees(1, Vec3(0, 0, -90))));
-        Ctnovo = Ctnovo.apply(Transformations::rotateZAroundPointDegrees(1, Vec3(0, 0, -90)).apply(Transformations::rotateXAroundPointDegrees(1, Vec3(0, 0, -90))));
-
-        cilindro2->update(Cbnovo.getVec3(), Ctnovo.getVec3());
-
-        // cout << "indo pintar canvas\n";
-        cenario->pintarCanvas(dJanela, olhoPintor);
-
-        for (int l = 0; l < nLin; ++l) {
-            for (int c = 0; c < nCol; ++c) {
-                SDL_Color cor = cenario->canvas->cores[l][c];
-
-                SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
-                SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
-            }
-        }
-    
-        // cout << "Fim da pintura" << endl;
-        SDL_RenderPresent(renderer); // usar no final para pintar
-        if ( window = nullptr ) {
-            cout << "ERRO:" << SDL_GetError() << "\n";
-            return 1;
+            SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+            SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
         }
     }
+    
+    cout << "Fim da pintura" << endl;
 
+    SDL_RenderPresent(renderer); // usar no final para pintar
 
+    if ( window = nullptr ) {
+        cout << "ERRO:" << SDL_GetError() << "\n";
+        return 1;
+    }
 
     SDL_Event windowEvent;
     while (true) {

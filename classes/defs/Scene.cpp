@@ -8,8 +8,14 @@
 #include <math.h>
 #include <queue>
 #include <set>
+#include "../headers/primitives/ObjetoComposto.h"
 
 using namespace std;
+
+template<typename Base, typename T>
+inline bool instanceof(const T *ptr) {
+   return dynamic_cast<const Base*>(ptr) != nullptr;
+}
 
 // TODO: colocar luz ambiente como parametro e colocar padrao tbm
 Scene::Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height) :
@@ -134,6 +140,8 @@ optional<pair<Objeto*, LPointGetType>> Scene::firstObj(Ray raycaster) {
 //TODO: FALTA SO FAZER OS CALCULOS AQUI
 void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
+    this->canvas->pintarTodoCanvas({100, 100, 100, 255});
+
     const double hJanela = this->canvas->dY * this->canvas->nLin; 
     const double wJanela = this->canvas->dX * this->canvas->nCol;
 
@@ -143,23 +151,19 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
     cout << "CANVAS: h,w: [ " << hJanela << " " << wJanela << " ] Dy, Dx: [ " << Dy << " " << Dx << " ]\n";  
     cout << "LOOP: " << this->canvas->nLin << " por " << this->canvas->nCol << endl;
 
-    for (int l = 0; l < this->canvas->nLin; l++) {
+    int resScale = 2;
 
-        double y = hJanela/2 - Dy/2 - l*Dy;
+    for (int l = 0; l < this->canvas->nLin; l += resScale) {
 
-        for (int c = 0; c < this->canvas->nCol; c++) {
+        double y = hJanela/2 - resScale*Dy/2 - l*Dy;
 
-            double x = -wJanela/2 + Dx/2 + c*Dx;
+        for (int c = 0; c < this->canvas->nCol; c += resScale) {
+
+            double x = -wJanela/2 + resScale*Dx/2 + c*Dx;
 
             Vec3 PosJanela(x, y, -dJanela);
             Vec3 direcao = (PosJanela - olhoPintor).norm(); // vetor unitario aki
             Ray raycaster(olhoPintor, direcao);
-
-            // vector<Objeto*> objetos_intersecs = (this->intersectaObjetos(raycaster)).first; 
-
-            // for (auto* obj : objetos_intersecs) {
-            //     this->canvas->pintarCanvas(l, c, obj->cor);
-            // }
 
             optional<pair<Objeto*, LPointGetType>> par = this->firstObj(raycaster);
             
@@ -196,12 +200,20 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                         bool temSombra = false;
                         for (auto* objeto : this->objetos) {
                             optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
-                            if (interseccao.has_value() && objeto->id != maisPerto->id && interseccao.value().tint < L) {
+                            if (interseccao.has_value() && interseccao.value().tint < L - 0.000001) {
                                 temSombra = true; break;
                             }
+                                // if (instanceof<ObjetoComposto>(objeto)) {
+                                //     for (auto* subobjeto : ((ObjetoComposto*)objeto)->subObjetos) {
+                                //         optional<LPointGetType> interseccao2 = subobjeto->intersecta(raisombra);
+                                //         if (interseccao2.has_value() && interseccao2.value().tint < L && subobjeto->id != maisPerto->id) {
+                                //             temSombra = true; break;
+                                //         }
+                                //     }
+                                // }
                         }
 
-                        if (temSombra) break; // se tem sombra, nao calcula luz
+                        if (temSombra) continue; // vai pra proxima luz
 
                         double f_dif = max(0.0, lv.dot(normal));
                         // double f_esp = pow(vv.dot(rv), maisPerto->material.getM());
@@ -272,7 +284,12 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     // corNovaPintar.g = clamp(intensidadeCor.y, 0.0, 255.0);
                     // corNovaPintar.b = clamp(intensidadeCor.z, 0.0, 255.0);
 
-                    this->canvas->pintarCanvas(l, c, corNovaPintar);
+                    // this->canvas->pintarCanvas(l, c, corNovaPintar);
+                    for (int i = 0; i < resScale; ++i) {
+                        for (int j = 0; j < resScale; j++) {
+                            this->canvas->pintarCanvas(l + i, c + j, corNovaPintar);
+                        }
+                    }
                     
                     // DEBUG
                     if (l == (int)(this->canvas->nLin / 2 - 100) &&  c == (int)(this->canvas->nCol / 2 - 100)) {

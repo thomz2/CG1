@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r) : ObjetoComposto(id, cor), Cb(Cb), Ct(Ct), r(r) {
+Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r) : Objeto(id, cor), Cb(Cb), Ct(Ct), r(r) {
 
     Vec3 dif = Ct - Cb;
 
@@ -20,7 +20,7 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r) : ObjetoCo
     this->circuloBase = new Circulo(10000 + id, cor, BaseMaterial(), Cb, Cb - Ct, r);
 };
 
-Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), Ct(Ct), r(r) {
+Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMaterial material) : Objeto(id, cor, material), Cb(Cb), Ct(Ct), r(r) {
 
     Vec3 dif = Ct - Cb;
 
@@ -32,13 +32,13 @@ Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 Ct, double r, BaseMateri
     this->circuloBase = new Circulo(10000 + id, cor, material, Cb, Cb - Ct, r);
 };
 
-Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio) : ObjetoComposto(id, cor), Cb(Cb), d(direcao), h(altura), r(raio) {
+Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio) : Objeto(id, cor), Cb(Cb), d(direcao), h(altura), r(raio) {
     this->Ct = Cb.add(direcao.mult(altura));
     this->circuloTopo = new Circulo(10000 + id, cor, material, Ct, Ct - Cb, r);
     this->circuloBase = new Circulo(10000 + id, cor, material, Cb, Cb - Ct, r);    
 }
 
-Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material) : ObjetoComposto(id, cor, material), Cb(Cb), d(direcao), h(altura), r(raio) {
+Cilindro::Cilindro(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material) : Objeto(id, cor, material), Cb(Cb), d(direcao), h(altura), r(raio) {
     this->Ct = Cb.add(direcao.mult(altura));
     this->circuloTopo = new Circulo(10000 + id, cor, material, Ct, Ct - Cb, r);
     this->circuloBase = new Circulo(10000 + id, cor, material, Cb, Cb - Ct, r);    
@@ -48,7 +48,23 @@ Vec3 Cilindro::getW(Vec3 Pin) {
     return Pin - this->Cb;
 }
 
-optional<LPointGetType> Cilindro::intersectaFace(Ray raycaster) {
+void Cilindro::update(Vec3 Cb, Vec3 Ct) {
+    this->Cb = Cb;
+    this->Ct = Ct;
+
+    Vec3 dif = Ct - Cb;
+
+    this->h = dif.modulo(); // altura = comprimento do vetor diferença
+    this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
+
+    this->circuloTopo->update(Ct, Ct - Cb);
+    this->circuloBase->update(Ct, Cb - Ct);
+    this->circuloTopo->setNormal(dif);
+    this->circuloBase->setNormal(Cb - Ct);
+}
+
+optional<LPointGetType> Cilindro::intersectaFace(Ray raycaster)
+{
     Vec3 dr = raycaster.direcao, w = this->getW(raycaster.Pinicial), dc = this->d;
 
     double a = dr.dot(dr) - pow((dr.dot(dc)), 2);
