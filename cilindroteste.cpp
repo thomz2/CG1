@@ -88,6 +88,9 @@ int main ( int argc, char *argv[] ) {
         Cbnovo = Cbnovo.apply(Transformations::rotateZAroundPointDegrees(1, Vec3(0, 0, -90)).apply(Transformations::rotateXAroundPointDegrees(1, Vec3(0, 0, -90))));
         Ctnovo = Ctnovo.apply(Transformations::rotateZAroundPointDegrees(1, Vec3(0, 0, -90)).apply(Transformations::rotateXAroundPointDegrees(1, Vec3(0, 0, -90))));
 
+        // Cbnovo = Cbnovo.apply(Transformations::rotateXAroundPointDegrees(-1, Vec3(0, 0, -90)));
+        // Ctnovo = Ctnovo.apply(Transformations::rotateXAroundPointDegrees(-1, Vec3(0, 0, -90)));
+
         cilindro2->update(Cbnovo.getVec3(), Ctnovo.getVec3());
 
         // cout << "indo pintar canvas\n";

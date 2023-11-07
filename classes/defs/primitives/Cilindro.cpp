@@ -57,10 +57,10 @@ void Cilindro::update(Vec3 Cb, Vec3 Ct) {
     this->h = dif.modulo(); // altura = comprimento do vetor diferença
     this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
 
-    this->circuloTopo->update(Ct, Ct - Cb);
-    this->circuloBase->update(Ct, Cb - Ct);
-    this->circuloTopo->setNormal(dif);
-    this->circuloBase->setNormal(Cb - Ct);
+    this->circuloTopo->update(Ct, this->d);
+    this->circuloBase->update(Cb, dif.mult(-1).norm());
+    this->circuloTopo->setNormal(this->d);
+    this->circuloBase->setNormal(dif.mult(-1).norm());
 }
 
 optional<LPointGetType> Cilindro::intersectaFace(Ray raycaster)
@@ -96,15 +96,35 @@ optional<LPointGetType> Cilindro::intersectaFace(Ray raycaster)
     double dist1 = proj1.modulo();
     double dist2 = proj2.modulo();
 
+    /*
     if (proj1.dot(this->d) > 0 && dist1 < this->h) { // se uma distancia existe
-
-        if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) 
-            return LPointGetType(t2, hv2, Pint2); // se a outra tbm existe
+        if (proj2.dot(this->d) > 0 && dist2 < this->h && t2 < t1) // se a outra tbm existe
+            return LPointGetType(t2, hv2, Pint2); 
         
         else return LPointGetType(t1, hv1, Pint1); // se apenas a primeira existe
     } 
 
     else if (proj2.dot(this->d) > 0 && dist2 < this->h) return LPointGetType(t2, hv2, Pint2); // se apenas a segunda existe
+    */
+
+    // as duas distancias existem
+    if (proj1.dot(this->d) > 0 && dist1 < this->h && proj2.dot(this->d) > 0 && dist2 < this->h) {
+        if (t2 < 0 && t1 < 0) {
+            return nullopt;
+        } else if (t2 < 0) {
+            if (t1 >= 0) return LPointGetType(t1, hv1, Pint1);
+        } else if (t1 < 0) {
+            if (t2 >= 0) return LPointGetType(t2, hv2, Pint2);
+        } else {
+            return t1 < t2 ? LPointGetType(t1, hv1, Pint1) : LPointGetType(t2, hv2, Pint2);
+        }
+    } else if (proj1.dot(this->d) > 0 && dist1 < this->h) {
+        if (t1 < 0) return nullopt;
+        return LPointGetType(t1, hv1, Pint1);
+    } else if (proj2.dot(this->d) > 0 && dist2 < this->h) {
+        if (t2 < 0) return nullopt;
+        return LPointGetType(t2, hv2, Pint2);
+    } 
 
     return nullopt;
 }
@@ -120,9 +140,28 @@ base e topo (apenas ver qual ta mais perto, nao precisa calcular face)
 optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
 
     // checar interseccao das bases
-    optional<LPointGetType> intersectCT = this->circuloTopo->intersecta(raycaster);
-    optional<LPointGetType> intersectCB = this->circuloBase->intersecta(raycaster);
+    optional<LPointGetType> intersectCT   = this->circuloTopo->intersecta(raycaster);
+    optional<LPointGetType> intersectCB   = this->circuloBase->intersecta(raycaster);
+    optional<LPointGetType> intersectFace = this->intersectaFace(raycaster);
 
+    optional<LPointGetType> interseccoes[] = {intersectCT, intersectCB, intersectFace};
+    optional<LPointGetType> ponto = nullopt;
+
+    for (auto intersec : interseccoes) {
+        if (intersec.has_value()) {
+            if (ponto.has_value()) {
+                if (ponto.value().tint > intersec.value().tint) {
+                    ponto = intersec;
+                }
+            } else {
+                ponto = intersec;
+            }
+        }
+    }
+
+    return ponto;
+
+/*
     // caso em que o raio intersecta as duas bases -o=o->
     if (intersectCB.has_value() && intersectCT.has_value()) {
 
@@ -133,7 +172,6 @@ optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
     } else {
         
         // casos em que possivelmente a face eh intersectada
-        optional<LPointGetType> intersectFace = this->intersectaFace(raycaster);
         if (!intersectFace.has_value()) return nullopt; // nao intersectou o topo e a base e nem a face, entao nao paro por aqui
 
         if (intersectCB.has_value()) { // caso em que intersecta base e face
@@ -156,5 +194,6 @@ optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
 
     // caso nao de certo, retorna nada (nunca chega aqui)
     return nullopt;
+*/
     
 }
