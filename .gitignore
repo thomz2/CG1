@@ -1,0 +1,15 @@
+.vscode
+src
+SDL2.dll
+*.exe
+*.vcxproj
+*.sln
+*.user
+*.suo
+*.wsuo
+*.vsidx
+*.vs
+include
+lib
+x64
+*vcxproj.filters
