@@ -18,16 +18,16 @@ inline bool instanceof(const T *ptr) {
 }
 
 // TODO: colocar luz ambiente como parametro e colocar padrao tbm
-Scene::Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height) :
-    window(window), renderer(renderer), width(width), height(height), luzAmbiente(Vec3(0.4, 0.4, 0.4)) {
+Scene::Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height, Camera* camera) :
+    window(window), renderer(renderer), width(width), height(height), luzAmbiente(Vec3(0.4, 0.4, 0.4)), camera(camera)  {
     this->initializeSDLandWindow(width, height);
     this->canvas = nullptr;
     this->objetos = {};
     this->luzes = {};
 }
 
-Scene::Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height, Vec3 luzAmbiente) :
-    window(window), renderer(renderer), width(width), height(height), luzAmbiente(luzAmbiente) {
+Scene::Scene(SDL_Window **window, SDL_Renderer **renderer, int width, int height, Vec3 luzAmbiente, Camera* camera) :
+    window(window), renderer(renderer), width(width), height(height), luzAmbiente(luzAmbiente), camera(camera) {
     this->initializeSDLandWindow(width, height);
     this->canvas = nullptr;
     this->objetos = {};
@@ -151,7 +151,8 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
     cout << "CANVAS: h,w: [ " << hJanela << " " << wJanela << " ] Dy, Dx: [ " << Dy << " " << Dx << " ]\n";  
     cout << "LOOP: " << this->canvas->nLin << " por " << this->canvas->nCol << endl;
 
-    int resScale = 2;
+    // resScale está atrelado aos tamanhos do canvas
+    int resScale = 5; // SEMPRE UM DIVISOR COMUM ENTRE A LINHA E COLUNA
 
     for (int l = 0; l < this->canvas->nLin; l += resScale) {
 

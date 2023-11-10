@@ -13,7 +13,9 @@ optional<LPointGetType> ObjetoComposto::intersecta(Ray ray) {
     optional<LPointGetType> ponto = nullopt;
 
     for (Objeto* obj : subObjetos) {
-        optional<LPointGetType> intersec = obj->intersecta(ray);
+
+        optional<LPointGetType> intersec = obj->intersecta(ray); 
+        
         if (intersec.has_value()) {
             if (ponto.has_value()) {
                 if (ponto.value().tint > intersec.value().tint) {

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <thread>
 #include "classes/headers/math/Vec3.h"
 #include "classes/headers/primitives/Esfera.h"
 #include "classes/headers/primitives/Cilindro.h"
@@ -14,10 +15,26 @@
 #include "classes/headers/math/Transformations.h"
 #include "classes/headers/math/Mat4.h"
 #include "classes/headers/math/Vec4.h"
+#include "classes/headers/Camera.h"
 
 using namespace std;
 
 const int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
+
+void renderizarCenario(Scene* cenario, double dJanela, Vec3 olhoPintor) {
+    cenario->pintarCanvas(dJanela, olhoPintor);
+}
+
+void colorirCenario(SDL_Renderer* renderer, Scene* cenario, int nLin, int nCol) {
+    for (int l = 0; l < nLin; ++l) {
+        for (int c = 0; c < nCol; ++c) {
+            SDL_Color cor = cenario->canvas->cores[l][c];
+
+            SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+            SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
+        }
+    }
+}
 
 int main ( int argc, char *argv[] ) {
 
@@ -28,10 +45,8 @@ int main ( int argc, char *argv[] ) {
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
     SDL_Renderer *renderer;
 
-    const int wJanela = 60, hJanela = 60;
 
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3));
 
     const double dJanela = 30;
     const double rEsfera = 40;
@@ -39,6 +54,10 @@ int main ( int argc, char *argv[] ) {
 
     Vec3 centroJanela(0, 0, -dJanela);
     Vec3 olhoPintor(0, 0, 0);
+
+    Camera *camera = new Camera(olhoPintor, centroJanela, dJanela, 60, WINDOW_WIDTH, WINDOW_HEIGHT, 30);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3), camera);
+    const double wJanela = camera->wJanela, hJanela = camera->hJanela;
 
     SDL_Color corVermelha = {255, 0, 0, 255};
     SDL_Color corVerde = {0, 255, 0, 255};
@@ -80,7 +99,16 @@ int main ( int argc, char *argv[] ) {
 
     cenario->setCanvas(nLin, nCol, Dx, Dy);
 
-    while (true) {
+    bool rodando = true;
+    while (rodando) {
+
+        SDL_Event windowEvent;
+        while ( SDL_PollEvent(&windowEvent) ) {
+            if (SDL_QUIT == windowEvent.type) { 
+                rodando = false;
+                break; 
+            }
+        }
 
         Vec4 Cbnovo = Vec3(cilindro2->Cb);
         Vec4 Ctnovo = Vec3(cilindro2->Ct);
@@ -93,17 +121,25 @@ int main ( int argc, char *argv[] ) {
 
         cilindro2->update(Cbnovo.getVec3(), Ctnovo.getVec3());
 
-        // cout << "indo pintar canvas\n";
-        cenario->pintarCanvas(dJanela, olhoPintor);
+        // USAR THREAD PARA RENDERIZAR
+        // std::thread renderThread(renderizarCenario, cenario, dJanela, olhoPintor);
+        renderizarCenario(cenario, dJanela, olhoPintor);
+        // cenario->pintarCanvas(dJanela, olhoPintor);
 
-        for (int l = 0; l < nLin; ++l) {
-            for (int c = 0; c < nCol; ++c) {
-                SDL_Color cor = cenario->canvas->cores[l][c];
+        // USAR THREAD PARA COLORIR
+        // std::thread colorThread(colorirCenario, renderer, cenario, nLin, nCol);
+        colorirCenario(renderer, cenario, nLin, nCol);
+        // for (int l = 0; l < nLin; ++l) {
+        //     for (int c = 0; c < nCol; ++c) {
+        //         SDL_Color cor = cenario->canvas->cores[l][c];
 
-                SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
-                SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
-            }
-        }
+        //         SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+        //         SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
+        //     }
+        // }
+
+        // renderThread.join();
+        // colorThread.join();
     
         // cout << "Fim da pintura" << endl;
         SDL_RenderPresent(renderer); // usar no final para pintar
@@ -120,15 +156,6 @@ int main ( int argc, char *argv[] ) {
         if ( SDL_PollEvent(&windowEvent) ) {
             if (SDL_QUIT == windowEvent.type) { break; }
         }
-        // else if (windowEvent.type == SDLK_a) { // esquerda
-        //     // Um evento de tecla foi pressionado
-        //     SDL_Keycode key = windowEvent.key.keysym.sym;
-        //     esfera.PCentro.x += 100;
-
-            
-            
-        //     // Adicione aqui outras ações para teclas específicas
-        // }
     }
 
     SDL_DestroyWindow( window );
