@@ -142,8 +142,11 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
     this->canvas->pintarTodoCanvas({100, 100, 100, 255});
 
-    const double hJanela = this->canvas->dY * this->canvas->nLin; 
-    const double wJanela = this->canvas->dX * this->canvas->nCol;
+    // const double hJanela = this->canvas->dY * this->canvas->nLin; 
+    // const double wJanela = this->canvas->dX * this->canvas->nCol;
+
+    const double hJanela = camera->hJanela;
+    const double wJanela = camera->wJanela;
 
     const double Dy = this->canvas->dY;
     const double Dx = this->canvas->dX;
@@ -158,10 +161,13 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
         double y = hJanela/2 - resScale*Dy/2 - l*Dy;
 
+        // cout << "L = " << l << " Y = " << y << endl;
+
         for (int c = 0; c < this->canvas->nCol; c += resScale) {
 
             double x = -wJanela/2 + resScale*Dx/2 + c*Dx;
 
+            // posjanela na vdd é o centro do quadrado
             Vec3 PosJanela(x, y, -dJanela);
             Vec3 direcao = (PosJanela - olhoPintor).norm(); // vetor unitario aki
             Ray raycaster(olhoPintor, direcao);
@@ -318,6 +324,118 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                             cout << par.first->id << ':' << par.second.tint << endl;
                         }
                     }
+                }
+            }
+        }
+    } 
+}
+
+void Scene::pintarCanvas2(double dJanela, Vec3& olhoPintor) {
+
+    this->canvas->pintarTodoCanvas({100, 100, 100, 255});
+
+    const double hJanela = camera->hJanela;
+    const double wJanela = camera->wJanela;
+
+    Vec3 viewport_u = camera->viewport_u;
+    Vec3 viewport_v = camera->viewport_v;
+
+    Vec3 pixel_delta_u = camera->pixel_delta_u;
+    Vec3 pixel_delta_v = camera->pixel_delta_v;
+
+    // PONTO MAIS ACIMA A ESQUERDA DA JANELA
+    Vec3 viewport_upper_left = camera->viewport_upper_left;
+    Vec3 pixel00_loc = camera->pixel00_loc;
+
+    // resScale está atrelado aos tamanhos do canvas
+    int resScale = 10; // SEMPRE UM DIVISOR COMUM ENTRE A LINHA E COLUNA
+
+    for (int l = 0; l < this->canvas->nLin; l += resScale) {
+        for (int c = 0; c < this->canvas->nCol; c += resScale) {
+
+            Vec3 pixel_center = pixel00_loc.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
+            Vec3 direcao = (pixel_center - olhoPintor).norm(); // vetor unitario aki
+            Ray raycaster(olhoPintor, direcao);
+
+            optional<pair<Objeto*, LPointGetType>> par = this->firstObj(raycaster);
+            
+            Objeto* maisPerto = nullptr;
+            if (par.has_value()){
+                maisPerto = par.value().first;
+                LPointGetType retorno = par.value().second;
+
+                Vec3 corNova(
+                    maisPerto->cor.value().r,
+                    maisPerto->cor.value().g,
+                    maisPerto->cor.value().b
+                );
+
+                // foi intersectado
+                if (maisPerto != nullptr) {
+
+                    Vec3 ponto_mais_prox = retorno.posContato;
+                    Vec3 normal          = retorno.normalContato.norm();
+                    double tint          = retorno.tint;
+
+                    // Vec3 intensidadeCor = Vec3(0.2, 0.2, 0.2); // luz ambiente
+                    Vec3 intensidadeCor = maisPerto->material.getKAmbiente() | luzAmbiente;
+
+                    // fazer loop da luz
+                    for (Luz* luz : luzes) {
+                        Vec3 lv = (luz->posicao - ponto_mais_prox).norm();
+                        Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
+                        Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
+
+                        // checando sombra
+                        Ray raisombra = Ray(luz->posicao, lv * (-1));
+                        double L = (luz->posicao - ponto_mais_prox).modulo();
+                        bool temSombra = false;
+                        for (auto* objeto : this->objetos) {
+                            optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
+                            if (interseccao.has_value() && interseccao.value().tint < L - 0.000001) {
+                                temSombra = true; break;
+                            }
+                        }
+
+                        if (temSombra) continue; // vai pra proxima luz
+
+                        double f_dif = max(0.0, lv.dot(normal));
+                        double f_esp = pow(max(0.0, vv.dot(rv)), maisPerto->material.getM());
+
+                        // usando operador @ (|)
+                        Vec3 aux1 = ((maisPerto->material.getRugosidade()) * f_dif);
+                        Vec3 aux2 = ((maisPerto->material.getRefletividade()) * f_esp);
+
+                        Vec3 iDif = luz->intensidade | aux1;
+                        Vec3 iEsp = luz->intensidade | aux2;
+                    
+                        Vec3 anterior = intensidadeCor;
+                        intensidadeCor = anterior + iDif + iEsp;
+
+                        if (intensidadeCor.x > 1) intensidadeCor.x = 1;
+                        if (intensidadeCor.y > 1) intensidadeCor.y = 1;
+                        if (intensidadeCor.z > 1) intensidadeCor.z = 1;
+
+                    }
+
+
+                    // OPERADOR @
+                    // corNova = corNova | intensidadeCor;
+                    corNova = intensidadeCor * 255;
+
+                    SDL_Color corNovaPintar = {
+                        (Uint8)corNova.x,
+                        (Uint8)corNova.y,
+                        (Uint8)corNova.z,
+                        255 // ver isso dps
+                    };
+
+                    for (int i = 0; i < resScale; ++i) {
+                        for (int j = 0; j < resScale; j++) {
+                            this->canvas->pintarCanvas(l + i, c + j, corNovaPintar);
+                        }
+                    }
+                    
                 }
             }
         }

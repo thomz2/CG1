@@ -4,10 +4,13 @@
 class Camera {
     public:
 
-        Camera(Vec3 olhoPintor, Vec3 centroJanela, double dJanela, double vFov, double imageWidth, double imageHeight, double kFov);
-        Camera(Vec3 olhoPintor, Vec3 centroJanela, double dJanela, double wJanela, double hJanela);
-        void initialize(Vec3 olhoPintor, Vec3 centroJanela, double dJanela, double vFov, double imageWidth, double imageHeight, double kFov);
-        void changeFog(double vFov);
+        Camera(Vec3 lookfrom, Vec3 lookat, double focal_length, double vFov, double imageWidth, double imageHeight, double kFov);
+        Camera(Vec3 lookfrom, Vec3 lookat, double focal_length, double wJanela, double hJanela);
+        Camera(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight);
+
+        void initialize(Vec3 lookfrom, Vec3 lookat, double focal_length, double vFov, double imageWidth, double imageHeight, double kFov);
+        void initialize2(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight);
+        void changeFov(double vFov);
 
         // verificar se esses valores sao -1, se forem, eh pq nao sao utilizados (usamos tamanhos de janela predefinidos)
         double vFov = -1;
@@ -18,8 +21,23 @@ class Camera {
 
         double hJanela;
         double wJanela;
-        double dJanela;
+        double focal_length;
 
-        Vec3 centroJanela;
-        Vec3 olhoPintor;
+        // Positioning and Orienting the Camera
+        Vec3 lookfrom = Vec3(0,0,-1); // Point camera is looking from
+        Vec3 lookat   = Vec3(0,0,0);   // Point camera is looking at
+        Vec3 vup      = Vec3(0,1,0);   // Camera-relative "up" direction
+
+        Vec3 u, v, w; // Camera frame basis vectors
+
+        // informacoes de renderizacao
+        Vec3 viewport_u;
+        Vec3 viewport_v;
+
+        Vec3 pixel_delta_u;
+        Vec3 pixel_delta_v;
+
+        Vec3 viewport_upper_left;
+        Vec3 pixel00_loc;
+
 };

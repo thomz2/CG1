@@ -22,7 +22,7 @@ using namespace std;
 const int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
 
 void renderizarCenario(Scene* cenario, double dJanela, Vec3 olhoPintor) {
-    cenario->pintarCanvas(dJanela, olhoPintor);
+    cenario->pintarCanvas2(dJanela, olhoPintor);
 }
 
 void colorirCenario(SDL_Renderer* renderer, Scene* cenario, int nLin, int nCol) {
@@ -53,9 +53,9 @@ int main ( int argc, char *argv[] ) {
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
     Vec3 centroJanela(0, 0, -dJanela);
-    Vec3 olhoPintor(0, 0, 0);
+    Vec3 olhoPintor(-30, 0, 0);
 
-    Camera *camera = new Camera(olhoPintor, centroJanela, dJanela, 60, WINDOW_WIDTH, WINDOW_HEIGHT, 30);
+    Camera *camera = new Camera(olhoPintor, centroJanela, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
 
@@ -69,10 +69,8 @@ int main ( int argc, char *argv[] ) {
     
     Cilindro* cilindro = new Cilindro(1, corVerde, Vec3(0, 0, -100), Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)), 3 * rEsfera, rEsfera/3, BaseMaterial(Vec3(0.2, 0.3, 0.8), Vec3(0.2, 0.3, 0.8), Vec3(0.2, 0.3, 0.8), 10));
     Cone* cone = new Cone(1, corAzul, cilindro->Ct, Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)), 1.5 * rEsfera / 3, (1.5)*rEsfera, BaseMaterial(Vec3(0.8, 0.3, 0.2), Vec3(0.8, 0.3, 0.2), Vec3(0.8, 0.3, 0.2), 10));
-    // Esfera* esfera2 = new Esfera(1, corEsfera2, Vec3(0, 1, zCentroEsfera), rEsfera - 30);
-    // Cone* cone = new Cone(2, corVerde, Vec3(0, 0, zCentroEsfera), Vec3(250, 0, zCentroEsfera - 1), 250);
-    // Cone* cone2 = new Cone(3, corVermelha, Vec3(200, 0, zCentroEsfera), Vec3(490, 0, zCentroEsfera - 1), 250);
-    // Cone* cone3 = new Cone(4, corAzul, Vec3(480, 0, zCentroEsfera), Vec3(730, 0, zCentroEsfera - 1), 250);
+    Cone* cone2 = new Cone(3, corVermelha, Vec3(200, 0, zCentroEsfera), Vec3(490, 0, zCentroEsfera - 1), 250);
+    Cone* cone3 = new Cone(4, corAzul, Vec3(480, 0, zCentroEsfera), Vec3(730, 0, zCentroEsfera - 1), 250);
 
     Cilindro* cilindro2 = new Cilindro(10, corVermelha, Vec3(0, -30, -100), Vec3(0, 30, -100), 25, MaterialTarefa());
 
@@ -86,14 +84,13 @@ int main ( int argc, char *argv[] ) {
 
     cenario->objetos.push_back(cilindro2);
 
-    // cenario->objetos.push_back(esfera);
-    // cenario->objetos.push_back(chao);
-    // cenario->objetos.push_back(planoDeFundo);
-    // cenario->objetos.push_back(cilindro);
-    // cenario->objetos.push_back(esfera2);
-    // cenario->objetos.push_back(cone);
-    // cenario->objetos.push_back(cone2);
-    // cenario->objetos.push_back(cone3);
+    cenario->objetos.push_back(esfera);
+    cenario->objetos.push_back(chao);
+    cenario->objetos.push_back(planoDeFundo);
+    cenario->objetos.push_back(cilindro);
+    cenario->objetos.push_back(cone);
+    cenario->objetos.push_back(cone2);
+    cenario->objetos.push_back(cone3);
 
     cenario->luzes.push_back(luzPontual);
 
@@ -102,14 +99,7 @@ int main ( int argc, char *argv[] ) {
     bool rodando = true;
     while (rodando) {
 
-        SDL_Event windowEvent;
-        while ( SDL_PollEvent(&windowEvent) ) {
-            if (SDL_QUIT == windowEvent.type) { 
-                rodando = false;
-                break; 
-            }
-        }
-
+        /* 
         Vec4 Cbnovo = Vec3(cilindro2->Cb);
         Vec4 Ctnovo = Vec3(cilindro2->Ct);
 
@@ -120,42 +110,48 @@ int main ( int argc, char *argv[] ) {
         // Ctnovo = Ctnovo.apply(Transformations::rotateXAroundPointDegrees(-1, Vec3(0, 0, -90)));
 
         cilindro2->update(Cbnovo.getVec3(), Ctnovo.getVec3());
+        */
 
-        // USAR THREAD PARA RENDERIZAR
-        // std::thread renderThread(renderizarCenario, cenario, dJanela, olhoPintor);
-        renderizarCenario(cenario, dJanela, olhoPintor);
-        // cenario->pintarCanvas(dJanela, olhoPintor);
+        for (int i = -80; i <= 10; ++i) {
 
-        // USAR THREAD PARA COLORIR
-        // std::thread colorThread(colorirCenario, renderer, cenario, nLin, nCol);
-        colorirCenario(renderer, cenario, nLin, nCol);
-        // for (int l = 0; l < nLin; ++l) {
-        //     for (int c = 0; c < nCol; ++c) {
-        //         SDL_Color cor = cenario->canvas->cores[l][c];
+            SDL_Event windowEvent;
+            while ( SDL_PollEvent(&windowEvent) ) {
+                if (SDL_QUIT == windowEvent.type) { 
+                    rodando = false;
+                    break; 
+                }
+            }
 
-        //         SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
-        //         SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
-        //     }
-        // }
+            camera->initialize2(Vec3(0, 0, 0), Vec3(i, 0, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        // renderThread.join();
-        // colorThread.join();
-    
-        // cout << "Fim da pintura" << endl;
-        SDL_RenderPresent(renderer); // usar no final para pintar
-        if ( window = nullptr ) {
-            cout << "ERRO:" << SDL_GetError() << "\n";
-            return 1;
+            // USAR THREAD PARA RENDERIZAR
+            // std::thread renderThread(renderizarCenario, cenario, dJanela, olhoPintor);
+            renderizarCenario(cenario, dJanela, olhoPintor);
+            // cenario->pintarCanvas(dJanela, olhoPintor);
+
+            // USAR THREAD PARA COLORIR
+            // std::thread colorThread(colorirCenario, renderer, cenario, nLin, nCol);
+            colorirCenario(renderer, cenario, nLin, nCol);
+            // for (int l = 0; l < nLin; ++l) {
+            //     for (int c = 0; c < nCol; ++c) {
+            //         SDL_Color cor = cenario->canvas->cores[l][c];
+
+            //         SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+            //         SDL_RenderDrawPoint(renderer, c, l); // x = coluna que ta e y = linha que ta
+            //     }
+            // }
+
+            // renderThread.join();
+            // colorThread.join();
+        
+            // cout << "Fim da pintura" << endl;
+            SDL_RenderPresent(renderer); // usar no final para pintar
+            if ( window = nullptr ) {
+                cout << "ERRO:" << SDL_GetError() << "\n";
+                return 1;
+            }
         }
-    }
 
-
-
-    SDL_Event windowEvent;
-    while (true) {
-        if ( SDL_PollEvent(&windowEvent) ) {
-            if (SDL_QUIT == windowEvent.type) { break; }
-        }
     }
 
     SDL_DestroyWindow( window );

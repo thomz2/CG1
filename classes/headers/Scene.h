@@ -44,5 +44,6 @@ class Scene {
     optional<pair<Objeto*, LPointGetType>> firstObj(Ray raycaster);
 
     void pintarCanvas(double dJanela, Vec3& olhoPintor);
+    void pintarCanvas2(double dJanela, Vec3& olhoPintor);
 };
 
