@@ -22,6 +22,7 @@ class Vec3 {
 
     Vec3 operator|(Vec3& other); // multiplica cada membro por outro e retorna um vetor
     Vec3 operator*(Vec3& other); // prod vetorial
+    Vec3 cross(Vec3 other); // prod vetorial
     
     double prodEscalar(Vec3& other); // prod escalar
     double dot(Vec3& other); // prod escalar

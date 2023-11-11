@@ -14,6 +14,7 @@
 #include "classes/headers/math/Transformations.h"
 #include "classes/headers/math/Mat4.h"
 #include "classes/headers/math/Vec4.h"
+#include "classes/headers/primitives/Triangulo.h"
 
 using namespace std;
 
@@ -56,7 +57,7 @@ int main ( int argc, char *argv[] ) {
     // Cone* cone3 = new Cone(4, corAzul, Vec3(480, 0, zCentroEsfera), Vec3(730, 0, zCentroEsfera - 1), 250);
 
     Cilindro* cilindro2 = new Cilindro(10, corVermelha, Vec3(0, -30, -100), Vec3(0, 30, -100), 25, MaterialTarefa());
-
+    Triangulo* triangulo = new Triangulo(11, BaseMaterial(), Vec3(-30, 0, -dJanela), Vec3(30,0,-dJanela), Vec3(0,30,-dJanela));
     Luz* luzPontual = new Luz(Vec3(0, 60, -30), Vec3(0.7, 0.7, 0.7));
 
     const int nCol = 500;
@@ -65,7 +66,7 @@ int main ( int argc, char *argv[] ) {
     const double Dx = (double)wJanela / (double)nCol;
     const double Dy = (double)hJanela / (double)nLin;
 
-    cenario->objetos.push_back(cilindro2);
+    cenario->objetos.push_back(triangulo);
 
     // cenario->objetos.push_back(esfera);
     // cenario->objetos.push_back(chao);
@@ -82,13 +83,7 @@ int main ( int argc, char *argv[] ) {
 
     while (true) {
 
-        Vec4 Cbnovo = Vec3(cilindro2->Cb);
-        Vec4 Ctnovo = Vec3(cilindro2->Ct);
-
-        Cbnovo = Cbnovo.apply(Transformations::rotateZAroundPointDegrees(1, Vec3(0, 0, -90)).apply(Transformations::rotateXAroundPointDegrees(1, Vec3(0, 0, -90))));
-        Ctnovo = Ctnovo.apply(Transformations::rotateZAroundPointDegrees(1, Vec3(0, 0, -90)).apply(Transformations::rotateXAroundPointDegrees(1, Vec3(0, 0, -90))));
-
-        cilindro2->update(Cbnovo.getVec3(), Ctnovo.getVec3());
+        
 
         // cout << "indo pintar canvas\n";
         cenario->pintarCanvas(dJanela, olhoPintor);

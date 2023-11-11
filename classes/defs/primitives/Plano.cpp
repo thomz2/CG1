@@ -2,6 +2,8 @@
 
 using namespace std;
 
+Plano::Plano(int id, BaseMaterial material, Vec3 Ppi) : Objeto(id, { 0,0,0,0 }, material), Ppi(Ppi) {};
+
 Plano::Plano(int id, SDL_Color cor, BaseMaterial material, Vec3 Ppi, Vec3 n) :
     Objeto(id, cor, material), Ppi(Ppi), n(n) {};
 

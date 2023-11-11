@@ -46,6 +46,11 @@ Vec3 Vec3::operator*(Vec3& other) {
     return Vec3( ((y*other.z)-(z*other.y)) , ((z*other.x)-(x*other.z)) , ((x*other.y)-(y*other.x)) );
 }
 
+// PROD VETORIAL
+Vec3 Vec3::cross(Vec3 other) {
+    return Vec3(((y * other.z) - (z * other.y)), ((z * other.x) - (x * other.z)), ((x * other.y) - (y * other.x)));
+}
+
 // PRODUTO ESCALAR
 double Vec3::prodEscalar(Vec3& other) {
     return other.x*x + other.y*y + other.z*z;

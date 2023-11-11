@@ -11,6 +11,7 @@ public:
     Vec3 Ppi;
     Vec3 n;
 
+    Plano(int id, BaseMaterial material, Vec3 Ppi);
     Plano(int id, SDL_Color cor, BaseMaterial material, Vec3 Ppi, Vec3 n);
     Plano(int id, SDL_Color cor, BaseMaterial material, Vec3 Ppi);
 
