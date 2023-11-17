@@ -1,4 +1,9 @@
+// ISSO EH A CAMERA PERSPECTIVA
+
 #include "./../headers/Camera.h"
+#include "./../headers/Ray.h"
+#include "./../headers/Scene.h"
+
 #include <math.h>
 #define M_PI 3.14159265358979323846
 
@@ -7,16 +12,6 @@ using namespace std;
 double degreesToRadian(double dgvalue) {
     return dgvalue * (M_PI/180);
 }
-
-// DEPRECADO KK
-Camera::Camera(Vec3 lookfrom, Vec3 lookat, double focal_length, double vFov, double imageWidth, double imageHeight, double kFov) {
-    this->initialize(lookfrom, lookat, focal_length, vFov, imageWidth, imageHeight, kFov);
-}
-
-// construtor mais simples sem fov
-// DEPRECADO KK
-Camera::Camera(Vec3 lookfrom, Vec3 lookat, double focal_length, double wJanela, double hJanela) 
- : lookfrom(lookfrom), lookat(lookat), focal_length(focal_length), wJanela(wJanela), hJanela(hJanela) {}
 
 Camera::Camera(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight) 
  : lookfrom(lookfrom), lookat(lookat), vup(vup), vFov(vFov), imageWidth(imageWidth), imageHeight(imageHeight) {
@@ -53,27 +48,103 @@ void Camera::initialize2(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, doub
 
     pixel00_loc = viewport_upper_left.add( (pixel_delta_u.add(pixel_delta_v)).mult(0.5) );
 
+}
+
+void Camera::initializeRenderAndWindow(int width, int height, SDL_Renderer **renderer, SDL_Window **window) {
+    SDL_Init (SDL_INIT_EVERYTHING);
+    SDL_CreateWindowAndRenderer (
+        width, height, 0, window, renderer
+    );
+}
+
+SDL_Color Camera::renderPixel(int l, int c) {
+    Vec3 pixel_center = pixel00_loc.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
+    Vec3 direcao = (pixel_center - lookfrom).norm(); // vetor unitario aki
+    Ray raycaster(lookfrom, direcao);
+
+    // TODO: refatorar funcao firstObj dps
+    optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
+
+    if (par.has_value()) {
+        Objeto* maisPerto = par.value().first;
+        LPointGetType retorno = par.value().second;
+
+        // foi intersectado
+        if (maisPerto != nullptr) {
+            
+            Vec3 ponto_mais_prox = retorno.posContato;
+            Vec3 normal          = retorno.normalContato.norm();
+            double tint          = retorno.tint;
+
+            Vec3 intensidadeCor = maisPerto->material.getKAmbiente() | cenario->luzAmbiente;
+
+            for (Luz* luz: cenario->luzes) {
+
+                Vec3 lv = (luz->posicao - ponto_mais_prox).norm();
+                Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
+                Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
+
+                Ray raisombra = Ray(luz->posicao, lv * (-1));
+                double L = (luz->posicao - ponto_mais_prox).modulo();
+                bool temSombra = false;
+                for (auto* objeto : cenario->objetos) {
+                    optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
+                    if (interseccao.has_value() && interseccao.value().tint < L - 0.000001) {
+                        temSombra = true; break;
+                    }
+                }
+
+                if (temSombra) continue; // vai pra proxima luz
+
+                double f_dif = max(0.0, lv.dot(normal));
+                double f_esp = pow(max(0.0, vv.dot(rv)), maisPerto->material.getM());
+
+                // usando operador @ (|)
+                Vec3 aux1 = ((maisPerto->material.getRugosidade()) * f_dif);
+                Vec3 aux2 = ((maisPerto->material.getRefletividade()) * f_esp);
+
+                Vec3 iDif = luz->intensidade | aux1;
+                Vec3 iEsp = luz->intensidade | aux2;
+            
+                Vec3 anterior = intensidadeCor;
+                intensidadeCor = anterior + iDif + iEsp;
+
+                if (intensidadeCor.x > 1) intensidadeCor.x = 1;
+                if (intensidadeCor.y > 1) intensidadeCor.y = 1;
+                if (intensidadeCor.z > 1) intensidadeCor.z = 1;
+            }
+
+            Vec3 corNova = intensidadeCor * 255;
+
+            SDL_Color corNovaPintar = {
+                (Uint8)corNova.x,
+                (Uint8)corNova.y,
+                (Uint8)corNova.z,
+                255 // ver isso dps
+            };
+
+            return corNovaPintar;
+
+        }
+    }
+
+    return {100, 100, 100, 255};
 
 }
 
-// DEPRECADO KK
-void Camera::initialize(Vec3 lookfrom, Vec3 lookat, double focal_length, double vFov, double imageWidth, double imageHeight, double kFov) {
+void Camera::renderAndPaintCanvas(int resScale) {
+    cenario->canvas->pintarTodoCanvas({100, 100, 100, 255});
 
-    this->imageWidth = imageWidth;
-    this->imageHeight = imageHeight;
-
-    this->lookfrom = lookfrom; // eh o CENTRO
-    this->lookat = lookat;
-    this->focal_length = focal_length;
-    this->vFov = vFov;
-    this->theta = degreesToRadian(vFov);
-    this->h = tan(theta/2);
-
-    this->hJanela = 2 * h * kFov;
-    this->wJanela = hJanela * (imageWidth/imageHeight);
-
-    cout << "[ H, W ] = " << hJanela << " " << wJanela << endl;
-
+    for (int l = 0; l < cenario->canvas->nLin; l += resScale) {
+        for (int c = 0; c < cenario->canvas->nCol; c += resScale) {
+            SDL_Color corNovaPintar = this->renderPixel(l, c);
+            for (int i = 0; i < resScale; ++i) {
+                for (int j = 0; j < resScale; j++) {
+                    cenario->canvas->pintarCanvas(l + i, c + j, corNovaPintar);
+                }
+            }
+        }
+    }
 }
 
 void Camera::changeFov(double vFov) {
@@ -84,6 +155,6 @@ void Camera::changeFov(double vFov) {
     this->theta = degreesToRadian(vFov);
     this->h = tan(theta/2);
 
-    this->hJanela = 2 * h;
+    this->hJanela = 2 * h * focal_length;
     this->wJanela = hJanela * (imageWidth/imageHeight);
 }

@@ -11,7 +11,8 @@
 #include <map>
 #include "luzes/Luz.h"
 #include "types/LPointGetType.h"
-#include "./Camera.h"
+
+class Camera;
 
 using namespace std;
 
@@ -42,6 +43,7 @@ class Scene {
 
     vector  <pair<Objeto*, LPointGetType>> intersectaObjetos(Ray raycaster); // TODO: colocar ordem de intersecção
     optional<pair<Objeto*, LPointGetType>> firstObj(Ray raycaster);
+    optional<pair<Objeto*, LPointGetType>> firstObj2(Ray raycaster);
 
     void pintarCanvas(double dJanela, Vec3& olhoPintor);
     void pintarCanvas2(double dJanela, Vec3& olhoPintor);

@@ -9,6 +9,8 @@
 #include <queue>
 #include <set>
 #include "../headers/primitives/ObjetoComposto.h"
+#include "../headers/Camera.h"
+
 
 using namespace std;
 
@@ -137,6 +139,40 @@ optional<pair<Objeto*, LPointGetType>> Scene::firstObj(Ray raycaster) {
         LPointGetType(infos->tint, infos->normalContato, infos->posContato));
 }
 
+// tentativa refatorada
+optional<pair<Objeto*, LPointGetType>> Scene::firstObj2(Ray raycaster) {
+
+    Objeto* menordistObj = nullptr;
+    double menordist = INT_FAST32_MAX;
+
+    LPointGetType infos = LPointGetType();
+
+    for (auto *obj : this->objetos) {
+        auto intersecao = obj->intersecta(raycaster);
+        
+        if (intersecao.has_value()) {
+            double datual = intersecao.value().tint;
+            if (datual < menordist) {
+                menordist = datual;
+                menordistObj = obj;
+                
+                // infos adicionais
+                infos.tint = intersecao.value().tint;
+                infos.normalContato = intersecao.value().normalContato;
+                infos.posContato = intersecao.value().posContato;
+            }
+        }
+    }
+
+    //TODO: DESTRUIR 'infos'
+
+    if (menordistObj == nullptr) return nullopt;
+    
+    return  make_pair(menordistObj, 
+        //            tint,        normalcontato,               posicaocontato
+        LPointGetType(infos.tint, infos.normalContato, infos.posContato));
+}
+
 //TODO: FALTA SO FAZER OS CALCULOS AQUI
 void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
 
@@ -192,7 +228,6 @@ void Scene::pintarCanvas(double dJanela, Vec3& olhoPintor) {
                     Vec3 normal          = retorno.normalContato.norm();
                     double tint          = retorno.tint;
 
-                    // Vec3 intensidadeCor = Vec3(0.2, 0.2, 0.2); // luz ambiente
                     Vec3 intensidadeCor = maisPerto->material.getKAmbiente() | luzAmbiente;
 
                     // fazer loop da luz

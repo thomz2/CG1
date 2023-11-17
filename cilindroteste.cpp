@@ -16,6 +16,8 @@
 #include "classes/headers/math/Mat4.h"
 #include "classes/headers/math/Vec4.h"
 #include "classes/headers/Camera.h"
+#include "classes/headers/primitives/Triangulo.h"
+#include "classes/headers/primitives/Mesh.h"
 
 using namespace std;
 
@@ -74,6 +76,17 @@ int main ( int argc, char *argv[] ) {
 
     Cilindro* cilindro2 = new Cilindro(10, corVermelha, Vec3(0, -30, -100), Vec3(0, 30, -100), 25, MaterialTarefa());
 
+    Triangulo* triangulo = new Triangulo(11, BaseMaterial(), Vec3(-30, 0, -dJanela), Vec3(30,0,-dJanela), Vec3(0,30,-dJanela));
+
+    Mesh* mesh = new Mesh(1);
+    mesh->vertices.push_back(Vec3(0, 0, -dJanela));
+    mesh->vertices.push_back(Vec3(30, 0, -dJanela));
+    mesh->vertices.push_back(Vec3(30, 30, -dJanela));
+    mesh->faces.push_back({ 0,1,2 });
+    mesh->vertices.push_back({ 0,30,-dJanela });
+    mesh->faces.push_back({ 0,2,3 });
+    mesh->renderizar();
+
     Luz* luzPontual = new Luz(Vec3(0, 60, -30), Vec3(0.7, 0.7, 0.7));
 
     const int nCol = 500;
@@ -91,6 +104,8 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(cone);
     cenario->objetos.push_back(cone2);
     cenario->objetos.push_back(cone3);
+    cenario->objetos.push_back(triangulo);
+    cenario->objetos.push_back(mesh);
 
     cenario->luzes.push_back(luzPontual);
 

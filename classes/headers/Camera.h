@@ -1,16 +1,26 @@
 #pragma once
 #include "./math/Vec3.h"
+#include <SDL2/SDL.h>
+#include <optional>
+#include "./primitives/Objeto.h"
+#include "./types/LPointGetType.h"
+#include "./Scene.h"
+#include "./luzes/Luz.h"
+
+class Scene;
 
 class Camera {
     public:
 
-        Camera(Vec3 lookfrom, Vec3 lookat, double focal_length, double vFov, double imageWidth, double imageHeight, double kFov);
-        Camera(Vec3 lookfrom, Vec3 lookat, double focal_length, double wJanela, double hJanela);
         Camera(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight);
 
-        void initialize(Vec3 lookfrom, Vec3 lookat, double focal_length, double vFov, double imageWidth, double imageHeight, double kFov);
         void initialize2(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight);
+        void initializeRenderAndWindow(int width, int height, SDL_Renderer **renderer, SDL_Window **window);
+        SDL_Color renderPixel(int l, int c);
+        void renderAndPaintCanvas(int resScale = 1);
         void changeFov(double vFov);
+
+        Scene* cenario;
 
         // verificar se esses valores sao -1, se forem, eh pq nao sao utilizados (usamos tamanhos de janela predefinidos)
         double vFov = -1;
