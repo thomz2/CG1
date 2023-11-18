@@ -21,7 +21,7 @@ void Mesh::gerarTriangulo(std::vector<int> face, int id) {
 // 	this->subObjetos.push_back(t);
 // }
 
-void Mesh::gerarTriangulo(std::vector<int> face, int id, BaseMaterial material) {
+void Mesh::gerarTriangulo(std::vector<int> face, std::vector<int> uv, int id, BaseMaterial material) {
 	Vec3 v1, v2, v3;
 	v1 = vertices[face[0]];
 	v2 = vertices[face[1]];
@@ -36,9 +36,9 @@ void Mesh::gerarTriangulo(std::vector<int> face, int id, BaseMaterial material) 
 	} else {
 
 		Vec3 uv1, uv2, uv3;
-		uv1 = this->uvs[face[0]];
-		uv2 = this->uvs[face[1]];
-		uv3 = this->uvs[face[2]];
+		uv1 = this->uvs[uv[0]];
+		uv2 = this->uvs[uv[1]];
+		uv3 = this->uvs[uv[2]];
 		// cout << "TESTE UV1: " << uv1 << endl;
 		t = new Triangulo(id, material, this->textura, v1, v2, v3, uv1, uv2, uv3);
 

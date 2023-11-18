@@ -40,7 +40,7 @@ Vec3 Triangulo::getUV(Vec3 pi) {
 	double c2 = V1.sub(pi).cross(V2.sub(pi)).dot(n) / razao;
 	double c3 = V2.sub(pi).cross(V3.sub(pi)).dot(n) / razao;
 
-	Vec3 uvRet = uv3.mult(c3).add(uv2.mult(c2)).add(uv1.mult(c1));
+	Vec3 uvRet = uv1.mult(c3).add(uv2.mult(c1)).add(uv3.mult(c2));
 	uvRet.y = 1 - uvRet.y;
 
 	uvRet.x -= floor(uvRet.x);

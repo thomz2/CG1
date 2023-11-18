@@ -57,7 +57,7 @@ int main ( int argc, char *argv[] ) {
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
     Vec3 lookat(0, 10, -dJanela);
-    Vec3 lookfrom(0, 20, 50);
+    Vec3 lookfrom(-70, 120, 150);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3), camera);
@@ -77,12 +77,12 @@ int main ( int argc, char *argv[] ) {
     // mesh->faces.push_back({ 0,2,3 });
     // mesh->renderizar();
 
-    ObjMesh* mesh2 = new ObjMesh(2, "assets/stan/stan.obj", "assets/uvtest.jpg");
+    ObjMesh* mesh2 = new ObjMesh(2, "assets/porygon/porygon.obj", "assets/porygon/porygon_body.png");
     // mesh2->textura = new Texture("assets/uvtest.jpg");
 
     // mesh2->textura->testColors();
 
-    Luz* luzPontual = new Luz(Vec3(0, 50, 30), Vec3(0.7, 0.7, 0.7));
+    Luz* luzPontual = new Luz(Vec3(-20, 200, 30), Vec3(0.7, 0.7, 0.7));
 
     cenario->objetos.push_back(mesh2);
 
@@ -108,7 +108,7 @@ int main ( int argc, char *argv[] ) {
     // }
 
             // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-            camera->renderAndPaintCanvas(2);
+            camera->renderAndPaintCanvas(1);
             colorirCenario(renderer, cenario, nLin, nCol);
             
             SDL_RenderPresent(renderer); // usar para pintar

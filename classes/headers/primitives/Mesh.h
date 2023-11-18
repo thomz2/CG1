@@ -16,6 +16,6 @@ public:
 	Mesh(int id);
 	void gerarTriangulo(std::vector<int> face, int id);
 	void gerarTriangulo(std::vector<int> face, int id, BaseMaterial material);
-	void gerarTriangulo(std::vector<int> face, int id, BaseMaterial material, std::vector<int> iuvs);
+	void gerarTriangulo(std::vector<int> face, std::vector<int> uv, int id, BaseMaterial material);
 	void renderizar();
 };
