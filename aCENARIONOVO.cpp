@@ -18,6 +18,8 @@
 #include "classes/headers/Camera.h"
 #include "classes/headers/primitives/Triangulo.h"
 #include "classes/headers/primitives/Mesh.h"
+#include "classes/headers/primitives/ObjMesh.h"
+#include "classes/headers/primitives/mesh/Texture.h"
 
 using namespace std;
 
@@ -54,8 +56,8 @@ int main ( int argc, char *argv[] ) {
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookat(0, 0, -dJanela);
-    Vec3 lookfrom(-30, 0, 0);
+    Vec3 lookat(0, 10, -dJanela);
+    Vec3 lookfrom(0, 20, 50);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3), camera);
@@ -66,18 +68,23 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corVerde = {0, 255, 0, 255};
     SDL_Color corAzul = {0, 0, 255, 255};
 
-    Mesh* mesh = new Mesh(1);
-    mesh->vertices.push_back(Vec3(0, 0, -dJanela));
-    mesh->vertices.push_back(Vec3(30, 0, -dJanela));
-    mesh->vertices.push_back(Vec3(30, 30, -dJanela));
-    mesh->faces.push_back({ 0,1,2 });
-    mesh->vertices.push_back({ 0,30,-dJanela });
-    mesh->faces.push_back({ 0,2,3 });
-    mesh->renderizar();
+    // Mesh* mesh = new Mesh(1);
+    // mesh->vertices.push_back(Vec3(0, 0, -dJanela));
+    // mesh->vertices.push_back(Vec3(30, 0, -dJanela));
+    // mesh->vertices.push_back(Vec3(30, 30, -dJanela));
+    // mesh->faces.push_back({ 0,1,2 });
+    // mesh->vertices.push_back({ 0,30,-dJanela });
+    // mesh->faces.push_back({ 0,2,3 });
+    // mesh->renderizar();
 
-    Luz* luzPontual = new Luz(Vec3(0, 60, -30), Vec3(0.7, 0.7, 0.7));
+    ObjMesh* mesh2 = new ObjMesh(2, "assets/stan/stan.obj", "assets/uvtest.jpg");
+    // mesh2->textura = new Texture("assets/uvtest.jpg");
 
-    cenario->objetos.push_back(mesh);
+    // mesh2->textura->testColors();
+
+    Luz* luzPontual = new Luz(Vec3(0, 50, 30), Vec3(0.7, 0.7, 0.7));
+
+    cenario->objetos.push_back(mesh2);
 
     cenario->luzes.push_back(luzPontual);
 
@@ -88,8 +95,31 @@ int main ( int argc, char *argv[] ) {
     cenario->setCanvas(nLin, nCol, Dx, Dy);
 
     bool rodando = true;
+    // while (rodando) {
+    //     // for (int i = -100; i <= 0 ; i+=5) {
+
+    //         SDL_Event windowEvent;
+    //         while ( SDL_PollEvent(&windowEvent) ) {
+    //             if (SDL_QUIT == windowEvent.type) { 
+    //                 rodando = false;
+    //                 break; 
+    //             }
+    //         }
+    // }
+
+            // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
+            camera->renderAndPaintCanvas(2);
+            colorirCenario(renderer, cenario, nLin, nCol);
+            
+            SDL_RenderPresent(renderer); // usar para pintar
+            if ( window = nullptr ) {
+                cout << "ERRO:" << SDL_GetError() << "\n";
+                return 1;
+            }
+        // }
+    
     while (rodando) {
-        for (int i = -30; i <= 0 ; ++i) {
+        // for (int i = -100; i <= 0 ; i+=5) {
 
             SDL_Event windowEvent;
             while ( SDL_PollEvent(&windowEvent) ) {
@@ -98,20 +128,8 @@ int main ( int argc, char *argv[] ) {
                     break; 
                 }
             }
-
-            camera->initialize2(Vec3(i, 0, 0), Vec3(0, 0, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-            camera->renderAndPaintCanvas(10);
-            colorirCenario(renderer, cenario, nLin, nCol);
-            
-            SDL_RenderPresent(renderer); // usar para pintar
-            if ( window = nullptr ) {
-                cout << "ERRO:" << SDL_GetError() << "\n";
-                return 1;
-            }
-        }
-        
-
     }
+
 
     SDL_DestroyWindow( window );
     SDL_Quit();
