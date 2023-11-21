@@ -1,0 +1,22 @@
+# Blender 3.5.0 MTL File: 'None'
+# www.blender.org
+
+newmtl yoshi_all_tx
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:/Users/danys/Downloads/modelos/Yoshi/yoshi_all.png
+
+newmtl yoshi_eye_tx
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:/Users/danys/Downloads/modelos/Yoshi/yoshi_eye.png

@@ -4,6 +4,7 @@
 #include "ObjetoComposto.h"
 #include "../materiais/MaterialTarefa.h"
 #include "../materiais/BaseMaterial.h"
+#include "../math/Mat4.h"
 
 class Mesh:public ObjetoComposto {
 public:
@@ -18,4 +19,5 @@ public:
 	void gerarTriangulo(std::vector<int> face, int id, BaseMaterial material);
 	void gerarTriangulo(std::vector<int> face, std::vector<int> uv, int id, BaseMaterial material);
 	void renderizar();
+	void applyMatrix(Mat4 matrix);
 };

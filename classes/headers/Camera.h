@@ -6,6 +6,8 @@
 #include "./types/LPointGetType.h"
 #include "./Scene.h"
 #include "./luzes/Luz.h"
+#include <thread>
+#include <vector>
 
 class Scene;
 
@@ -18,6 +20,7 @@ class Camera {
         void initializeRenderAndWindow(int width, int height, SDL_Renderer **renderer, SDL_Window **window);
         SDL_Color renderPixel(int l, int c);
         void renderAndPaintCanvas(int resScale = 1);
+        void renderAndPaintCanvasThread(int numThreads, int resScale = 1);
         void changeFov(double vFov);
 
         Scene* cenario;

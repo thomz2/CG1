@@ -23,6 +23,12 @@ Triangulo::Triangulo(int id, BaseMaterial material, Texture* textura,  Vec3 v1, 
 	this->n = N.norm();
 }
 
+void Triangulo::setVs(Vec3 v1, Vec3 v2, Vec3 v3) {
+	this->V1 = v1;
+	this->V2 = v2;
+	this->V3 = v3;
+}
+
 void Triangulo::setUV(Vec3 uv1, Vec3 uv2, Vec3 uv3) {
 	this->uv1 = uv1;
 	this->uv2 = uv2;
@@ -30,6 +36,8 @@ void Triangulo::setUV(Vec3 uv1, Vec3 uv2, Vec3 uv3) {
 }
 
 void Triangulo::setNormal(Vec3 r1, Vec3 r2) {
+	this->r1 = r1;
+	this->r2 = r2;
 	Vec3 N = r1 * r2;
 	this->n = N.norm();
 }
@@ -73,9 +81,14 @@ std::optional<LPointGetType> Triangulo::intersecta(Ray raio) {
 			cor.b
 		);
 		novoKDifuso = novoKDifuso.norm();
-		// cout << "novoKD: " << novoKDifuso << endl;
-		this->material.RUGOSIDADE = novoKDifuso;
-		return ponto.value();
+
+
+		// this->material.RUGOSIDADE = novoKDifuso;
+		// this->material.KAMBIENTE = novoKDifuso; // TESTE
+		BaseMaterial material = BaseMaterial(novoKDifuso, this->material.REFLETIVIDADE, novoKDifuso, this->material.M);
+		LPointGetType retorno = LPointGetType(ponto.value().tint, ponto.value().normalContato, ponto.value().posContato, material);
+		// cout << retorno.material.value().KAMBIENTE << endl;
+		return retorno;
 	}
 	return std::nullopt;
 }

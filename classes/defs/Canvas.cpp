@@ -1,5 +1,6 @@
 #include "../headers/Canvas.h"
 #include <optional>
+#include <iostream>
 
 using namespace std;
 
@@ -23,7 +24,10 @@ void Canvas::pintarTodoCanvas(SDL_Color cor) {
 }
 
 void Canvas::pintarCanvas(int linha, int coluna, SDL_Color cor) {
-    this->cores[linha][coluna] = cor;
+        // cout << "POSICAO NULA: " << linha << ", " << coluna << endl;
+    // if (this->cores != nullptr && this->cores[linha] != nullptr)
+        this->cores[linha][coluna] = cor;
+ 
 }
 
 void Canvas::pintarCanvas(int linha, int coluna, optional<SDL_Color> cor) {

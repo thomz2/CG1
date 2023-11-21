@@ -76,7 +76,13 @@ SDL_Color Camera::renderPixel(int l, int c) {
             Vec3 normal          = retorno.normalContato.norm();
             double tint          = retorno.tint;
 
-            Vec3 intensidadeCor = maisPerto->material.getKAmbiente() | cenario->luzAmbiente;
+            BaseMaterial material = maisPerto->material;
+            // cout << retorno.material.value().KAMBIENTE << " PROVANDO QUE TEM\n";
+            if (retorno.material.has_value()) {
+                material = retorno.material.value();
+            }
+
+            Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
 
             for (Luz* luz: cenario->luzes) {
 
@@ -97,11 +103,11 @@ SDL_Color Camera::renderPixel(int l, int c) {
                 if (temSombra) continue; // vai pra proxima luz
 
                 double f_dif = max(0.0, lv.dot(normal));
-                double f_esp = pow(max(0.0, vv.dot(rv)), maisPerto->material.getM());
+                double f_esp = pow(max(0.0, vv.dot(rv)), material.getM());
 
                 // usando operador @ (|)
-                Vec3 aux1 = ((maisPerto->material.getRugosidade()) * f_dif);
-                Vec3 aux2 = ((maisPerto->material.getRefletividade()) * f_esp);
+                Vec3 aux1 = ((material.getRugosidade()) * f_dif);
+                Vec3 aux2 = ((material.getRefletividade()) * f_esp);
 
                 Vec3 iDif = luz->intensidade | aux1;
                 Vec3 iEsp = luz->intensidade | aux2;
@@ -133,7 +139,7 @@ SDL_Color Camera::renderPixel(int l, int c) {
 }
 
 void Camera::renderAndPaintCanvas(int resScale) {
-    cenario->canvas->pintarTodoCanvas({100, 100, 100, 255});
+    // cenario->canvas->pintarTodoCanvas({100, 100, 100, 255});
 
     for (int l = 0; l < cenario->canvas->nLin; l += resScale) {
         for (int c = 0; c < cenario->canvas->nCol; c += resScale) {
@@ -144,6 +150,51 @@ void Camera::renderAndPaintCanvas(int resScale) {
                 }
             }
         }
+    }
+}
+
+void Camera::renderAndPaintCanvasThread(int numThreads, int resScale) {
+     // Vetor para armazenar threads
+    std::vector<std::thread> threads;
+
+    // Função para renderizar um quadrante
+    auto renderQuadrante = [this, resScale](int lStart, int lEnd, int cStart, int cEnd) {
+        for (int l = lStart; l < lEnd; l += resScale) {
+            for (int c = cStart; c < cEnd; c += resScale) {
+                SDL_Color corNovaPintar = this->renderPixel(l, c);
+                for (int i = 0; i < resScale; ++i) {
+                    for (int j = 0; j < resScale; j++) {
+                        if (l + i < cenario->canvas->nLin && c + j < cenario->canvas->nCol){
+                            // if (l+i > 450) cout << l + i << " " << c + j << endl;
+                            cenario->canvas->pintarCanvas(l + i, c + j, corNovaPintar);
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // Calcula as dimensões dos quadrantes
+    int quadWidth = cenario->canvas->nCol / numThreads;
+    int quadHeight = cenario->canvas->nLin / numThreads;
+
+    // Cria threads para renderizar quadrantes
+    for (int i = 0; i < numThreads; ++i) {
+        int lStart = i * quadHeight;
+        int lEnd = (i + 1) * quadHeight;
+        if (lEnd >= cenario->canvas->nLin) lEnd = cenario->canvas->nLin - 1;
+        for (int j = 0; j < numThreads; ++j) {
+            int cStart = j * quadWidth;
+            int cEnd = (j + 1) * quadWidth;
+            if (cEnd >= cenario->canvas->nCol) cEnd = cenario->canvas->nCol - 1;
+
+            threads.emplace_back(renderQuadrante, lStart, lEnd, cStart, cEnd);
+        }
+    }
+
+    // Aguarda todas as threads terminarem
+    for (auto& thread : threads) {
+        thread.join();
     }
 }
 

@@ -5,7 +5,8 @@
 
 using namespace std;
 
-ObjMesh::ObjMesh(int id, const string& filepath, const char* filepath2) : Mesh(id) {
+ObjMesh::ObjMesh(int id, const string& filepath, const char* filepath2, BaseMaterial material) : Mesh(id) {
+    this->material = material;
     this->textura = new Texture(filepath2);
     bool result = readFilePath(filepath);
     if (!result) {
@@ -65,12 +66,12 @@ bool ObjMesh::readFilePath(const string& filepath) {
                 }
             }
             
-            this->gerarTriangulo(faceIndices, uvIndices, this->id, BaseMaterial());
+            this->gerarTriangulo(faceIndices, uvIndices, this->id, this->material);
 
             if(faceIndices.size() > 3){
                 vector<int> face2Indexes = {faceIndices[0], faceIndices[2], faceIndices[3]};
                 vector<int> face2UVIndexes = {uvIndices[0], uvIndices[2], uvIndices[3]};
-                this->gerarTriangulo(face2Indexes, face2UVIndexes, this->id, BaseMaterial());
+                this->gerarTriangulo(face2Indexes, face2UVIndexes, this->id, this->material);
             }
         } else if (type == "vt") {
             double u, v;

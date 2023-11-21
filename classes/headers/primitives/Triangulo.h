@@ -16,6 +16,7 @@ public:
 	Triangulo(int id, BaseMaterial material, Vec3 v1, Vec3 v2, Vec3 v3);
 	Triangulo(int id, BaseMaterial material, Texture* textura,  Vec3 v1, Vec3 v2, Vec3 v3, Vec3 uv1, Vec3 uv2, Vec3 uv3);
 
+	void setVs(Vec3 v1, Vec3 v2, Vec3 v3);
 	void setUV(Vec3 uv1, Vec3 uv2, Vec3 uv3);
 	void setNormal(Vec3 r1, Vec3 r2);
 	Vec3 getUV(Vec3 pi);

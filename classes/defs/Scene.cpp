@@ -160,6 +160,11 @@ optional<pair<Objeto*, LPointGetType>> Scene::firstObj2(Ray raycaster) {
                 infos.tint = intersecao.value().tint;
                 infos.normalContato = intersecao.value().normalContato;
                 infos.posContato = intersecao.value().posContato;
+                if (intersecao.value().material.has_value()) {
+                    infos.material = intersecao.value().material.value();
+                } else {
+                    infos.material = nullopt;
+                }
             }
         }
     }
@@ -167,10 +172,14 @@ optional<pair<Objeto*, LPointGetType>> Scene::firstObj2(Ray raycaster) {
     //TODO: DESTRUIR 'infos'
 
     if (menordistObj == nullptr) return nullopt;
-    
-    return  make_pair(menordistObj, 
-        //            tint,        normalcontato,               posicaocontato
-        LPointGetType(infos.tint, infos.normalContato, infos.posContato));
+
+    if (infos.material.has_value()) {
+        return  make_pair(menordistObj, 
+            LPointGetType(infos.tint, infos.normalContato, infos.posContato, infos.material.value()));
+    } else {
+        return  make_pair(menordistObj, 
+            LPointGetType(infos.tint, infos.normalContato, infos.posContato));
+    }
 }
 
 //TODO: FALTA SO FAZER OS CALCULOS AQUI
