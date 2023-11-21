@@ -26,15 +26,15 @@ bool Texture::readFromFilePath(const char* filePath) {
         for (int y = 0; y < height; ++y) {
             // cout << '\n';
             for (int x = 0; x < width; ++x) {
-                int index = (y * width + x) * 3;
-                unsigned char r = data[index];
-                unsigned char g = data[index+1];
-                unsigned char b = data[index+2];
+                int index = (y * width + x) * 4;
+                int r = data[index];
+                int g = data[index+1];
+                int b = data[index+2];
                 this->matrizDeCores[y][x] = {
-                    r,      // Red
-                    g,  // Green
-                    b,   // Blue
-                    0
+                    (Uint8)r,      // Red
+                    (Uint8)g,  // Green
+                    (Uint8)b,   // Blue
+                    255
                 };
                 // cout << "[ " << static_cast<unsigned>(matrizDeCores[y][x].r) << " " << static_cast<unsigned>(matrizDeCores[y][x].g) << " " << static_cast<unsigned>(matrizDeCores[y][x].b) << " ], ";
                 // cout << "[ " << data[index] << " " << data[index+1] << " " << data[index+2] << " ], ";

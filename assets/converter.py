@@ -11,8 +11,8 @@ def convert_rgba_to_rgb(input_path, output_path):
     rgb_img.save(output_path)
 
 # Exemplo de uso
-input_path = 'assets/megaman/Megaman.png'
-output_path = 'assets/megaman/Megaman_rgb.png'
+input_path = 'assets/roll/Roll_(Cutscene).png'
+output_path = 'assets/roll/Roll_(Cutscene)_rgb.png'
 
 # assets\megaman\Megaman.png
 

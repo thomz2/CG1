@@ -57,10 +57,10 @@ int main ( int argc, char *argv[] ) {
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
     Vec3 lookat(0, -10, -dJanela);
-    Vec3 lookfrom(0, 40, 50);
+    Vec3 lookfrom(0, 40, 70);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(1, 1, 1), camera);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.5), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
 
@@ -77,32 +77,35 @@ int main ( int argc, char *argv[] ) {
     // mesh->faces.push_back({ 0,2,3 });
     // mesh->renderizar();
 
-    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -30, 0), Vec3(0, 1, 0));
+    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20, 0), Vec3(0, 1, 0));
     Plano* planoDeFundo = new Plano(6, corAzul, BaseMaterial(Vec3(0.3, 0.3, 0.7), Vec3(0, 0, 0), Vec3(0.3, 0.3, 0.7), 1), Vec3(0, 0, -200), Vec3(0, 0, 1));
 
 
     BaseMaterial materialMesh = BaseMaterial();
-    materialMesh.REFLETIVIDADE = Vec3(0, 0, 0);
+    materialMesh.REFLETIVIDADE = Vec3(0.2, 0.2, 0.2);
     // ObjMesh1* mesh2 = new ObjMesh(3, "assets/Yoshi2/Yoshi.obj", "assets/Yoshi/yoshi_all.png", materialMesh);
     // ObjMesh* mesh2 = new ObjMesh(2, "assets/porygon/porygon.obj", "assets/porygon/porygon_body.png", materialMesh);
     // ObjMesh* mesh3 = new ObjMesh(3, "assets/mine_cube/cube.obj", "assets/uv_test.png", materialMesh);
     // mesh3->applyMatrix(Transformations::scale(25, 25, 25));
     // mesh3->applyMatrix(Transformations::translate(0, 0, -50));
-    ObjMesh* mesh4 = new ObjMesh(4, "assets/megaman/megaman.obj", "assets/megaman/Megaman_rgb.png", materialMesh);
-    // mesh2->applyMatrix(Transformations::scale(0.5, 0.5, 0.5));
+    ObjMesh* megaman = new ObjMesh(4, "assets/megaman/megaman.obj", "assets/megaman/Megaman.png", materialMesh);
+    megaman->applyMatrix(Transformations::scale(1, 1, 1).apply(Transformations::translate(0, 20, 0)).apply(Transformations::rotateYAroundPoint(135, Vec3(0, 0, 0))));
 
-    mesh4->applyMatrix(Transformations::scale(1, 1, 1).apply(Transformations::translate(0, 20, 0)).apply(Transformations::rotateYAroundPoint(135, Vec3(0, 0, 0))));
-    // mesh4->applyMatrix();
+    ObjMesh* roll = new ObjMesh(5, "assets/roll/roll.obj", "assets/roll/Roll_(Cutscene).png", materialMesh);
+    roll->applyMatrix(Transformations::translate(18, 18, -18).apply(Transformations::rotateYAroundPoint(109, Vec3(20, 20, -20))));
+
+    // megaman->applyMatrix();
 
     // mesh2->textura->testColors();
 
-    // Luz* luzPontual = new Luz(Vec3(0, 25, 150), Vec3(0.8, 0.8, 0.8));
+    Luz* luzPontual = new Luz(Vec3(-40, 25, 0), Vec3(0.8, 0.8, 0.8));
 
-    cenario->objetos.push_back(mesh4);
+    cenario->objetos.push_back(megaman);
+    cenario->objetos.push_back(roll);
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(planoDeFundo);
 
-    // cenario->luzes.push_back(luzPontual);
+    cenario->luzes.push_back(luzPontual);
 
     const int nCol = 500;
     const int nLin = 500;
@@ -130,7 +133,7 @@ int main ( int argc, char *argv[] ) {
 
         // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
         if (i == 0) {
-            camera->renderAndPaintCanvasThread(4);
+            camera->renderAndPaintCanvasThread(4, 1);
             colorirCenario(renderer, cenario, nLin, nCol);
         }
         i += 1;
