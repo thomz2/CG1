@@ -130,7 +130,7 @@ int main ( int argc, char *argv[] ) {
 
         // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
         if (i == 0) {
-            camera->renderAndPaintCanvasThread(4, 10);
+            camera->renderAndPaintCanvasThread(4);
             colorirCenario(renderer, cenario, nLin, nCol);
         }
         i += 1;

@@ -80,7 +80,8 @@ std::optional<LPointGetType> Triangulo::intersecta(Ray raio) {
 			cor.g,
 			cor.b
 		);
-		novoKDifuso = novoKDifuso.norm();
+		// novoKDifuso = novoKDifuso.norm();
+		novoKDifuso = novoKDifuso.div(255);
 
 
 		// this->material.RUGOSIDADE = novoKDifuso;
