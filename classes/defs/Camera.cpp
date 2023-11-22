@@ -154,7 +154,7 @@ void Camera::renderAndPaintCanvas(int resScale) {
 }
 
 void Camera::renderAndPaintCanvasThread(int numThreads, int resScale) {
-     // Vetor para armazenar threads
+    // Vetor para armazenar threads
     std::vector<std::thread> threads;
 
     // Função para renderizar um quadrante

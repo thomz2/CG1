@@ -53,14 +53,12 @@ int main ( int argc, char *argv[] ) {
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     const double dJanela = 30;
-    const double rEsfera = 40;
-    const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookat(0, -10, -dJanela);
-    Vec3 lookfrom(0, 40, 70);
+    Vec3 lookat(0, 0, -dJanela);
+    Vec3 lookfrom(0, 0, 0);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.5), camera);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
 
@@ -77,37 +75,43 @@ int main ( int argc, char *argv[] ) {
     // mesh->faces.push_back({ 0,2,3 });
     // mesh->renderizar();
 
-    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20, 0), Vec3(0, 1, 0));
-    Plano* planoDeFundo = new Plano(6, corAzul, BaseMaterial(Vec3(0.3, 0.3, 0.7), Vec3(0, 0, 0), Vec3(0.3, 0.3, 0.7), 1), Vec3(0, 0, -200), Vec3(0, 0, 1));
+    Plano* chao = new Plano(1, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -150, 0), Vec3(0, 1, 0));
+    Plano* paredeLateralDireita = new Plano(2, corAzul, BaseMaterial(Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), 1), Vec3(200, -150, 0), Vec3(-1, 0, 0));
+    Plano* paredeFrontal = new Plano(3, corAzul, BaseMaterial(Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), 1), Vec3(200, -150, -400), Vec3(0, 0, 1));
+    Plano* paredeLateralEsquerda = new Plano(4, corAzul, BaseMaterial(Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), 1), Vec3(-200, -150, 0), Vec3(1, 0, 0));
+    Plano* teto = new Plano(5, corAzul, BaseMaterial(Vec3(0.933, 0.933, 0.933), Vec3(0.933, 0.933, 0.933), Vec3(0.933, 0.933, 0.933), 1), Vec3(0, 150, 0), Vec3(0, -1, 0));
+    
+    Cilindro* cilindro = new Cilindro(6, corAzul, Vec3(0, -150, -200), Vec3(0, 1, 0), 90, 5, BaseMaterial(Vec3(0.824, 0.706, 0.549), Vec3(0.824, 0.706, 0.549), Vec3(0.824, 0.706, 0.549), 1)); 
+    Cone* cone = new Cone(7, corAzul, Vec3(0, -60, -200), Vec3(0, 1, 0), 150, 90, BaseMaterial(Vec3(0.824, 0.706, 0.549), Vec3(0.824, 0.706, 0.549), Vec3(0.824, 0.706, 0.549), 1));
+    ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", BaseMaterial(Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), 1));
+    cubo->applyMatrix(Transformations::scale(20, 20, 20));
+    cubo->applyMatrix((Transformations::translate(0, -150, -200)));
 
+    Esfera* esfera = new Esfera(9, corAzul, Vec3(0, 95, -200), 5, BaseMaterial(Vec3(0.854, 0.647, 0.125), Vec3(0.854, 0.647, 0.125), Vec3(0.854, 0.647, 0.125), 1));
 
-    BaseMaterial materialMesh = BaseMaterial();
-    materialMesh.REFLETIVIDADE = Vec3(0.2, 0.2, 0.2);
-    // ObjMesh1* mesh2 = new ObjMesh(3, "assets/Yoshi2/Yoshi.obj", "assets/Yoshi/yoshi_all.png", materialMesh);
-    // ObjMesh* mesh2 = new ObjMesh(2, "assets/porygon/porygon.obj", "assets/porygon/porygon_body.png", materialMesh);
-    // ObjMesh* mesh3 = new ObjMesh(3, "assets/mine_cube/cube.obj", "assets/uv_test.png", materialMesh);
-    // mesh3->applyMatrix(Transformations::scale(25, 25, 25));
-    // mesh3->applyMatrix(Transformations::translate(0, 0, -50));
-    ObjMesh* megaman = new ObjMesh(4, "assets/megaman/megaman.obj", "assets/megaman/Megaman.png", materialMesh);
-    megaman->applyMatrix(Transformations::scale(1, 1, 1).apply(Transformations::translate(0, 20, 0)).apply(Transformations::rotateYAroundPoint(135, Vec3(0, 0, 0))));
+    Luz* luzPontual = new Luz(Vec3(-100, 140, -20), Vec3(0.7, 0.7, 0.7));
+    Luz* luzTeste = new Luz(Vec3(-100, -100, -20), Vec3(0.7, 0.7, 0.7));
 
-    ObjMesh* roll = new ObjMesh(5, "assets/roll/roll.obj", "assets/roll/Roll_(Cutscene).png", materialMesh);
-    roll->applyMatrix(Transformations::translate(18, 18, -18).apply(Transformations::rotateYAroundPoint(109, Vec3(20, 20, -20))));
+    Esfera* esfera2 = new Esfera(0, corVermelha, Vec3(0, 0, -100), 40, MaterialTarefa());
+    Plano* chao2 = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -55, 0), Vec3(0, 1, 0));
+    Plano* planoDeFundo2 = new Plano(6, corVerde, BaseMaterial(Vec3(0.3, 0.3, 0.7), Vec3(0, 0, 0), Vec3(0.3, 0.3, 0.7), 1), Vec3(0, 0, -200), Vec3(0, 0, 1));
+    
+    Cilindro* cilindro2 = new Cilindro(1, corVerde, Vec3(0, 0, -100), Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)), 3 * 40, 40/3, BaseMaterial(Vec3(0.2, 0.3, 0.8), Vec3(0.2, 0.3, 0.8), Vec3(0.2, 0.3, 0.8), 10));
+    Cone* cone2 = new Cone(1, corAzul, cilindro->Ct, Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)), 1.5 * 40 / 3, (1.5)*40, BaseMaterial(Vec3(0.8, 0.3, 0.2), Vec3(0.8, 0.3, 0.2), Vec3(0.8, 0.3, 0.2), 10));
 
-    ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
-    stan->applyMatrix(Transformations::translate(-20, 0, -18));
+    Cone* coneTeste = new Cone(100, corAzul, Vec3(-50, 20, -200), Vec3(-50, 90, -200), 45);
+    Cilindro* cilindroTeste = new Cilindro(101, corAzul, Vec3(50, 20, -200), Vec3(50, 90, -200), 45);
 
-    // megaman->applyMatrix();
-
-    // mesh2->textura->testColors();
-
-    Luz* luzPontual = new Luz(Vec3(-40, 25, 0), Vec3(0.8, 0.8, 0.8));
-
-    cenario->objetos.push_back(megaman);
-    cenario->objetos.push_back(roll);
-    cenario->objetos.push_back(stan);
     cenario->objetos.push_back(chao);
-    cenario->objetos.push_back(planoDeFundo);
+    cenario->objetos.push_back(paredeLateralDireita);
+    cenario->objetos.push_back(paredeFrontal);
+    cenario->objetos.push_back(paredeLateralEsquerda);
+    cenario->objetos.push_back(teto);
+
+    cenario->objetos.push_back(cilindro);
+    cenario->objetos.push_back(cone);
+    cenario->objetos.push_back(cubo);
+    cenario->objetos.push_back(esfera);
 
     cenario->luzes.push_back(luzPontual);
 
@@ -138,6 +142,7 @@ int main ( int argc, char *argv[] ) {
         // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
         if (i == 0) {
             camera->renderAndPaintCanvasThread(4, 1);
+            // cenario->pintarCanvas(dJanela, lookfrom);
             colorirCenario(renderer, cenario, nLin, nCol);
         }
         i += 1;

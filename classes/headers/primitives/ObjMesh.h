@@ -11,6 +11,7 @@ using namespace std;
 class ObjMesh : public Mesh {
     public: 
         ObjMesh(int id, const string& filepath, const char* filepath2, BaseMaterial material);
+        ObjMesh(int id, const string& filepath, BaseMaterial material);
         ObjMesh(int id, const string& filepath);
         ObjMesh(int id);
 

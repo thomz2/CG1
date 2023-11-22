@@ -14,6 +14,14 @@ ObjMesh::ObjMesh(int id, const string& filepath, const char* filepath2, BaseMate
     }
 }
 
+ObjMesh::ObjMesh(int id, const string& filepath, BaseMaterial material) : Mesh(id) {
+    this->material = material;
+    bool result = readFilePath(filepath);
+    if (!result) {
+        cout << "ERRO EM LER O PATH NO OBJMESH\n";
+    }
+}
+
 ObjMesh::ObjMesh(int id, const string& filepath) : Mesh(id) {
     bool result = readFilePath(filepath);
     if (!result) {
