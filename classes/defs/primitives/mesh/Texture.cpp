@@ -9,8 +9,14 @@ Texture::Texture() {}
 Texture::Texture(const char* filePath) {
     readFromFilePath(filePath);
 }
+Texture::Texture(const char* filePath, bool isRGB) {
+    if (isRGB)
+        readFromFilePath(filePath, 3);
+    else 
+        readFromFilePath(filePath, 4);
+}
 
-bool Texture::readFromFilePath(const char* filePath) {
+bool Texture::readFromFilePath(const char* filePath, int interval) {
     int width, height, channels;
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
 
@@ -26,7 +32,7 @@ bool Texture::readFromFilePath(const char* filePath) {
         for (int y = 0; y < height; ++y) {
             // cout << '\n';
             for (int x = 0; x < width; ++x) {
-                int index = (y * width + x) * 4;
+                int index = (y * width + x) * interval;
                 int r = data[index];
                 int g = data[index+1];
                 int b = data[index+2];
@@ -68,6 +74,8 @@ SDL_Color Texture::sample(Vec3 p){
     int x = static_cast<int> (p.x * w) % w; 
     int y = static_cast<int> (p.y * h) % h;
 
+    // cout << "X E Y:" << x << ' ' << y << endl;
+    if (x < 0 || x >= w || y < 0 || y >= h) return {100, 100, 100, 100};
     return matrizDeCores[y][x];
 }
 

@@ -75,7 +75,8 @@ int main ( int argc, char *argv[] ) {
     // mesh->faces.push_back({ 0,2,3 });
     // mesh->renderizar();
 
-    Plano* chao = new Plano(1, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -150, 0), Vec3(0, 1, 0));
+    Texture* textura = new Texture("assets/wood.png");
+    Plano* chao = new Plano(1, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -150, 0), Vec3(0, 1, 0), textura);
     Plano* paredeLateralDireita = new Plano(2, corAzul, BaseMaterial(Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), 1), Vec3(200, -150, 0), Vec3(-1, 0, 0));
     Plano* paredeFrontal = new Plano(3, corAzul, BaseMaterial(Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), 1), Vec3(200, -150, -400), Vec3(0, 0, 1));
     Plano* paredeLateralEsquerda = new Plano(4, corAzul, BaseMaterial(Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), Vec3(0.686, 0.933, 0.933), 1), Vec3(-200, -150, 0), Vec3(1, 0, 0));
@@ -103,15 +104,15 @@ int main ( int argc, char *argv[] ) {
     Cilindro* cilindroTeste = new Cilindro(101, corAzul, Vec3(50, 20, -200), Vec3(50, 90, -200), 45);
 
     cenario->objetos.push_back(chao);
-    cenario->objetos.push_back(paredeLateralDireita);
-    cenario->objetos.push_back(paredeFrontal);
-    cenario->objetos.push_back(paredeLateralEsquerda);
-    cenario->objetos.push_back(teto);
+    // cenario->objetos.push_back(paredeLateralDireita);
+    // cenario->objetos.push_back(paredeFrontal);
+    // cenario->objetos.push_back(paredeLateralEsquerda);
+    // cenario->objetos.push_back(teto);
 
-    cenario->objetos.push_back(cilindro);
-    cenario->objetos.push_back(cone);
-    cenario->objetos.push_back(cubo);
-    cenario->objetos.push_back(esfera);
+    // cenario->objetos.push_back(cilindro);
+    // cenario->objetos.push_back(cone);
+    // cenario->objetos.push_back(cubo);
+    // cenario->objetos.push_back(esfera);
 
     cenario->luzes.push_back(luzPontual);
 

@@ -1,0 +1,42 @@
+# Blender 3.5.0 MTL File: 'None'
+# www.blender.org
+
+newmtl cartman_body
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:/Users/danys/Downloads/modelos/Cartman/cartman_all.png
+
+newmtl cartman_chin
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:/Users/danys/Downloads/modelos/Cartman/cartman_chin.png
+
+newmtl cartman_eyes
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:/Users/danys/Downloads/modelos/Cartman/cartman_eyes_1.png
+
+newmtl cartman_mouth
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:/Users/danys/Downloads/modelos/Cartman/cartman_mouth_1.png

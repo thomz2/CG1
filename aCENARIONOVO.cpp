@@ -56,11 +56,11 @@ int main ( int argc, char *argv[] ) {
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookat(0, -10, -dJanela);
-    Vec3 lookfrom(0, 40, 70);
+    Vec3 lookat(0, 0, -dJanela);
+    Vec3 lookfrom(0, 0, 100);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.5), camera);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.8, 0.8, 0.8), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
 
@@ -68,17 +68,9 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corVerde = {0, 255, 0, 255};
     SDL_Color corAzul = {0, 0, 255, 255};
 
-    // Mesh* mesh = new Mesh(1);
-    // mesh->vertices.push_back(Vec3(0, 0, -dJanela));
-    // mesh->vertices.push_back(Vec3(30, 0, -dJanela));
-    // mesh->vertices.push_back(Vec3(30, 30, -dJanela));
-    // mesh->faces.push_back({ 0,1,2 });
-    // mesh->vertices.push_back({ 0,30,-dJanela });
-    // mesh->faces.push_back({ 0,2,3 });
-    // mesh->renderizar();
-
-    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20, 0), Vec3(0, 1, 0));
-    Plano* planoDeFundo = new Plano(6, corAzul, BaseMaterial(Vec3(0.3, 0.3, 0.7), Vec3(0, 0, 0), Vec3(0.3, 0.3, 0.7), 1), Vec3(0, 0, -200), Vec3(0, 0, 1));
+    Texture* textura = new Texture("assets/snow.png", true);
+    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20, 0), Vec3(0, 1, 0), textura);
+    Plano* planoDeFundo = new Plano(6, corAzul, BaseMaterial(Vec3(0, 1, 1), Vec3(0, 0, 0), Vec3(0, 1, 1), 1), Vec3(0, 0, -700), Vec3(0, 0, 1));
 
 
     BaseMaterial materialMesh = BaseMaterial();
@@ -88,26 +80,31 @@ int main ( int argc, char *argv[] ) {
     // ObjMesh* mesh3 = new ObjMesh(3, "assets/mine_cube/cube.obj", "assets/uv_test.png", materialMesh);
     // mesh3->applyMatrix(Transformations::scale(25, 25, 25));
     // mesh3->applyMatrix(Transformations::translate(0, 0, -50));
-    ObjMesh* megaman = new ObjMesh(4, "assets/megaman/megaman.obj", "assets/megaman/Megaman.png", materialMesh);
-    megaman->applyMatrix(Transformations::scale(1, 1, 1).apply(Transformations::translate(0, 20, 0)).apply(Transformations::rotateYAroundPoint(135, Vec3(0, 0, 0))));
-
-    ObjMesh* roll = new ObjMesh(5, "assets/roll/roll.obj", "assets/roll/Roll_(Cutscene).png", materialMesh);
-    roll->applyMatrix(Transformations::translate(18, 18, -18).apply(Transformations::rotateYAroundPoint(109, Vec3(20, 20, -20))));
 
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
-    stan->applyMatrix(Transformations::translate(-20, 0, -18));
+    stan->applyMatrix(Transformations::translate(-35, -20, -18));
+
+    ObjMesh* cartman = new ObjMesh(7, "assets/cartman/cartman2.obj", "assets/cartman/cartman_all.png", materialMesh);
+    cartman->applyMatrix(Transformations::translate(35, -20, -18));
+
+    Cone* montanha1 = new Cone(8, corAzul, Vec3(-500, -20, -900), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha2 = new Cone(9, corAzul, Vec3(500, -20, -850), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+
 
     // megaman->applyMatrix();
 
     // mesh2->textura->testColors();
 
-    Luz* luzPontual = new Luz(Vec3(-40, 25, 0), Vec3(0.8, 0.8, 0.8));
+    Luz* luzPontual = new Luz(Vec3(-550, 525, 0), Vec3(0.3, 0.3, 0.3));
 
-    cenario->objetos.push_back(megaman);
-    cenario->objetos.push_back(roll);
+    // cenario->objetos.push_back(megaman);
+    // cenario->objetos.push_back(roll);
     cenario->objetos.push_back(stan);
+    cenario->objetos.push_back(cartman);
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(planoDeFundo);
+    cenario->objetos.push_back(montanha1);
+    cenario->objetos.push_back(montanha2);
 
     cenario->luzes.push_back(luzPontual);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./Objeto.h"
+#include "./mesh/Texture.h"
 #include "../math/Vec3.h"
 #include "../types/LPointGetType.h"
 
@@ -11,8 +12,11 @@ public:
     Vec3 Ppi;
     Vec3 n;
 
+    Texture* textura;
+
     Plano(int id, BaseMaterial material, Vec3 Ppi);
     Plano(int id, SDL_Color cor, BaseMaterial material, Vec3 Ppi, Vec3 n);
+    Plano(int id, SDL_Color cor, BaseMaterial material, Vec3 Ppi, Vec3 n, Texture* textura);
     Plano(int id, SDL_Color cor, BaseMaterial material, Vec3 Ppi);
 
     void setNormal(Vec3 normal);

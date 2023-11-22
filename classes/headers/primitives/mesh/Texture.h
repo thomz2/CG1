@@ -11,8 +11,9 @@ class Texture {
 
         Texture();
         Texture(const char* filePath);
+        Texture(const char* filePath, bool isRGB);
         void initializeMatrix(int w, int h); 
-        bool readFromFilePath(const char* filePath);
+        bool readFromFilePath(const char* filePath, int interval = 4);
         SDL_Color sample(Vec3 p);
 
         void testColors();
