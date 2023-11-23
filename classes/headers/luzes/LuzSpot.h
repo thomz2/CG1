@@ -1,14 +1,13 @@
 #include "./Luz.h"
-#include <vector>
-#include "../primitives/Objeto.h"
-#include "../materiais/BaseMaterial.h"
+#include "./LuzPontual.h"
 #pragma once
 
 using namespace std;
 
-class LuzPontual : public Luz {
+class LuzSpot : public LuzPontual {
 public:
-    LuzPontual(Vec3 posicao, Vec3 intensidade);
+    double theta;
+    Vec3 direcao;
+    LuzSpot(Vec3 posicao, Vec3 intensidade, Vec3 direcao, double GRAUS);
     Vec3 calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray raycaster, BaseMaterial material);
-
 };

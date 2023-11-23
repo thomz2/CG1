@@ -20,6 +20,8 @@
 #include "classes/headers/primitives/Mesh.h"
 #include "classes/headers/primitives/ObjMesh.h"
 #include "classes/headers/primitives/mesh/Texture.h"
+#include "classes/headers/luzes/LuzPontual.h"
+#include "classes/headers/luzes/LuzSpot.h"
 
 using namespace std;
 
@@ -95,7 +97,8 @@ int main ( int argc, char *argv[] ) {
 
     // mesh2->textura->testColors();
 
-    Luz* luzPontual = new Luz(Vec3(-550, 525, 0), Vec3(0.3, 0.3, 0.3));
+    // LuzPontual* luzPontual = new LuzPontual(Vec3(-550, 525, 0), Vec3(0.3, 0.3, 0.3));
+    LuzSpot* luzSpot = new LuzSpot(Vec3(0, 400, -18), Vec3(0.8, 0.8, 0.8), Vec3(0, -1, 0), 15);
 
     // cenario->objetos.push_back(megaman);
     // cenario->objetos.push_back(roll);
@@ -106,7 +109,8 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(montanha1);
     cenario->objetos.push_back(montanha2);
 
-    cenario->luzes.push_back(luzPontual);
+    // cenario->luzes.push_back(luzPontual);
+    cenario->luzes.push_back(luzSpot);
 
     const int nCol = 500;
     const int nLin = 500;
@@ -137,7 +141,7 @@ int main ( int argc, char *argv[] ) {
             camera->renderAndPaintCanvasThread(4, 1);
             colorirCenario(renderer, cenario, nLin, nCol);
         }
-        i += 1;
+        i += 1; 
         
         SDL_RenderPresent(renderer); // usar para pintar
         if ( window = nullptr ) {

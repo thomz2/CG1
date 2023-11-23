@@ -86,34 +86,36 @@ SDL_Color Camera::renderPixel(int l, int c) {
 
             for (Luz* luz: cenario->luzes) {
 
-                Vec3 lv = (luz->posicao - ponto_mais_prox).norm();
-                Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
-                Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
+                // Vec3 lv = (luz->posicao - ponto_mais_prox).norm();
+                // Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
+                // Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
 
-                Ray raisombra = Ray(luz->posicao, lv * (-1));
-                double L = (luz->posicao - ponto_mais_prox).modulo();
-                bool temSombra = false;
-                for (auto* objeto : cenario->objetos) {
-                    optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
-                    if (interseccao.has_value() && interseccao.value().tint < L - 0.000001) {
-                        temSombra = true; break;
-                    }
-                }
+                // Ray raisombra = Ray(luz->posicao, lv * (-1));
+                // double L = (luz->posicao - ponto_mais_prox).modulo();
+                // bool temSombra = false;
+                // for (auto* objeto : cenario->objetos) {
+                //     optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
+                //     if (interseccao.has_value() && interseccao.value().tint < L - 0.000001) {
+                //         temSombra = true; break;
+                //     }
+                // }
 
-                if (temSombra) continue; // vai pra proxima luz
+                // if (temSombra) continue; // vai pra proxima luz
 
-                double f_dif = max(0.0, lv.dot(normal));
-                double f_esp = pow(max(0.0, vv.dot(rv)), material.getM());
+                // double f_dif = max(0.0, lv.dot(normal));
+                // double f_esp = pow(max(0.0, vv.dot(rv)), material.getM());
 
-                // usando operador @ (|)
-                Vec3 aux1 = ((material.getRugosidade()) * f_dif);
-                Vec3 aux2 = ((material.getRefletividade()) * f_esp);
+                // // usando operador @ (|)
+                // Vec3 aux1 = ((material.getRugosidade()) * f_dif);
+                // Vec3 aux2 = ((material.getRefletividade()) * f_esp);
 
-                Vec3 iDif = luz->intensidade | aux1;
-                Vec3 iEsp = luz->intensidade | aux2;
+                // Vec3 iDif = luz->intensidade | aux1;
+                // Vec3 iEsp = luz->intensidade | aux2;
             
-                Vec3 anterior = intensidadeCor;
-                intensidadeCor = anterior + iDif + iEsp;
+                // Vec3 anterior = intensidadeCor;
+                // intensidadeCor = anterior + iDif + iEsp;
+
+                intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno, raycaster, material));
 
                 if (intensidadeCor.x > 1) intensidadeCor.x = 1;
                 if (intensidadeCor.y > 1) intensidadeCor.y = 1;
