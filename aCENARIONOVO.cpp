@@ -98,7 +98,7 @@ int main ( int argc, char *argv[] ) {
     // mesh2->textura->testColors();
 
     // LuzPontual* luzPontual = new LuzPontual(Vec3(-550, 525, 0), Vec3(0.3, 0.3, 0.3));
-    LuzSpot* luzSpot = new LuzSpot(Vec3(0, 400, -18), Vec3(0.8, 0.8, 0.8), Vec3(0, -1, 0), 15);
+    LuzSpot* luzSpot = new LuzSpot(Vec3(0, 400, -18), Vec3(1, 1, 1), Vec3(0, -1, 0), 10);
 
     // cenario->objetos.push_back(megaman);
     // cenario->objetos.push_back(roll);

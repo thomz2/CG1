@@ -38,11 +38,13 @@ Vec3 LuzPontual::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray 
 
 
     // fator de distancia
-    // double distanceDecayFactor = 1 / ((luz->posicao - raycast->contact_position)).magSquared();
+    // TODO: melhorar eficiencia na classe vec3
+    double distanceDecayFactor = 10000.0 / pow(((luz->posicao.sub(raycaster.Pinicial))).modulo(), 2);
+    
     // fim fator distancia
 
-    Vec3 iDif = luz->intensidade | aux1;
-    Vec3 iEsp = luz->intensidade | aux2;
+    Vec3 iDif = luz->intensidade.mult(distanceDecayFactor) | aux1;
+    Vec3 iEsp = luz->intensidade.mult(distanceDecayFactor) | aux2;
 
     return iDif.add(iEsp);
             
