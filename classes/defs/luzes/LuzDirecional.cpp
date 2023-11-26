@@ -1,29 +1,29 @@
-#include "../../headers/luzes/LuzPontual.h"
+#include "../../headers/luzes/LuzDirecional.h"
 #include "../../headers/Ray.h"
 #include <math.h>
+#include <limits.h>
 
 using namespace std;
 
-LuzPontual::LuzPontual(Vec3 posicao, Vec3 intensidade) : Luz(posicao, intensidade) {}
+LuzDirecional::LuzDirecional(Vec3 intensidade, Vec3 direcao) : Luz(Vec3(0, 0, 0), intensidade), direcao(direcao) {}
 
-Vec3 LuzPontual::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray raycaster, BaseMaterial material) {
+Vec3 LuzDirecional::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray raycaster, BaseMaterial material) {
 
     Vec3 ponto_mais_prox = retorno.posContato;
     Vec3 normal          = retorno.normalContato.norm();
     double tint          = retorno.tint;
 
-    LuzPontual* luz = this;
+    LuzDirecional* luz = this;
 
-    Vec3 lv = (luz->posicao - ponto_mais_prox).norm();
+    Vec3 lv = (Vec3(0,0,0) - luz->direcao).norm();
     Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
     Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
 
-    Ray raisombra = Ray(luz->posicao, lv * (-1));
-    double L = (luz->posicao - ponto_mais_prox).modulo();
+    Ray raisombra = Ray(ponto_mais_prox, this->direcao.mult(-1));
     bool temSombra = false;
     for (auto* objeto : objs) {
         optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
-        if (interseccao.has_value() && interseccao.value().tint < L - 0.000001) {
+        if (interseccao.has_value() && interseccao.value().tint > 1) {
             // temSombra = true; break;
             return Vec3(0, 0, 0); // intensidade vazia
         }
@@ -36,15 +36,8 @@ Vec3 LuzPontual::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray 
     Vec3 aux1 = ((material.getRugosidade()) * f_dif);
     Vec3 aux2 = ((material.getRefletividade()) * f_esp);
 
-
-    // fator de distancia
-    // TODO: melhorar eficiencia na classe vec3
-    double distanceDecayFactor = 100000.0 / pow(((luz->posicao.sub(raycaster.Pinicial))).modulo(), 2);
-    
-    // fim fator distancia
-
-    Vec3 iDif = luz->intensidade.mult(distanceDecayFactor) | aux1;
-    Vec3 iEsp = luz->intensidade.mult(distanceDecayFactor) | aux2;
+    Vec3 iDif = luz->intensidade | aux1;
+    Vec3 iEsp = luz->intensidade | aux2;
 
     return iDif.add(iEsp);
             

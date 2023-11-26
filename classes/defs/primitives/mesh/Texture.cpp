@@ -21,9 +21,6 @@ bool Texture::readFromFilePath(const char* filePath, int interval) {
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
 
     if (data) {
-
-        cout << "entrou no if data" << endl;
-
         this->w = width;
         this->h = height;
         this->initializeMatrix(width, height);
@@ -49,17 +46,15 @@ bool Texture::readFromFilePath(const char* filePath, int interval) {
 
             }
         }
-
-        cout << "finish" << endl;
-
-
     } else {
         // Handle error loading texture
         // For example, print an error message or throw an exception
         cout << "ERRO DATA NULA\n";
+        return false;
     }
 
     stbi_image_free(data);
+    return true;
 }
 
 void Texture::initializeMatrix(int w, int h) {

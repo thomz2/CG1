@@ -30,6 +30,34 @@ void Camera::initialize2(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, doub
     this->h = tan(theta/2);
     this->hJanela = 2 * h * focal_length;
     this->wJanela = hJanela * (imageWidth/imageHeight);
+    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+
+
+    // // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+    // this->w = lookfrom.sub(lookat).norm();
+    // this->u = vup.cross(w);
+    // this->v = w.cross(u);
+
+    // // informacoes de renderizacao
+    // viewport_u = u.mult(wJanela);
+    // viewport_v = v.mult(-hJanela);
+
+    // pixel_delta_u = viewport_u.div(imageWidth);
+    // pixel_delta_v = viewport_v.div(imageHeight);
+
+    // viewport_upper_left 
+    //     = center.sub((w.mult(focal_length))).sub(viewport_u.div(2)).sub(viewport_v.div(2));
+
+    // pixel00_loc = viewport_upper_left.add( (pixel_delta_u.add(pixel_delta_v)).mult(0.5) );
+
+    update();
+
+}
+
+void Camera::update() {
+    if (imageWidth < 0 || imageHeight < 0) return;
+
+    Vec3 center = lookfrom;
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     this->w = lookfrom.sub(lookat).norm();
@@ -47,7 +75,6 @@ void Camera::initialize2(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, doub
         = center.sub((w.mult(focal_length))).sub(viewport_u.div(2)).sub(viewport_v.div(2));
 
     pixel00_loc = viewport_upper_left.add( (pixel_delta_u.add(pixel_delta_v)).mult(0.5) );
-
 }
 
 void Camera::initializeRenderAndWindow(int width, int height, SDL_Renderer **renderer, SDL_Window **window) {
@@ -85,36 +112,6 @@ SDL_Color Camera::renderPixel(int l, int c) {
             Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
 
             for (Luz* luz: cenario->luzes) {
-
-                // Vec3 lv = (luz->posicao - ponto_mais_prox).norm();
-                // Vec3 vv = Vec3(-raycaster.direcao.x, -raycaster.direcao.y, -raycaster.direcao.z);
-                // Vec3 rv = normal * (2 * (lv.dot(normal))) - lv;
-
-                // Ray raisombra = Ray(luz->posicao, lv * (-1));
-                // double L = (luz->posicao - ponto_mais_prox).modulo();
-                // bool temSombra = false;
-                // for (auto* objeto : cenario->objetos) {
-                //     optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
-                //     if (interseccao.has_value() && interseccao.value().tint < L - 0.000001) {
-                //         temSombra = true; break;
-                //     }
-                // }
-
-                // if (temSombra) continue; // vai pra proxima luz
-
-                // double f_dif = max(0.0, lv.dot(normal));
-                // double f_esp = pow(max(0.0, vv.dot(rv)), material.getM());
-
-                // // usando operador @ (|)
-                // Vec3 aux1 = ((material.getRugosidade()) * f_dif);
-                // Vec3 aux2 = ((material.getRefletividade()) * f_esp);
-
-                // Vec3 iDif = luz->intensidade | aux1;
-                // Vec3 iEsp = luz->intensidade | aux2;
-            
-                // Vec3 anterior = intensidadeCor;
-                // intensidadeCor = anterior + iDif + iEsp;
-
                 intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno, raycaster, material));
 
                 if (intensidadeCor.x > 1) intensidadeCor.x = 1;
@@ -210,4 +207,21 @@ void Camera::changeFov(double vFov) {
 
     this->hJanela = 2 * h * focal_length;
     this->wJanela = hJanela * (imageWidth/imageHeight);
+
+    update();
+
+    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+
+}
+
+void Camera::changeFovAlt(double dFocal, double wJanela, double hJanela) {
+
+    this->focal_length = dFocal;
+    this->hJanela = hJanela;
+    this->wJanela = wJanela;
+
+    update();
+
+    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+
 }

@@ -22,6 +22,7 @@
 #include "classes/headers/primitives/mesh/Texture.h"
 #include "classes/headers/luzes/LuzPontual.h"
 #include "classes/headers/luzes/LuzSpot.h"
+#include "classes/headers/luzes/LuzDirecional.h"
 
 using namespace std;
 
@@ -43,10 +44,6 @@ void colorirCenario(SDL_Renderer* renderer, Scene* cenario, int nLin, int nCol) 
 }
 
 int main ( int argc, char *argv[] ) {
-
-    MaterialTarefa material = MaterialTarefa();
-    cout << material.getRefletividade() << endl;
-
 
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
     SDL_Renderer *renderer;
@@ -97,20 +94,22 @@ int main ( int argc, char *argv[] ) {
 
     // mesh2->textura->testColors();
 
-    // LuzPontual* luzPontual = new LuzPontual(Vec3(-550, 525, 0), Vec3(0.3, 0.3, 0.3));
-    LuzSpot* luzSpot = new LuzSpot(Vec3(0, 400, -18), Vec3(1, 1, 1), Vec3(0, -1, 0), 10);
+    LuzPontual* luzPontual = new LuzPontual(Vec3(-250, 125, 0), Vec3(0.5, 0.5, 0.5));
+    LuzSpot* luzSpot = new LuzSpot(Vec3(20, 30, -18), Vec3(1, 1, 1), Vec3(-1, -1, 0).norm(), 60);
+    LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.5, 0.5, 0.5), Vec3(-1, -1, 0).norm());
 
     // cenario->objetos.push_back(megaman);
     // cenario->objetos.push_back(roll);
     cenario->objetos.push_back(stan);
-    cenario->objetos.push_back(cartman);
+    // cenario->objetos.push_back(cartman);
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(planoDeFundo);
     cenario->objetos.push_back(montanha1);
     cenario->objetos.push_back(montanha2);
 
+    cenario->luzes.push_back(luzDirecional);
     // cenario->luzes.push_back(luzPontual);
-    cenario->luzes.push_back(luzSpot);
+    // cenario->luzes.push_back(luzSpot);
 
     const int nCol = 500;
     const int nLin = 500;
@@ -137,11 +136,14 @@ int main ( int argc, char *argv[] ) {
         // mesh2->applyMatrix(Transformations::scale(i, i, i));    
 
         // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-        if (i == 0) {
-            camera->renderAndPaintCanvasThread(4, 1);
+        // if (i == 0) {
+            // camera->changeFov(i+60);
+            camera->changeFovAlt(130+i, 260, 260);
+            // camera->initialize2(lookfrom, lookat, Vec3(0, 1, 0), i  + 60, WINDOW_WIDTH, WINDOW_HEIGHT);
+            camera->renderAndPaintCanvasThread(1,1);
             colorirCenario(renderer, cenario, nLin, nCol);
-        }
-        i += 1; 
+        // }
+        i += 1;  
         
         SDL_RenderPresent(renderer); // usar para pintar
         if ( window = nullptr ) {
