@@ -23,7 +23,7 @@ Vec3 LuzDirecional::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, R
     bool temSombra = false;
     for (auto* objeto : objs) {
         optional<LPointGetType> interseccao = objeto->intersecta(raisombra);
-        if (interseccao.has_value() && interseccao.value().tint > 1) {
+        if (interseccao.has_value() && interseccao.value().tint > 0.1) {
             // temSombra = true; break;
             return Vec3(0, 0, 0); // intensidade vazia
         }

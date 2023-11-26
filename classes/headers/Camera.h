@@ -24,8 +24,10 @@ class Camera {
         void renderAndPaintCanvasThread(int numThreads, int resScale = 1);
         void changeFov(double vFov);
         void changeFovAlt(double dFocal, double wJanela, double hJanela);
+        void changeCamera();
 
         Scene* cenario;
+        bool isParalel = false;
 
         // verificar se esses valores sao -1, se forem, eh pq nao sao utilizados (usamos tamanhos de janela predefinidos)
         double vFov = -1;
@@ -54,5 +56,8 @@ class Camera {
 
         Vec3 viewport_upper_left;
         Vec3 pixel00_loc;
+
+        Vec3 lookfrom_upper_left;
+        Vec3 pixel00_loc2;
 
 };

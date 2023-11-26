@@ -56,12 +56,14 @@ int main ( int argc, char *argv[] ) {
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
     Vec3 lookat(0, 0, -dJanela);
-    Vec3 lookfrom(0, 0, 100);
+    // Vec3 lookfrom(-30, 60, 90);
+    Vec3 lookfrom(0, 0, 50);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.8, 0.8, 0.8), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
+    // camera->changeCamera();
 
     SDL_Color corVermelha = {255, 0, 0, 255};
     SDL_Color corVerde = {0, 255, 0, 255};
@@ -81,7 +83,9 @@ int main ( int argc, char *argv[] ) {
     // mesh3->applyMatrix(Transformations::translate(0, 0, -50));
 
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
-    stan->applyMatrix(Transformations::translate(-35, -20, -18));
+    // stan->applyMatrix(Transformations::translate(-35, -20, -18));
+    stan->applyMatrix(Transformations::translate(0, -5, -18));
+
 
     ObjMesh* cartman = new ObjMesh(7, "assets/cartman/cartman2.obj", "assets/cartman/cartman_all.png", materialMesh);
     cartman->applyMatrix(Transformations::translate(35, -20, -18));
@@ -94,9 +98,13 @@ int main ( int argc, char *argv[] ) {
 
     // mesh2->textura->testColors();
 
-    LuzPontual* luzPontual = new LuzPontual(Vec3(-250, 125, 0), Vec3(0.5, 0.5, 0.5));
-    LuzSpot* luzSpot = new LuzSpot(Vec3(20, 30, -18), Vec3(1, 1, 1), Vec3(-1, -1, 0).norm(), 60);
+    LuzPontual* luzPontual = new LuzPontual(Vec3(-250, 125, 0), Vec3(0.2, 0.2, 0.2));
+    LuzSpot* luzSpot = new LuzSpot(Vec3(-15, 50, -18), Vec3(0.3, 0.3, 0.3), Vec3(0, -1, 0).norm(), 60);
     LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.5, 0.5, 0.5), Vec3(-1, -1, 0).norm());
+
+    // Esfera* esferaTeste = new Esfera(100, corAzul, Vec3(30, 30, -30), 15, BaseMaterial(Vec3(0.8, 0.2, 0.2), Vec3(0.2, 0.2, 0.8), Vec3(0.2, 0.8, 0.2), 10));
+    ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", BaseMaterial(Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), 1));
+    cubo->applyMatrix(Transformations::scale(5, 5, 5));
 
     // cenario->objetos.push_back(megaman);
     // cenario->objetos.push_back(roll);
@@ -106,7 +114,7 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(planoDeFundo);
     cenario->objetos.push_back(montanha1);
     cenario->objetos.push_back(montanha2);
-
+         
     cenario->luzes.push_back(luzDirecional);
     // cenario->luzes.push_back(luzPontual);
     // cenario->luzes.push_back(luzSpot);
@@ -136,13 +144,13 @@ int main ( int argc, char *argv[] ) {
         // mesh2->applyMatrix(Transformations::scale(i, i, i));    
 
         // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-        // if (i == 0) {
+        if (i == 0) {
             // camera->changeFov(i+60);
-            camera->changeFovAlt(130+i, 260, 260);
+            // camera->changeFovAlt(130+i, 260, 260);
             // camera->initialize2(lookfrom, lookat, Vec3(0, 1, 0), i  + 60, WINDOW_WIDTH, WINDOW_HEIGHT);
-            camera->renderAndPaintCanvasThread(1,1);
+            camera->renderAndPaintCanvasThread(4);
             colorirCenario(renderer, cenario, nLin, nCol);
-        // }
+        }
         i += 1;  
         
         SDL_RenderPresent(renderer); // usar para pintar

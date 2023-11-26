@@ -5,12 +5,18 @@
 #include "./../headers/Scene.h"
 
 #include <math.h>
+#include <cstdlib>
 #define M_PI 3.14159265358979323846
 
 using namespace std;
 
 double degreesToRadian(double dgvalue) {
     return dgvalue * (M_PI/180);
+}
+
+inline double random_double() {
+    // Returns a random real in [0,1).
+    return rand() / (RAND_MAX + 1.0);
 }
 
 Camera::Camera(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight) 
@@ -74,7 +80,12 @@ void Camera::update() {
     viewport_upper_left 
         = center.sub((w.mult(focal_length))).sub(viewport_u.div(2)).sub(viewport_v.div(2));
 
+    lookfrom_upper_left
+        = center.sub(viewport_u.div(2)).sub(viewport_v.div(2));
+
+
     pixel00_loc = viewport_upper_left.add( (pixel_delta_u.add(pixel_delta_v)).mult(0.5) );
+    pixel00_loc2 = lookfrom_upper_left.add( (pixel_delta_u.add(pixel_delta_v)).mult(0.5) );
 }
 
 void Camera::initializeRenderAndWindow(int width, int height, SDL_Renderer **renderer, SDL_Window **window) {
@@ -88,6 +99,12 @@ SDL_Color Camera::renderPixel(int l, int c) {
     Vec3 pixel_center = pixel00_loc.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
     Vec3 direcao = (pixel_center - lookfrom).norm(); // vetor unitario aki
     Ray raycaster(lookfrom, direcao);
+    if (isParalel) {
+        // cout << "oi";
+        pixel_center = pixel00_loc2.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
+        direcao = (lookat - lookfrom).norm();
+        raycaster = Ray(pixel_center, direcao);
+    }
 
     // TODO: refatorar funcao firstObj dps
     optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
@@ -224,4 +241,8 @@ void Camera::changeFovAlt(double dFocal, double wJanela, double hJanela) {
 
     cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
 
+}
+
+void Camera::changeCamera() {
+    this->isParalel = !(this->isParalel);
 }

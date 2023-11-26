@@ -20,6 +20,8 @@
 #include "classes/headers/primitives/Mesh.h"
 #include "classes/headers/primitives/ObjMesh.h"
 #include "classes/headers/primitives/mesh/Texture.h"
+#include "classes/headers/luzes/LuzPontual.h"
+
 
 using namespace std;
 
@@ -55,12 +57,14 @@ int main ( int argc, char *argv[] ) {
     const double dJanela = 30;
 
     Vec3 lookat(0, 0, -dJanela);
-    Vec3 lookfrom(0, 0, 0);
+    Vec3 lookfrom(0, 0, 100);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.3, 0.3, 0.3), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
+    camera->changeCamera();
+    camera->isParalel = true;
 
     SDL_Color corVermelha = {255, 0, 0, 255};
     SDL_Color corVerde = {0, 255, 0, 255};
@@ -90,8 +94,8 @@ int main ( int argc, char *argv[] ) {
 
     Esfera* esfera = new Esfera(9, corAzul, Vec3(0, 95, -200), 5, BaseMaterial(Vec3(0.854, 0.647, 0.125), Vec3(0.854, 0.647, 0.125), Vec3(0.854, 0.647, 0.125), 1));
 
-    Luz* luzPontual = new Luz(Vec3(-100, 140, -20), Vec3(0.7, 0.7, 0.7));
-    Luz* luzTeste = new Luz(Vec3(-100, -100, -20), Vec3(0.7, 0.7, 0.7));
+    LuzPontual* luzPontual = new LuzPontual(Vec3(-100, 140, -20), Vec3(0.3, 0.3, 0.3));
+    LuzPontual* luzTeste = new LuzPontual(Vec3(-100, -100, -20), Vec3(0.7, 0.7, 0.7));
 
     Esfera* esfera2 = new Esfera(0, corVermelha, Vec3(0, 0, -100), 40, MaterialTarefa());
     Plano* chao2 = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -55, 0), Vec3(0, 1, 0));
@@ -104,15 +108,15 @@ int main ( int argc, char *argv[] ) {
     Cilindro* cilindroTeste = new Cilindro(101, corAzul, Vec3(50, 20, -200), Vec3(50, 90, -200), 45);
 
     cenario->objetos.push_back(chao);
-    // cenario->objetos.push_back(paredeLateralDireita);
-    // cenario->objetos.push_back(paredeFrontal);
-    // cenario->objetos.push_back(paredeLateralEsquerda);
-    // cenario->objetos.push_back(teto);
+    cenario->objetos.push_back(paredeLateralDireita);
+    cenario->objetos.push_back(paredeFrontal);
+    cenario->objetos.push_back(paredeLateralEsquerda);
+    cenario->objetos.push_back(teto);
 
-    // cenario->objetos.push_back(cilindro);
-    // cenario->objetos.push_back(cone);
-    // cenario->objetos.push_back(cubo);
-    // cenario->objetos.push_back(esfera);
+    cenario->objetos.push_back(cilindro);
+    cenario->objetos.push_back(cone);
+    cenario->objetos.push_back(cubo);
+    cenario->objetos.push_back(esfera);
 
     cenario->luzes.push_back(luzPontual);
 
