@@ -26,17 +26,17 @@ Camera::Camera(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWi
 
 void Camera::initialize2(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight) {
 
-    this->imageWidth = imageWidth;
-    this->imageHeight = imageHeight;
+    // this->imageWidth = imageWidth;
+    // this->imageHeight = imageHeight;
 
-    Vec3 center = lookfrom;
+    // Vec3 center = lookfrom;
 
-    this->focal_length = (lookfrom.sub(lookat)).modulo();
-    this->theta = degreesToRadian(vFov);
-    this->h = tan(theta/2);
-    this->hJanela = 2 * h * focal_length;
-    this->wJanela = hJanela * (imageWidth/imageHeight);
-    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+    // this->focal_length = (lookfrom.sub(lookat)).modulo();
+    // this->theta = degreesToRadian(vFov);
+    // this->h = tan(theta/2);
+    // this->hJanela = 2 * h * focal_length;
+    // this->wJanela = hJanela * (imageWidth/imageHeight);
+    // cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
 
 
     // // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
@@ -65,10 +65,19 @@ void Camera::update() {
 
     Vec3 center = lookfrom;
 
+    if (vFov != -1) {
+        this->focal_length = (lookfrom.sub(lookat)).modulo();
+        this->theta = degreesToRadian(vFov);
+        this->h = tan(theta/2);
+        this->hJanela = 2 * h * focal_length;
+        this->wJanela = hJanela * (imageWidth/imageHeight);
+    }
+    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
-    this->w = lookfrom.sub(lookat).norm();
-    this->u = vup.cross(w);
-    this->v = w.cross(u);
+    this->w = lookfrom.sub(lookat).norm(); // tras
+    this->u = vup.cross(w); // direita
+    this->v = w.cross(u); // "cima"
 
     // informacoes de renderizacao
     viewport_u = u.mult(wJanela);
@@ -225,7 +234,7 @@ void Camera::changeFov(double vFov) {
     this->hJanela = 2 * h * focal_length;
     this->wJanela = hJanela * (imageWidth/imageHeight);
 
-    update();
+    // update();
 
     cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
 
@@ -236,8 +245,9 @@ void Camera::changeFovAlt(double dFocal, double wJanela, double hJanela) {
     this->focal_length = dFocal;
     this->hJanela = hJanela;
     this->wJanela = wJanela;
+    this->vFov = -1; // indicando que nao vai calcular a partir do fov
 
-    update();
+    // update();
 
     cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
 
@@ -245,4 +255,40 @@ void Camera::changeFovAlt(double dFocal, double wJanela, double hJanela) {
 
 void Camera::changeCamera() {
     this->isParalel = !(this->isParalel);
+}
+
+void Camera::moveForward(float speed) {
+    this->lookfrom = this->lookfrom.sub(w.mult(speed));
+    this->lookat = this->lookat.sub(w.mult(speed));
+    // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
+}
+
+void Camera::moveBackward(float speed) {
+    this->lookfrom = this->lookfrom.add(w.mult(speed));
+    this->lookat = this->lookat.add(w.mult(speed));
+    // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
+}
+
+void Camera::moveLeft(float speed) {
+    this->lookfrom = this->lookfrom.sub(u.mult(speed));
+    this->lookat = this->lookat.sub(u.mult(speed));
+    // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
+}
+
+void Camera::moveRight(float speed) {
+    this->lookfrom = this->lookfrom.add(u.mult(speed));
+    this->lookat = this->lookat.add(u.mult(speed));
+    // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
+}
+
+void Camera::moveDown(float speed) {
+    this->lookfrom = this->lookfrom.sub(v.mult(speed));
+    this->lookat = this->lookat.sub(v.mult(speed));
+    // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);   
+}
+
+void Camera::moveUp(float speed) {
+    this->lookfrom = this->lookfrom.add(v.mult(speed));
+    this->lookat = this->lookat.add(v.mult(speed));
+    // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
 }

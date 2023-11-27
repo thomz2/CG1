@@ -26,6 +26,15 @@ class Camera {
         void changeFovAlt(double dFocal, double wJanela, double hJanela);
         void changeCamera();
 
+        // controles
+        void moveForward(float speed);
+        void moveBackward(float speed);
+        void moveLeft(float speed);
+        void moveRight(float speed);
+        void moveDown(float speed);
+        void moveUp(float speed);
+
+
         Scene* cenario;
         bool isParalel = false;
 

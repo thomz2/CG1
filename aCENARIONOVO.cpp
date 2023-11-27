@@ -127,31 +127,64 @@ int main ( int argc, char *argv[] ) {
 
     bool rodando = true;
     double i = 0;
+    double res = 10;
     while (rodando) {
-        // cout << i << endl;
-    //     // for (int i = -100; i <= 0 ; i+=5) {
-
         SDL_Event windowEvent;
         while ( SDL_PollEvent(&windowEvent) ) {
             if (SDL_QUIT == windowEvent.type) { 
                 rodando = false;
                 break; 
             }
+            else if (windowEvent.type == SDL_KEYDOWN) {
+                // Lógica para teclas pressionadas
+                switch (windowEvent.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        rodando = false;
+                        break;
+                    case SDLK_w:
+                        // Lógica para mover a câmera para cima
+                        camera->moveForward(5);
+                        break;
+                    case SDLK_s:
+                        // Lógica para mover a câmera para baixo
+                        camera->moveBackward(5);
+                        break;
+                    case SDLK_a:
+                        // Lógica para mover a câmera para a esquerda
+                        camera->moveLeft(5);
+                        break;
+                    case SDLK_d:
+                        // Lógica para mover a câmera para a direita
+                        camera->moveRight(5);
+                        break;
+                    case SDLK_LSHIFT:
+                        camera->moveDown(5);
+                        break;
+                    case SDLK_RSHIFT:
+                        camera->moveDown(5);
+                        break;
+                    case SDLK_SPACE:
+                        camera->moveUp(5);
+                        break;
+                    case SDLK_1:
+                        res = 1;
+                        break;
+                    case SDLK_2:
+                        res = 2;
+                        break;
+                    case SDLK_5:
+                        res = 5;
+                        break;
+                    case SDLK_9:
+                        res = 10;
+                        break;
+                }
+            }
         }
 
-        // mesh2->applyMatrix(Transformations::rotateZAroundPointDegrees(1, Vec3(0, 0, 0)).apply(Transformations::rotateXAroundPointDegrees(1, Vec3(0, 0, 0))));
-        // mesh2->applyMatrix(Transformations::translate(0, -i, 0));
-        // mesh2->applyMatrix(Transformations::scale(i, i, i));    
-
-        // camera->initialize2(Vec3(i, 0, 50), Vec3(0, 10, -dJanela), Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-        if (i == 0) {
-            // camera->changeFov(i+60);
-            // camera->changeFovAlt(130+i, 260, 260);
-            // camera->initialize2(lookfrom, lookat, Vec3(0, 1, 0), i  + 60, WINDOW_WIDTH, WINDOW_HEIGHT);
-            camera->renderAndPaintCanvasThread(4);
-            colorirCenario(renderer, cenario, nLin, nCol);
-        }
-        i += 1;  
+        camera->update();
+        camera->renderAndPaintCanvasThread(4, res);
+        colorirCenario(renderer, cenario, nLin, nCol);
         
         SDL_RenderPresent(renderer); // usar para pintar
         if ( window = nullptr ) {
