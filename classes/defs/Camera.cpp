@@ -292,3 +292,10 @@ void Camera::moveUp(float speed) {
     this->lookat = this->lookat.add(v.mult(speed));
     // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
 }
+
+void Camera::lookLeft(float degrees) {}
+void Camera::lookRight(float degrees) {}
+void Camera::lookDown(float degrees) {}
+void Camera::lookUp(float degrees) {}
+
+

@@ -7,6 +7,7 @@ class Transformations{
     public:
     static constexpr double pi = 3.14159265358979323846;
     static Mat4 scale(double x, double y, double z);
+    static Mat4 scaleArroundPoint(double x, double y, double z, Vec3 point);
     static Mat4 translate(double x, double y, double z);
     static Mat4 rotateXByDegree(double angulo);
     static Mat4 rotateXByRadian(double angulo_radiano);
@@ -20,4 +21,6 @@ class Transformations{
     static Mat4 rotateXAroundPointDegrees(double degrees, Vec3 point);
     static Mat4 rotateYAroundPointDegrees(double degrees, Vec3 point);
     static Mat4 rotateZAroundPointDegrees(double degrees, Vec3 point);
+    static Mat4 rotateAroundAxisDegrees(double degrees, Vec3 point, Vec3 axis);
+    static Mat4 rotateAroundAxis(double angle, Vec3 point, Vec3 axis);
 };

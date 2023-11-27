@@ -26,13 +26,19 @@ class Camera {
         void changeFovAlt(double dFocal, double wJanela, double hJanela);
         void changeCamera();
 
-        // controles
+        // ====== controles ====== 
         void moveForward(float speed);
         void moveBackward(float speed);
         void moveLeft(float speed);
         void moveRight(float speed);
         void moveDown(float speed);
         void moveUp(float speed);
+
+        void lookLeft(float degrees);
+        void lookRight(float degrees);
+        void lookDown(float degrees);
+        void lookUp(float degrees);
+        //  ====== controles ====== 
 
 
         Scene* cenario;
