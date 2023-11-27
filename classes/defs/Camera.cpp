@@ -236,7 +236,7 @@ void Camera::changeFov(double vFov) {
 
     // update();
 
-    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+    // cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
 
 }
 
@@ -249,7 +249,7 @@ void Camera::changeFovAlt(double dFocal, double wJanela, double hJanela) {
 
     // update();
 
-    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+    // cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
 
 }
 
@@ -282,20 +282,42 @@ void Camera::moveRight(float speed) {
 }
 
 void Camera::moveDown(float speed) {
-    this->lookfrom = this->lookfrom.sub(v.mult(speed));
-    this->lookat = this->lookat.sub(v.mult(speed));
+    this->lookfrom = this->lookfrom.sub(Vec3(0, 1, 0).mult(speed));
+    this->lookat = this->lookat.sub(Vec3(0, 1, 0).mult(speed));
     // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);   
 }
 
 void Camera::moveUp(float speed) {
-    this->lookfrom = this->lookfrom.add(v.mult(speed));
-    this->lookat = this->lookat.add(v.mult(speed));
+    this->lookfrom = this->lookfrom.add(Vec3(0, 1, 0).mult(speed));
+    this->lookat = this->lookat.add(Vec3(0, 1, 0).mult(speed));
     // this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
 }
 
-void Camera::lookLeft(float degrees) {}
-void Camera::lookRight(float degrees) {}
-void Camera::lookDown(float degrees) {}
-void Camera::lookUp(float degrees) {}
+void Camera::lookLeft(float degrees) {
+    this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(degrees, this->lookfrom, v))).getVec3();
+}
+void Camera::lookRight(float degrees) {
+    this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(-degrees, this->lookfrom, v))).getVec3();
+}
+void Camera::lookDown(float degrees) {
+    pitch -= degrees;
+    if (pitch < -89.0f) {
+        pitch = -89.0f;
+        return;
+    }
+    cout << pitch << endl;
+    this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(-degrees, this->lookfrom, u))).getVec3();
+    // this->vup = (Vec4(this->vup).apply(Transformations::rotateAroundAxisDegrees(degrees, this->lookfrom, u))).getVec3();
+}
+void Camera::lookUp(float degrees) {
+    pitch += degrees;
+    if (pitch > 89.0f){
+        pitch = 89.0f;
+        return;
+    } 
+    cout << pitch << endl;
+    this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(degrees, this->lookfrom, u))).getVec3();
+    // this->vup = (Vec4(this->vup).apply(Transformations::rotateAroundAxisDegrees(-degrees, this->lookfrom, u))).getVec3();
+}
 
 

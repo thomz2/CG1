@@ -166,6 +166,18 @@ int main ( int argc, char *argv[] ) {
                     case SDLK_SPACE:
                         camera->moveUp(5);
                         break;
+                    case SDLK_LEFT:
+                        camera->lookLeft(5);
+                        break;
+                    case SDLK_RIGHT:
+                        camera->lookRight(5);
+                        break;
+                    case SDLK_UP:
+                        camera->lookUp(5);
+                        break;
+                    case SDLK_DOWN:
+                        camera->lookDown(5);
+                        break;
                     case SDLK_1:
                         res = 1;
                         break;

@@ -1,5 +1,7 @@
 #pragma once
 #include "./math/Vec3.h"
+#include "./math/Vec4.h"
+#include "./math/Transformations.h"
 #include <SDL2/SDL.h>
 #include <optional>
 #include "./primitives/Objeto.h"
@@ -43,6 +45,9 @@ class Camera {
 
         Scene* cenario;
         bool isParalel = false;
+
+        // rotacao de camera
+        double pitch = 0;
 
         // verificar se esses valores sao -1, se forem, eh pq nao sao utilizados (usamos tamanhos de janela predefinidos)
         double vFov = -1;
