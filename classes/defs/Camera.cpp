@@ -72,7 +72,7 @@ void Camera::update() {
         this->hJanela = 2 * h * focal_length;
         this->wJanela = hJanela * (imageWidth/imageHeight);
     }
-    cout << "NOVOS VALORES: HJANELA: " << hJanela << ", WJANELA: " << wJanela << ", DFOCAL: " << focal_length << endl;
+    // cout << "NOVOS VALORES: LOOKFROM: " << this->lookat << ", LOOKAT: " << this->lookat << endl;
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     this->w = lookfrom.sub(lookat).norm(); // tras
@@ -159,8 +159,17 @@ SDL_Color Camera::renderPixel(int l, int c) {
         }
     }
 
-    return {100, 100, 100, 255};
-
+    // return {100, 100, 100, 255};
+    auto a = (raycaster.direcao.y + 1.0) * 0.5;
+    Vec3 cor =  (Vec3(1.0, 1.0, 1.0).mult(1.0 - a).add( Vec3(0.5, 0.7, 1.0).mult(a) )).mult(255);
+    if (l == 250 && c == 250)
+        cout << cor << endl;
+    return {
+        (unsigned char)cor.x,
+        (unsigned char)cor.y,
+        (unsigned char)cor.z,
+        255
+    };
 }
 
 void Camera::renderAndPaintCanvas(int resScale) {

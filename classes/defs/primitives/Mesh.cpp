@@ -3,6 +3,18 @@
 
 Mesh::Mesh(int id) : ObjetoComposto(id) {};
 
+Mesh::Mesh(int id, vector<Triangulo*> triangulos) : ObjetoComposto(id) {
+	for (auto t : triangulos) {
+		this->subObjetos.push_back(t);
+	}
+}
+
+Mesh::Mesh(int id, vector<Objeto*> triangulos) : ObjetoComposto(id) {
+	for (auto t : triangulos) {
+		this->subObjetos.push_back(t);
+	}
+}
+
 void Mesh::gerarTriangulo(std::vector<int> face, int id) {
 	Vec3 v1, v2, v3;
 	v1 = vertices[face[0]];

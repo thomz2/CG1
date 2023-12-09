@@ -40,8 +40,12 @@ optional<LPointGetType> Esfera::intersecta(Ray raycaster) {
 
     double tint;
 
-    if (D >= 0) 
+    if (D >= 0) {
         tint = (t1 > t2 ? t2 : t1); // distancia mais perto 
+        if (t1 < 0 && t2 >= 0) tint = t2;
+        if (t2 < 0 && t1 >= 0) tint = t1;
+        if (tint < 0) return nullopt;
+    } 
     else 
         return nullopt;
 

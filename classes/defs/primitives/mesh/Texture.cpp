@@ -29,7 +29,7 @@ bool Texture::readFromFilePath(const char* filePath, int interval) {
         for (int y = 0; y < height; ++y) {
             // cout << '\n';
             for (int x = 0; x < width; ++x) {
-                int index = (y * width + x) * interval;
+                int index = (y * width + x) * 3;
                 int r = data[index];
                 int g = data[index+1];
                 int b = data[index+2];

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <thread>
+#include <vector>
+#include <utility>
 #include "classes/headers/math/Vec3.h"
 #include "classes/headers/primitives/Esfera.h"
 #include "classes/headers/primitives/Cilindro.h"
@@ -23,6 +25,13 @@
 #include "classes/headers/luzes/LuzPontual.h"
 #include "classes/headers/luzes/LuzSpot.h"
 #include "classes/headers/luzes/LuzDirecional.h"
+#include "classes/headers/primitives/Cluster.h"
+
+#include "classes/miniball/Seb.h"
+// typedef double FT;
+// typedef Seb::Point<FT> Point;
+// typedef std::vector<Point> PointVector;
+// typedef Seb::Smallest_enclosing_ball<FT> Miniball;
 
 using namespace std;
 
@@ -43,6 +52,32 @@ void colorirCenario(SDL_Renderer* renderer, Scene* cenario, int nLin, int nCol) 
     }
 }
 
+// Função para iniciar o temporizador
+void startTimer(std::chrono::steady_clock::time_point& startTime) {
+    startTime = std::chrono::steady_clock::now();
+}
+
+// Função para obter a contagem de tempo decorrido em milissegundos
+long getElapsedTime(const std::chrono::steady_clock::time_point& startTime) {
+    auto endTime = std::chrono::steady_clock::now();
+    return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+}
+
+// Miniball getMiniball(vector<Vec3> pontos) {
+
+//     PointVector S;
+//     vector<double> coords(3);
+    
+//     for (int i = 0; i < pontos.size(); ++i) {
+//         coords[0] = pontos[i].x;
+//         coords[1] = pontos[i].y;
+//         coords[2] = pontos[i].z;
+//         S.push_back(Point(3, coords.begin()));
+//     }
+
+//     return Miniball(3, S);
+// }
+
 int main ( int argc, char *argv[] ) {
 
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
@@ -60,7 +95,7 @@ int main ( int argc, char *argv[] ) {
     Vec3 lookfrom(0, 0, 50);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.8, 0.8, 0.8), camera);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.9, 0.9, 0.9), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
     // camera->changeCamera();
@@ -83,12 +118,21 @@ int main ( int argc, char *argv[] ) {
     // mesh3->applyMatrix(Transformations::translate(0, 0, -50));
 
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
-    // stan->applyMatrix(Transformations::translate(-35, -20, -18));
-    stan->applyMatrix(Transformations::translate(0, -5, -18));
+    stan->applyMatrix(Transformations::translate(0, -20, -18));
 
+    ObjMesh* cartman = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh);
+    cartman->applyMatrix(Transformations::scale(25, 25, 25));
+    // cartman->applyMatrix(Transformations::translate(50, -20, -18));
+    // Vec3 centrodocart = Vec3(getMiniball( cartman->vertices ).center_begin()[0], getMiniball( cartman->vertices ).center_begin()[1], getMiniball( cartman->vertices ).center_begin()[2]);
+    // double raio = getMiniball(cartman->vertices).radius();
+    // Esfera* MINIBOLACARTMAN = new Esfera(1000, corAzul, centrodocart, raio, BaseMaterial());
+    Cluster* clusterCartman = new Cluster(cartman, 20000);
 
-    ObjMesh* cartman = new ObjMesh(7, "assets/cartman/cartman2.obj", "assets/cartman/cartman_all.png", materialMesh);
-    cartman->applyMatrix(Transformations::translate(35, -20, -18));
+    ObjMesh* kenny = new ObjMesh(8, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh);
+    kenny->applyMatrix(Transformations::translate(100, -20, -18));
+
+    ObjMesh* kyle = new ObjMesh(9, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", materialMesh);
+    kyle->applyMatrix(Transformations::translate(150, -20, -18));
 
     Cone* montanha1 = new Cone(8, corAzul, Vec3(-500, -20, -900), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
     Cone* montanha2 = new Cone(9, corAzul, Vec3(500, -20, -850), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
@@ -100,16 +144,17 @@ int main ( int argc, char *argv[] ) {
 
     LuzPontual* luzPontual = new LuzPontual(Vec3(-250, 125, 0), Vec3(0.2, 0.2, 0.2));
     LuzSpot* luzSpot = new LuzSpot(Vec3(-15, 50, -18), Vec3(0.3, 0.3, 0.3), Vec3(0, -1, 0).norm(), 60);
-    LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.5, 0.5, 0.5), Vec3(-1, -1, 0).norm());
+    LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.15, 0.1, 0.1), Vec3(-1, -1, 0).norm());
 
     // Esfera* esferaTeste = new Esfera(100, corAzul, Vec3(30, 30, -30), 15, BaseMaterial(Vec3(0.8, 0.2, 0.2), Vec3(0.2, 0.2, 0.8), Vec3(0.2, 0.8, 0.2), 10));
     ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", BaseMaterial(Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), 1));
     cubo->applyMatrix(Transformations::scale(5, 5, 5));
 
-    // cenario->objetos.push_back(megaman);
-    // cenario->objetos.push_back(roll);
-    cenario->objetos.push_back(stan);
-    // cenario->objetos.push_back(cartman);
+    // cenario->objetos.push_back(kyle);
+    // cenario->objetos.push_back(stan);
+    cenario->objetos.push_back(cartman);
+    // cenario->objetos.push_back(MINIBOLACARTMAN);
+    // cenario->objetos.push_back(kenny);
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(planoDeFundo);
     cenario->objetos.push_back(montanha1);
@@ -178,6 +223,9 @@ int main ( int argc, char *argv[] ) {
                     case SDLK_DOWN:
                         camera->lookDown(5);
                         break;
+                    case SDLK_c:
+                        camera->changeCamera();
+                        break;
                     case SDLK_1:
                         res = 1;
                         break;
@@ -190,13 +238,34 @@ int main ( int argc, char *argv[] ) {
                     case SDLK_9:
                         res = 10;
                         break;
+                    case SDLK_EQUALS:
+                        camera->changeFov(camera->vFov + 1);
+                        cout << camera->vFov << endl;
+                        break;
+                    case SDLK_MINUS:
+                        camera->changeFov(camera->vFov - 1);
+                        cout << camera->vFov << endl;
+                        break;
                 }
             }
         }
 
+         std::chrono::steady_clock::time_point timerStart;
+
+    // Inicia o temporizador
+    startTimer(timerStart);
+
+    // Alguma lógica de aplicação aqui...
+
+
+
         camera->update();
         camera->renderAndPaintCanvasThread(4, res);
         colorirCenario(renderer, cenario, nLin, nCol);
+    // Obtém o tempo decorrido
+    long elapsedTime = getElapsedTime(timerStart);
+    std::cout << "Tempo decorrido: " << elapsedTime << " ms\n";
+        i+= 2;
         
         SDL_RenderPresent(renderer); // usar para pintar
         if ( window = nullptr ) {

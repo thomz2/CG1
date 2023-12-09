@@ -59,11 +59,14 @@ bool ObjMesh::readFilePath(const string& filepath) {
                 // if (pos != string::npos) {
                 //     vertex = vertex.substr(0, pos); // Extract characters before '/'
                 // }
-                int index = stoi(vertex); // Convert to integer and adjust to be 0-based
+                if (pos != string::npos) {
 
-                index = (index > 0) ? index - 1 : this->vertices.size() + index;
+                    int index = stoi(vertex); // Convert to integer and adjust to be 0-based
 
-                faceIndices.push_back(index);
+                    index = (index > 0) ? index - 1 : this->vertices.size() + index;
+
+                    faceIndices.push_back(index);
+                }
 
                 // Check if UV coordinate is present
                 if (pos != string::npos) {
