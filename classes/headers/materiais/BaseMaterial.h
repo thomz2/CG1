@@ -12,6 +12,7 @@ public:
     double M;
 
     BaseMaterial();
+    BaseMaterial(Vec3 cor255, double M);
     BaseMaterial(Vec3 RUGOSIDADE, Vec3 REFLETIVIDADE, Vec3 KAMBIENTE, double M);
     BaseMaterial(Vec3 RUGOSIDADE, Vec3 REFLETIVIDADE, double M);
     

@@ -111,28 +111,36 @@ int main ( int argc, char *argv[] ) {
 
     BaseMaterial materialMesh = BaseMaterial();
     materialMesh.REFLETIVIDADE = Vec3(0.2, 0.2, 0.2);
-    // ObjMesh1* mesh2 = new ObjMesh(3, "assets/Yoshi2/Yoshi.obj", "assets/Yoshi/yoshi_all.png", materialMesh);
-    // ObjMesh* mesh2 = new ObjMesh(2, "assets/porygon/porygon.obj", "assets/porygon/porygon_body.png", materialMesh);
-    // ObjMesh* mesh3 = new ObjMesh(3, "assets/mine_cube/cube.obj", "assets/uv_test.png", materialMesh);
-    // mesh3->applyMatrix(Transformations::scale(25, 25, 25));
-    // mesh3->applyMatrix(Transformations::translate(0, 0, -50));
 
+    // <========== OBJETOS DO CENARIO ==========>
+    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-30, -20, -26), Vec3(-30, 75, -26), 3, BaseMaterial(Vec3(88.0, 57.0, 39.0), 1));
+    ObjMesh*  placa         = new ObjMesh(11, "assets/placaAmarela/placa_amarela.obj", "assets/placaAmarela/placa.png", materialMesh);
+    placa->applyMatrix(Transformations::scale(30, 30, 30));
+    placa->applyMatrix(Transformations::rotateYAroundPointDegrees(90, Vec3(0, 1, 0)));
+    placa->applyMatrix(Transformations::translate(-30, 70, -26));
+    // <========== OBJETOS DO CENARIO ==========>
+
+    // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
-    stan->applyMatrix(Transformations::translate(0, -20, -18));
+    stan->applyMatrix(Transformations::translate(10, -20, -18));
+    Cluster* clusterStan = new Cluster(stan, 20000);
 
-    ObjMesh* cartman = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh);
-    cartman->applyMatrix(Transformations::scale(25, 25, 25));
-    // cartman->applyMatrix(Transformations::translate(50, -20, -18));
-    // Vec3 centrodocart = Vec3(getMiniball( cartman->vertices ).center_begin()[0], getMiniball( cartman->vertices ).center_begin()[1], getMiniball( cartman->vertices ).center_begin()[2]);
-    // double raio = getMiniball(cartman->vertices).radius();
-    // Esfera* MINIBOLACARTMAN = new Esfera(1000, corAzul, centrodocart, raio, BaseMaterial());
-    Cluster* clusterCartman = new Cluster(cartman, 20000);
+    ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", materialMesh);
+    kyle->applyMatrix(Transformations::translate(50, -20, -18));
+    Cluster* clusterKyle = new Cluster(kyle, 20000);
 
-    ObjMesh* kenny = new ObjMesh(8, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh);
-    kenny->applyMatrix(Transformations::translate(100, -20, -18));
+    ObjMesh* cartman = new ObjMesh(6, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", materialMesh);
+    cartman->applyMatrix(Transformations::translate(100, -20, -18));
 
-    ObjMesh* kyle = new ObjMesh(9, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", materialMesh);
-    kyle->applyMatrix(Transformations::translate(150, -20, -18));
+    ObjMesh* kenny = new ObjMesh(8, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh, false);
+    kenny->applyMatrix(Transformations::translate(150, -20, -18));
+    Cluster* clusterKenny = new Cluster(kenny, 20000);
+    
+    ObjMesh* dio = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh, true);
+    dio->applyMatrix(Transformations::scale(25, 25, 25));
+    Cluster* clusterDio = new Cluster(dio, 20000);
+    // <========== PERSONAGENS ==========>
+    
 
     Cone* montanha1 = new Cone(8, corAzul, Vec3(-500, -20, -900), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
     Cone* montanha2 = new Cone(9, corAzul, Vec3(500, -20, -850), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
@@ -147,18 +155,22 @@ int main ( int argc, char *argv[] ) {
     LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.15, 0.1, 0.1), Vec3(-1, -1, 0).norm());
 
     // Esfera* esferaTeste = new Esfera(100, corAzul, Vec3(30, 30, -30), 15, BaseMaterial(Vec3(0.8, 0.2, 0.2), Vec3(0.2, 0.2, 0.8), Vec3(0.2, 0.8, 0.2), 10));
-    ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", BaseMaterial(Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), 1));
-    cubo->applyMatrix(Transformations::scale(5, 5, 5));
+    // ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", BaseMaterial(Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), 1));
+    // cubo->applyMatrix(Transformations::scale(5, 5, 5));
 
-    // cenario->objetos.push_back(kyle);
-    // cenario->objetos.push_back(stan);
+
+    // cenario->objetos.push_back(clusterDio);
+
+    cenario->objetos.push_back(clusterStan);
+    cenario->objetos.push_back(clusterKyle);
     cenario->objetos.push_back(cartman);
-    // cenario->objetos.push_back(MINIBOLACARTMAN);
-    // cenario->objetos.push_back(kenny);
+    cenario->objetos.push_back(clusterKenny);
+
     cenario->objetos.push_back(chao);
-    cenario->objetos.push_back(planoDeFundo);
     cenario->objetos.push_back(montanha1);
     cenario->objetos.push_back(montanha2);
+    cenario->objetos.push_back(estacaDaPlaca);
+    cenario->objetos.push_back(placa);
          
     cenario->luzes.push_back(luzDirecional);
     // cenario->luzes.push_back(luzPontual);

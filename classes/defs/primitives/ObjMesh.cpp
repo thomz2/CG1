@@ -5,6 +5,15 @@
 
 using namespace std;
 
+ObjMesh::ObjMesh(int id, const string& filepath, const char* filepath2, BaseMaterial material, bool isRGB) : Mesh(id) {
+    this->material = material;
+    this->textura = new Texture(filepath2, isRGB);
+    bool result = readFilePath(filepath);
+    if (!result) {
+        cout << "ERRO EM LER O PATH NO OBJMESH\n";
+    }
+}
+
 ObjMesh::ObjMesh(int id, const string& filepath, const char* filepath2, BaseMaterial material) : Mesh(id) {
     this->material = material;
     this->textura = new Texture(filepath2);
