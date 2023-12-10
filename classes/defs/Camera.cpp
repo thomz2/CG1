@@ -70,7 +70,7 @@ void Camera::update() {
         this->hJanela = 2 * h * focal_length;
         this->wJanela = hJanela * (imageWidth/imageHeight);
     }
-    cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
+    // cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     this->w = lookfrom.sub(lookat).norm(); // tras
@@ -107,7 +107,6 @@ SDL_Color Camera::renderPixel(int l, int c) {
     Vec3 direcao = (pixel_center - lookfrom).norm(); // vetor unitario aki
     Ray raycaster(lookfrom, direcao);
     if (isParalel) {
-        // cout << "oi";
         pixel_center = pixel00_loc2.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
         direcao = (lookat - lookfrom).norm();
         raycaster = Ray(pixel_center, direcao);
@@ -262,6 +261,25 @@ void Camera::changeFovAlt(double dFocal, double wJanela, double hJanela) {
 
 void Camera::changeCamera() {
     this->isParalel = !(this->isParalel);
+}
+
+Objeto* Camera::pick(int l, int c) {
+    Vec3 pixel_center = pixel00_loc.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
+    Vec3 direcao = (pixel_center - lookfrom).norm(); // vetor unitario aki
+    Ray raycaster(lookfrom, direcao);
+    if (isParalel) {
+        pixel_center = pixel00_loc2.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
+        direcao = (lookat - lookfrom).norm();
+        raycaster = Ray(pixel_center, direcao);
+    }
+
+    // TODO: refatorar funcao firstObj dps
+    optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
+
+    if (par.has_value()) {
+        Objeto* maisPerto = par.value().first;
+        cout << maisPerto->id << endl;
+    }
 }
 
 void Camera::moveForward(float speed) {

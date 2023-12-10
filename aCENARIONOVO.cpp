@@ -86,17 +86,17 @@ int main ( int argc, char *argv[] ) {
 
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    const int XPOSITIVO = 200;
-    const int ZPOSITIVO = 200;
-    const int YPOSITIVO = 200;
+    const int XPOSITIVO = 5000;
+    const int ZPOSITIVO = 5000;
+    const int YPOSITIVO = 5000;
 
     const double dJanela = 30;
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookat(56.5685, 230, 106.569);
+    Vec3 lookat(5075, 5017.87, 5121.74);
     // Vec3 lookfrom(-30, 60, 90);
-    Vec3 lookfrom(0, 230, 50);
+    Vec3 lookfrom(5075.08, 5017.95, 5041.74);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.9, 0.9, 0.9), camera);
@@ -122,8 +122,8 @@ int main ( int argc, char *argv[] ) {
     placa->applyMatrix(Transformations::shear());
     placa->applyMatrix(Transformations::rotateYAroundPointDegrees(90, Vec3(0, 1, 0)));
     placa->applyMatrix(Transformations::translate(-30 + XPOSITIVO, 70 + YPOSITIVO, -26 + ZPOSITIVO));
-    Cone* montanha1 = new Cone(8, corAzul, Vec3(-500 + XPOSITIVO, -20 + YPOSITIVO, -1900 + ZPOSITIVO), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
-    Cone* montanha2 = new Cone(9, corAzul, Vec3(500 + XPOSITIVO, -20 + YPOSITIVO, -1850 + ZPOSITIVO), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha1 = new Cone(8, corAzul, Vec3(-500 + XPOSITIVO, -20 + YPOSITIVO, -2400 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha2 = new Cone(9, corAzul, Vec3(500 + XPOSITIVO, -20 + YPOSITIVO, -2350 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
     // <========== OBJETOS DO CENARIO ==========>
 
     // <========== PERSONAGENS ==========>
@@ -135,10 +135,10 @@ int main ( int argc, char *argv[] ) {
     kyle->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKyle = new Cluster(kyle, 20000);
 
-    ObjMesh* cartman = new ObjMesh(6, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", materialMesh);
+    ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", materialMesh);
     cartman->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
 
-    ObjMesh* kenny = new ObjMesh(8, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh, false);
+    ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh, false);
     kenny->applyMatrix(Transformations::translate(150 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKenny = new Cluster(kenny, 20000);
     
@@ -168,10 +168,10 @@ int main ( int argc, char *argv[] ) {
 
     // cenario->objetos.push_back(clusterDio);
 
-    // cenario->objetos.push_back(clusterStan);
-    // cenario->objetos.push_back(clusterKyle);
-    // cenario->objetos.push_back(cartman);
-    // cenario->objetos.push_back(clusterKenny);
+    cenario->objetos.push_back(clusterStan);
+    cenario->objetos.push_back(clusterKyle);
+    cenario->objetos.push_back(cartman);
+    cenario->objetos.push_back(clusterKenny);
 
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(montanha1);
@@ -190,6 +190,7 @@ int main ( int argc, char *argv[] ) {
     cenario->setCanvas(nLin, nCol, Dx, Dy);
 
     bool rodando = true;
+    bool retrato = false;
     double i = 0;
     double res = 10;
     while (rodando) {
@@ -198,6 +199,16 @@ int main ( int argc, char *argv[] ) {
             if (SDL_QUIT == windowEvent.type) { 
                 rodando = false;
                 break; 
+            }
+            else if (windowEvent.type == SDL_MOUSEBUTTONDOWN) {
+                if (windowEvent.button.button == SDL_BUTTON_LEFT) {
+                    int mouseX = windowEvent.button.x;
+                    int mouseY = windowEvent.button.y;
+
+                    camera->pick(mouseY, mouseX);
+
+                    SDL_Log("Posição do mouse ao clicar: (%d, %d)", mouseX, mouseY);
+                }
             }
             else if (windowEvent.type == SDL_KEYDOWN) {
                 // Lógica para teclas pressionadas
@@ -259,11 +270,12 @@ int main ( int argc, char *argv[] ) {
                         break;
                     case SDLK_EQUALS:
                         camera->changeFov(camera->vFov + 1);
-                        cout << camera->vFov << endl;
                         break;
                     case SDLK_MINUS:
                         camera->changeFov(camera->vFov - 1);
-                        cout << camera->vFov << endl;
+                        break;
+                    case SDLK_r:
+                        retrato = !retrato;
                         break;
                 }
             }
@@ -271,11 +283,12 @@ int main ( int argc, char *argv[] ) {
 
          std::chrono::steady_clock::time_point timerStart;
 
+    if (!retrato){
+
     // Inicia o temporizador
     startTimer(timerStart);
 
     // Alguma lógica de aplicação aqui...
-
 
 
         camera->update();
@@ -285,6 +298,7 @@ int main ( int argc, char *argv[] ) {
     // Obtém o tempo decorrido
     long elapsedTime = getElapsedTime(timerStart);
     // std::cout << "Tempo decorrido: " << elapsedTime << " ms\n";
+    }
         i+= 2;
         
         SDL_RenderPresent(renderer); // usar para pintar

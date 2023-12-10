@@ -28,6 +28,8 @@ class Camera {
         void changeFovAlt(double dFocal, double wJanela, double hJanela);
         void changeCamera();
 
+        Objeto* pick(int l, int c);
+
         // ====== controles ====== 
         void moveForward(float speed);
         void moveBackward(float speed);
