@@ -86,13 +86,17 @@ int main ( int argc, char *argv[] ) {
 
     // initializeSDLAndWindow(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+    const int XPOSITIVO = 200;
+    const int ZPOSITIVO = 200;
+    const int YPOSITIVO = 200;
+
     const double dJanela = 30;
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookat(0, 0, -dJanela);
+    Vec3 lookat(56.5685, 230, 106.569);
     // Vec3 lookfrom(-30, 60, 90);
-    Vec3 lookfrom(0, 0, 50);
+    Vec3 lookfrom(0, 230, 50);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.9, 0.9, 0.9), camera);
@@ -105,35 +109,37 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corAzul = {0, 0, 255, 255};
 
     Texture* textura = new Texture("assets/snow.png", true);
-    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20, 0), Vec3(0, 1, 0), textura);
-    Plano* planoDeFundo = new Plano(6, corAzul, BaseMaterial(Vec3(0, 1, 1), Vec3(0, 0, 0), Vec3(0, 1, 1), 1), Vec3(0, 0, -700), Vec3(0, 0, 1));
+    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20 + YPOSITIVO, 0), Vec3(0, 1, 0), textura);
 
 
     BaseMaterial materialMesh = BaseMaterial();
     materialMesh.REFLETIVIDADE = Vec3(0.2, 0.2, 0.2);
 
     // <========== OBJETOS DO CENARIO ==========>
-    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-30, -20, -26), Vec3(-30, 75, -26), 3, BaseMaterial(Vec3(88.0, 57.0, 39.0), 1));
+    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-30 + XPOSITIVO, -20 + YPOSITIVO, -26 + ZPOSITIVO), Vec3(-30 + XPOSITIVO, 75 + YPOSITIVO, -26 + ZPOSITIVO), 3, BaseMaterial(Vec3(88.0, 57.0, 39.0), 1));
     ObjMesh*  placa         = new ObjMesh(11, "assets/placaAmarela/placa_amarela.obj", "assets/placaAmarela/placa.png", materialMesh);
     placa->applyMatrix(Transformations::scale(30, 30, 30));
+    placa->applyMatrix(Transformations::shear());
     placa->applyMatrix(Transformations::rotateYAroundPointDegrees(90, Vec3(0, 1, 0)));
-    placa->applyMatrix(Transformations::translate(-30, 70, -26));
+    placa->applyMatrix(Transformations::translate(-30 + XPOSITIVO, 70 + YPOSITIVO, -26 + ZPOSITIVO));
+    Cone* montanha1 = new Cone(8, corAzul, Vec3(-500 + XPOSITIVO, -20 + YPOSITIVO, -1900 + ZPOSITIVO), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha2 = new Cone(9, corAzul, Vec3(500 + XPOSITIVO, -20 + YPOSITIVO, -1850 + ZPOSITIVO), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
     // <========== OBJETOS DO CENARIO ==========>
 
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
-    stan->applyMatrix(Transformations::translate(10, -20, -18));
+    stan->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterStan = new Cluster(stan, 20000);
 
     ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", materialMesh);
-    kyle->applyMatrix(Transformations::translate(50, -20, -18));
+    kyle->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKyle = new Cluster(kyle, 20000);
 
     ObjMesh* cartman = new ObjMesh(6, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", materialMesh);
-    cartman->applyMatrix(Transformations::translate(100, -20, -18));
+    cartman->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
 
     ObjMesh* kenny = new ObjMesh(8, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh, false);
-    kenny->applyMatrix(Transformations::translate(150, -20, -18));
+    kenny->applyMatrix(Transformations::translate(150 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKenny = new Cluster(kenny, 20000);
     
     ObjMesh* dio = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh, true);
@@ -142,29 +148,30 @@ int main ( int argc, char *argv[] ) {
     // <========== PERSONAGENS ==========>
     
 
-    Cone* montanha1 = new Cone(8, corAzul, Vec3(-500, -20, -900), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
-    Cone* montanha2 = new Cone(9, corAzul, Vec3(500, -20, -850), Vec3(0, 1, 0), 1500, 800, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
 
 
     // megaman->applyMatrix();
 
     // mesh2->textura->testColors();
 
-    LuzPontual* luzPontual = new LuzPontual(Vec3(-250, 125, 0), Vec3(0.2, 0.2, 0.2));
-    LuzSpot* luzSpot = new LuzSpot(Vec3(-15, 50, -18), Vec3(0.3, 0.3, 0.3), Vec3(0, -1, 0).norm(), 60);
+    LuzPontual* luzPontual = new LuzPontual(Vec3(-250 + XPOSITIVO, 125 + YPOSITIVO, 0 + ZPOSITIVO), Vec3(0.2, 0.2, 0.2));
+    LuzSpot* luzSpot = new LuzSpot(Vec3(-15 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.3, 0.3, 0.3), Vec3(0, -1, 0).norm(), 60);
     LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.15, 0.1, 0.1), Vec3(-1, -1, 0).norm());
 
     // Esfera* esferaTeste = new Esfera(100, corAzul, Vec3(30, 30, -30), 15, BaseMaterial(Vec3(0.8, 0.2, 0.2), Vec3(0.2, 0.2, 0.8), Vec3(0.2, 0.8, 0.2), 10));
-    // ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", BaseMaterial(Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), Vec3(1, 0.078, 0.576), 1));
-    // cubo->applyMatrix(Transformations::scale(5, 5, 5));
+    // ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", "assets/uv_test.png", materialMesh, 1);
+    // cubo->applyMatrix(Transformations::scale(50, 50, 50));
+    // cubo->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    // cubo->applyMatrix(Transformations::shear(0, 0, 0, 0, -1, 0));
+    // cenario->objetos.push_back(cubo);
 
 
     // cenario->objetos.push_back(clusterDio);
 
-    cenario->objetos.push_back(clusterStan);
-    cenario->objetos.push_back(clusterKyle);
-    cenario->objetos.push_back(cartman);
-    cenario->objetos.push_back(clusterKenny);
+    // cenario->objetos.push_back(clusterStan);
+    // cenario->objetos.push_back(clusterKyle);
+    // cenario->objetos.push_back(cartman);
+    // cenario->objetos.push_back(clusterKenny);
 
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(montanha1);
@@ -274,9 +281,10 @@ int main ( int argc, char *argv[] ) {
         camera->update();
         camera->renderAndPaintCanvasThread(4, res);
         colorirCenario(renderer, cenario, nLin, nCol);
+
     // Obtém o tempo decorrido
     long elapsedTime = getElapsedTime(timerStart);
-    std::cout << "Tempo decorrido: " << elapsedTime << " ms\n";
+    // std::cout << "Tempo decorrido: " << elapsedTime << " ms\n";
         i+= 2;
         
         SDL_RenderPresent(renderer); // usar para pintar

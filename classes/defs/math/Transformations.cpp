@@ -126,7 +126,6 @@ Mat4 Transformations::rotateAroundAxisDegrees(double degrees, Vec3 point, Vec3 a
     return rotateAroundAxis(angle, point, axis);
 };
 
-// TODO: TESTAR
 Mat4 Transformations::rotateAroundAxis(double angle, Vec3 point, Vec3 axis) {
     axis = axis.norm();
     double a = angle, sina = sin(a), cosa = cos(a), opcosa = 1 - cosa, ux = axis.x, uy = axis.y, uz = axis.z;
@@ -144,4 +143,49 @@ Mat4 Transformations::rotateAroundAxis(double angle, Vec3 point, Vec3 axis) {
 
     return translate(p.x, p.y, p.z).apply(rotacao.apply(translate(-p.x, -p.y, -p.z)));
 
+};
+
+Mat4 Transformations::shearX(double y, double z) {
+    return Mat4(
+        {
+            {1, y, z, 0},
+            {0, 1, 0, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 1}
+        }
+    );
+};
+
+Mat4 Transformations::shearY(double x, double z) {
+    return Mat4(
+        {
+            {1, 0, 0, 0},
+            {x, 1, z, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 1}
+        }
+    );
+};
+
+Mat4 Transformations::shearZ(double x, double y) {
+    return Mat4(
+        {
+            {1, 0, 0, 0},
+            {0, 1, 0, 0},
+            {x, y, 1, 0},
+            {0, 0, 0, 1}
+        }
+    );
+};
+
+// o valor 1 deixa o aspecto parecido com 45º
+Mat4 Transformations::shear(double xy, double xz, double yx, double yz, double zx, double zy) {
+    return Mat4(
+        {
+            {1, xy, xz, 0},
+            {yx, 1, yz, 0},
+            {zx, zy, 1, 0},
+            {0, 0, 0, 1}
+        }
+    );
 };

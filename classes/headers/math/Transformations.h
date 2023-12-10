@@ -23,4 +23,8 @@ class Transformations{
     static Mat4 rotateZAroundPointDegrees(double degrees, Vec3 point);
     static Mat4 rotateAroundAxisDegrees(double degrees, Vec3 point, Vec3 axis);
     static Mat4 rotateAroundAxis(double angle, Vec3 point, Vec3 axis);
+    static Mat4 shearX(double y, double z);
+    static Mat4 shearY(double x, double z);
+    static Mat4 shearZ(double x, double y);
+    static Mat4 shear(double xy = 0, double xz = 0, double yx = 0, double yz = 0, double zx = 0, double zy = 0);
 };
