@@ -22,5 +22,7 @@ public:
     Vec3 getKAmbiente();
     double getM();
 
+    void printMaterial();
+
 };
 

@@ -26,4 +26,5 @@ class Cilindro : public Objeto {
     void update(Vec3 Cb, Vec3 Ct);
     std::optional<LPointGetType> intersecta(Ray raycaster) override;
     std::optional<LPointGetType> intersectaFace(Ray raycaster);
+    void printObj() override;
 };

@@ -23,5 +23,6 @@ public:
 	std::optional<LPointGetType> intersecta(Ray raio);
 	bool pertence(Vec3 pi);
 
+	void printObj() override;
 	
 };

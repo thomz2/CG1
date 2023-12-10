@@ -130,3 +130,26 @@ optional<LPointGetType> Cone::intersecta(Ray raycaster) {
     return ponto;
     
 }
+
+void Cone::printObj() {
+    std::cout << "Cone ID: " << id << std::endl;
+    std::cout << "Base Center (Cb): (" << Cb.x << ", " << Cb.y << ", " << Cb.z << ")" << std::endl;
+    std::cout << "Vertex Top (Vt): (" << Vt.x << ", " << Vt.y << ", " << Vt.z << ")" << std::endl;
+    std::cout << "Direction (d): (" << d.x << ", " << d.y << ", " << d.z << ")" << std::endl;
+    std::cout << "Radius (r): " << r << std::endl;
+    std::cout << "Height (h): " << h << std::endl;
+
+    material.printMaterial();
+
+    cout << "Deseja fazer algo?" << endl;
+    cout << "[0] não" << endl;
+    cout << "[1] transladar" << endl;
+    cout << "[2] rotacionar" << endl;
+    cout << "[3] aumentar altura" << endl;
+    cout << "[4] aumentar raio" << endl;
+    cout << "[5] mudar material" << endl;
+    int opcao = 0;
+    cin >> opcao;
+    if (opcao == 0) return; 
+
+}

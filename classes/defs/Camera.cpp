@@ -278,8 +278,10 @@ Objeto* Camera::pick(int l, int c) {
 
     if (par.has_value()) {
         Objeto* maisPerto = par.value().first;
-        cout << maisPerto->id << endl;
+        // cout << maisPerto->id << endl;
+        maisPerto->printObj();
     }
+    return nullptr;
 }
 
 void Camera::moveForward(float speed) {

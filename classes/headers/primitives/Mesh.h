@@ -23,4 +23,6 @@ public:
 	void gerarTriangulo(std::vector<int> face, std::vector<int> uv, int id, BaseMaterial material);
 	void renderizar();
 	void applyMatrix(Mat4 matrix);
+
+	void printObj() override;
 };

@@ -60,9 +60,8 @@ void Mesh::gerarTriangulo(std::vector<int> face, std::vector<int> uv, int id, Ba
 }
 
 void Mesh::renderizar() {
-	int id = -1;
 	for (auto face : this->faces) {
-		gerarTriangulo(face, ++id);
+		gerarTriangulo(face, this->id);
 	}
 }
 
@@ -85,4 +84,27 @@ void Mesh::applyMatrix(Mat4 matrix) {
 		Vec3 r2 = V3.sub(V1);
 		atual->setNormal(r1, r2);
 	}
+}
+
+void Mesh::printObj() {
+	cout << "Mesh ID: " << this->id << endl;
+
+    // Print the sizes of vectors
+    cout << "Number of Vertices: " << vertices.size() << endl;
+    cout << "Number of Faces: " << faces.size() << endl;
+    cout << "Number of UVs: " << uvs.size() << endl;
+
+	material.printMaterial();
+
+	cout << "Deseja fazer algo?" << endl;
+    cout << "[0] não" << endl;
+    cout << "[1] transladar" << endl;
+    cout << "[2] escalar" << endl;
+    cout << "[3] rotacionar" << endl;
+    cout << "[4] cisalhar" << endl;
+    cout << "[5] refletir" << endl;
+    cout << "[6] mudar material" << endl;
+	int opcao = 0;
+    cin >> opcao;
+    if (opcao == 0) return; 
 }

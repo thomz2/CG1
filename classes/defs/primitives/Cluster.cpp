@@ -24,7 +24,12 @@ Miniball getMiniball(vector<Vec3> pontos) {
     return Miniball(3, S);
 }
 
-Cluster::Cluster(Mesh* malha, int depth) : ObjetoComposto(malha->id) {
+Cluster::Cluster(Mesh* malha, int depth, bool first) : ObjetoComposto(malha->id) {
+    
+    if (first) {
+        this->malha = malha;
+    }
+
     vector<Vec3> pontos;
 	for (auto triangulo : malha->subObjetos) {
         Triangulo* atual = (Triangulo*)triangulo;
@@ -68,3 +73,7 @@ std::optional<LPointGetType> Cluster::intersecta(Ray raio) {
     if (!interseccao.has_value()) return nullopt;
     return this->ObjetoComposto::intersecta(raio);
 };
+
+void Cluster::printObj() {
+    return this->malha->printObj();
+}

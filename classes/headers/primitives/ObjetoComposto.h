@@ -19,4 +19,6 @@ public:
     ObjetoComposto(int id, SDL_Color cor, BaseMaterial material);
     
     std::optional<LPointGetType> intersecta(Ray ray);
+
+    void printObj() override;
 };

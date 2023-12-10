@@ -129,22 +129,22 @@ int main ( int argc, char *argv[] ) {
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
     stan->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
-    Cluster* clusterStan = new Cluster(stan, 20000);
+    Cluster* clusterStan = new Cluster(stan, 20000, true);
 
     ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", materialMesh);
     kyle->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
-    Cluster* clusterKyle = new Cluster(kyle, 20000);
+    Cluster* clusterKyle = new Cluster(kyle, 20000, true);
 
     ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", materialMesh);
     cartman->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
 
     ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh, false);
     kenny->applyMatrix(Transformations::translate(150 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
-    Cluster* clusterKenny = new Cluster(kenny, 20000);
+    Cluster* clusterKenny = new Cluster(kenny, 20000, true);
     
     ObjMesh* dio = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh, true);
     dio->applyMatrix(Transformations::scale(25, 25, 25));
-    Cluster* clusterDio = new Cluster(dio, 20000);
+    Cluster* clusterDio = new Cluster(dio, 20000, true);
     // <========== PERSONAGENS ==========>
     
 
@@ -207,7 +207,7 @@ int main ( int argc, char *argv[] ) {
 
                     camera->pick(mouseY, mouseX);
 
-                    SDL_Log("Posição do mouse ao clicar: (%d, %d)", mouseX, mouseY);
+                    // SDL_Log("Posição do mouse ao clicar: (%d, %d)", mouseX, mouseY);
                 }
             }
             else if (windowEvent.type == SDL_KEYDOWN) {

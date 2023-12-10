@@ -27,3 +27,11 @@ Vec3 BaseMaterial::getKAmbiente() {
 double BaseMaterial::getM() {
     return M;
 }
+
+void BaseMaterial::printMaterial() {
+    std::cout << "MATERIAL: " << std::endl;
+    std::cout << "  RUGOSIDADE: (" << RUGOSIDADE.x << ", " << RUGOSIDADE.y << ", " << RUGOSIDADE.z << ")" << std::endl;
+    std::cout << "  REFLETIVIDADE: (" << REFLETIVIDADE.x << ", " << REFLETIVIDADE.y << ", " << REFLETIVIDADE.z << ")" << std::endl;
+    std::cout << "  KAMBIENTE: (" << KAMBIENTE.x << ", " << KAMBIENTE.y << ", " << KAMBIENTE.z << ")" << std::endl;
+    std::cout << "  M: " << M << std::endl;
+}

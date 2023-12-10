@@ -14,6 +14,7 @@ public:
 
     Mesh* malha;
     Esfera* fronteira = nullptr;
-    Cluster(Mesh* malha, int depth);
+    Cluster(Mesh* malha, int depth, bool first = false);
     std::optional<LPointGetType> intersecta(Ray ray) override;
+    void printObj() override;
 };
