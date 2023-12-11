@@ -2,6 +2,8 @@
 
 #include <optional>
 #include "../math/Vec3.h"
+#include "../math/Vec4.h"
+#include "../math/Transformations.h"
 #include "./Objeto.h"
 #include "../Ray.h"
 #include "../materiais/BaseMaterial.h"
@@ -20,6 +22,7 @@ class Esfera : public Objeto {
 
     // Pin = olho observador
     Vec3 getW(Vec3 Pin); 
+    void update(Vec3 c, double raio = -1);
 
     int printObj() override;
     void handleChange(int option) override;

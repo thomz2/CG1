@@ -19,6 +19,12 @@ Vec3 Esfera::getW(Vec3 Pin) {
     return Pin - this->PCentro;
 }
 
+void Esfera::update(Vec3 c, double raio) {
+    if (raio != -1) this->raio = raio;
+    this->PCentro = c;
+}
+
+
 // TODO: ajeitar isso aqui depois
 optional<LPointGetType> Esfera::intersecta(Ray raycaster) {
 
@@ -68,13 +74,45 @@ int Esfera::printObj() {
     cout << "Deseja fazer algo?" << endl;
     cout << "[0] não" << endl;
     cout << "[1] transladar" << endl;
-    cout << "[2] aumentar raio" << endl;
-    cout << "[3] mudar material" << endl;
+    cout << "[2] alterar raio" << endl;
+    cout << "[3] alterar material" << endl;
     int opcao = 0;
     cin >> opcao;
     return opcao; 
 }
 
 void Esfera::handleChange(int option) {
+    double x, y, z;
+    Vec4 CbNovo;
+    Vec3 ponto;
+    Vec3 eixo;
+    switch (option)
+    {
+    case 0:
+        break;
+    case 1:
+        cout << "DIGITE OS VALORES DE X, Y E Z: ";
+        cin >> x >> y >> z; 
+        CbNovo = Vec4(this->PCentro).apply(Transformations::translate(x, y, z));
+        // cout << "DEBUG: " << CbNovo.getVec3() << ' ' << CtNovo.getVec3() << endl;
+        this->update(CbNovo.getVec3());
+        break;
+    case 2:
+        {
+
+        cout << "DIGITE O NOVO RAIO: ";
+        cin >> x;
+        this->update(this->PCentro, x);
+        break;
+        }
+    case 3:
+        {
+        int novoMatInd = this->material.offerMaterial();
+        Vec3 novoKambiente = this->material.offerColor();
+        this->material = this->material.getMaterial(novoMatInd, novoKambiente);
+        }
+    default:
+        break;
+    }
 	return;
 }

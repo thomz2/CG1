@@ -188,8 +188,8 @@ int Cilindro::printObj() {
     cout << "[1] transladar" << endl;
     cout << "[2] rotacionar" << endl;
     cout << "[3] alterar pontos" << endl;
-    cout << "[4] aumentar raio" << endl;
-    cout << "[5] mudar material" << endl;
+    cout << "[4] alterar raio" << endl;
+    cout << "[5] alterar material" << endl;
     int opcao = 0;
     cin >> opcao;
     return opcao; 
@@ -210,7 +210,7 @@ void Cilindro::handleChange(int option) {
         cin >> x >> y >> z; 
         CbNovo = Vec4(this->Cb).apply(Transformations::translate(x, y, z));
         CtNovo = Vec4(this->Ct).apply(Transformations::translate(x, y, z));
-        cout << "DEBUG: " << CbNovo.getVec3() << ' ' << CtNovo.getVec3() << endl;
+        // cout << "DEBUG: " << CbNovo.getVec3() << ' ' << CtNovo.getVec3() << endl;
         this->update(CbNovo.getVec3(), CtNovo.getVec3());
         break;
     case 2:
