@@ -86,7 +86,7 @@ std::optional<LPointGetType> Triangulo::intersecta(Ray raio) {
 
 		// this->material.RUGOSIDADE = novoKDifuso;
 		// this->material.KAMBIENTE = novoKDifuso; // TESTE
-		BaseMaterial material = BaseMaterial(novoKDifuso, this->material.REFLETIVIDADE, novoKDifuso, this->material.M);
+		BaseMaterial material = BaseMaterial(this->material.RUGOSIDADE, this->material.REFLETIVIDADE, novoKDifuso, this->material.M);
 		LPointGetType retorno = LPointGetType(ponto.value().tint, ponto.value().normalContato, ponto.value().posContato, material);
 		// cout << retorno.material.value().KAMBIENTE << endl;
 		return retorno;

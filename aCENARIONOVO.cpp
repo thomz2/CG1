@@ -13,6 +13,10 @@
 #include "classes/headers/Ray.h"
 #include "classes/headers/Scene.h"
 #include "classes/headers/materiais/BaseMaterial.h"
+#include "classes/headers/materiais/Difuso.h"
+#include "classes/headers/materiais/Vidro.h"
+#include "classes/headers/materiais/Metalico.h"
+#include "classes/headers/materiais/Plastico.h"
 #include "classes/headers/materiais/MaterialTarefa.h"
 #include "classes/headers/math/Transformations.h"
 #include "classes/headers/math/Mat4.h"
@@ -110,12 +114,26 @@ int main ( int argc, char *argv[] ) {
 
     BaseMaterial materialMesh = BaseMaterial();
     materialMesh.REFLETIVIDADE = Vec3(0.2, 0.2, 0.2);
+    materialMesh.RUGOSIDADE = Vec3(0.1, 0.1, 0.1);
     
     Texture* textura = new Texture("assets/snow.png", true);
     Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20 + YPOSITIVO, 0), Vec3(0, 1, 0), textura);
 
+    Difuso difuso = Difuso();
+    difuso.KAMBIENTE = Vec3(1.0, 0.0, 0.0);
+
+    Metalico metalico = Metalico();
+    metalico.KAMBIENTE = Vec3(1.0, 0.0, 0.0);
+
+    Plastico plastico = Plastico();
+    plastico.KAMBIENTE = Vec3(1.0, 0.0, 0.0);
+
+    Vidro vidro = Vidro();
+    vidro.KAMBIENTE = Vec3(1.0, 0.0, 0.0);
+
+
     // <========== OBJETOS DO CENARIO ==========>
-    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-30 + XPOSITIVO, -20 + YPOSITIVO, -26 + ZPOSITIVO), Vec3(-30 + XPOSITIVO, 75 + YPOSITIVO, -26 + ZPOSITIVO), 3, BaseMaterial(Vec3(88.0, 57.0, 39.0), 1));
+    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-30 + XPOSITIVO, -20 + YPOSITIVO, -26 + ZPOSITIVO), Vec3(-30 + XPOSITIVO, 75 + YPOSITIVO, -26 + ZPOSITIVO), 3, metalico);
     ObjMesh*  placa         = new ObjMesh(11, "assets/placaAmarela/placa_amarela.obj", "assets/placaAmarela/placa.png", materialMesh);
     placa->applyMatrix(Transformations::scale(30, 30, 30));
     placa->applyMatrix(Transformations::shear());
@@ -152,21 +170,32 @@ int main ( int argc, char *argv[] ) {
     // <========== ESTRUTURAS ==========>
 
     // <========== PERSONAGENS ==========>
-    ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
+    ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", difuso);
     stan->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterStan = new Cluster(stan, 20000, true);
 
-    ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", materialMesh);
+    Esfera* esfStan = new Esfera(9999, corAzul, Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, difuso);
+
+    ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", metalico);
     kyle->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKyle = new Cluster(kyle, 20000, true);
 
-    ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", materialMesh);
+    Esfera* esfKyle= new Esfera(9999, corAzul, Vec3(50 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, metalico);
+
+
+    ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", plastico);
     cartman->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
 
-    ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", materialMesh, false);
+    Esfera* esfCartman = new Esfera(9999, corAzul, Vec3(100 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, plastico);
+
+
+
+    ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", vidro, false);
     kenny->applyMatrix(Transformations::translate(150 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKenny = new Cluster(kenny, 20000, true);
     
+    Esfera* esfKenny = new Esfera(9999, corAzul, Vec3(150 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, vidro);
+
     ObjMesh* dio = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh, true);
     dio->applyMatrix(Transformations::scale(25, 25, 25));
     Cluster* clusterDio = new Cluster(dio, 20000, true);
@@ -179,7 +208,7 @@ int main ( int argc, char *argv[] ) {
 
     // mesh2->textura->testColors();
 
-    LuzPontual* luzPontual = new LuzPontual(Vec3(-250 + XPOSITIVO, 125 + YPOSITIVO, 0 + ZPOSITIVO), Vec3(0.2, 0.2, 0.2));
+    LuzPontual* luzPontual = new LuzPontual(Vec3(50 + XPOSITIVO, 325 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.8, 0.8, 0.8));
     LuzSpot* luzSpot = new LuzSpot(Vec3(-15 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.3, 0.3, 0.3), Vec3(0, -1, 0).norm(), 60);
     LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.1, 0.1, 0.2), Vec3(-1, -1, 0).norm());
 
@@ -194,9 +223,13 @@ int main ( int argc, char *argv[] ) {
     // cenario->objetos.push_back(clusterDio);
 
     cenario->objetos.push_back(clusterStan);
+    cenario->objetos.push_back(esfStan);
     cenario->objetos.push_back(clusterKyle);
+    cenario->objetos.push_back(esfKyle);
     cenario->objetos.push_back(cartman);
+    cenario->objetos.push_back(esfCartman);
     cenario->objetos.push_back(clusterKenny);
+    cenario->objetos.push_back(esfKenny);
 
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(montanha1);
@@ -210,8 +243,8 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(predioMarrom);
     cenario->objetos.push_back(predioTom);
 
-    cenario->luzes.push_back(luzDirecional);
-    // cenario->luzes.push_back(luzPontual);
+    // cenario->luzes.push_back(luzDirecional);
+    cenario->luzes.push_back(luzPontual);
     // cenario->luzes.push_back(luzSpot);
 
     const int nCol = 500;
