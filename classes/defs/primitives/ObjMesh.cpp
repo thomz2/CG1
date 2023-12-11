@@ -111,5 +111,5 @@ int ObjMesh::printObj() {
 }
 
 void ObjMesh::handleChange(int option) {
-	return;
+	Mesh::handleChange(option);
 }

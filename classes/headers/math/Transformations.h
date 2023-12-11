@@ -27,4 +27,5 @@ class Transformations{
     static Mat4 shearY(double x, double z);
     static Mat4 shearZ(double x, double y);
     static Mat4 shear(double xy = 0, double xz = 0, double yx = 0, double yz = 0, double zx = 0, double zy = 0);
+    static Mat4 reflection(Vec3 normal, Vec3 point); 
 };

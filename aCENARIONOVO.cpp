@@ -179,6 +179,10 @@ int main ( int argc, char *argv[] ) {
     Cluster* clusterStan = new Cluster(stan, 20000, true);
 
     Esfera* esfStan = new Esfera(1999, corAzul, Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, pele);
+    cout << esfStan->PCentro << endl;
+    Esfera* testeEspelho = new Esfera(1998, corAzul, 
+        Vec4(esfStan->PCentro).apply(Transformations::reflection(Vec3(0, 0, -1), Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, 20 + ZPOSITIVO ))).getVec3(), 20, pele );
+    cout << testeEspelho->PCentro << endl;
 
     ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", metalico);
     kyle->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
@@ -228,6 +232,7 @@ int main ( int argc, char *argv[] ) {
 
     // cenario->objetos.push_back(clusterStan);
     cenario->objetos.push_back(esfStan);
+    cenario->objetos.push_back(testeEspelho);
     // cenario->objetos.push_back(clusterKyle);
     // cenario->objetos.push_back(esfKyle);
     // cenario->objetos.push_back(cartman);

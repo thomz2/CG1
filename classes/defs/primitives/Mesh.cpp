@@ -103,7 +103,7 @@ int Mesh::printObj() {
     cout << "[3] rotacionar" << endl;
     cout << "[4] cisalhar" << endl;
     cout << "[5] refletir" << endl;
-    cout << "[6] mudar material" << endl;
+    cout << "[6] alterar material" << endl;
 	int opcao = 0;
     cin >> opcao;
     return opcao; 

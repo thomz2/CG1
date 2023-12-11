@@ -189,3 +189,16 @@ Mat4 Transformations::shear(double xy, double xz, double yx, double yz, double z
         }
     );
 };
+
+Mat4 Transformations::reflection(Vec3 normal, Vec3 point) {
+    normal = normal.norm();
+    double a = normal.x, b = normal.y, c = normal.z, d = point.mult(-1).dot(normal);
+    return Mat4(
+        {
+            {1 - 2*a*a, -(2*a*b), -(2*a*c), -(2*a*d)},
+            {-(2*a*b), 1 - 2*b*b, -(2*b*c), -(2*b*d)},
+            {-(2*a*c), -(2*b*c), 1 - (2*c*c), -(2*c*d)},
+            {0, 0, 0, 1}
+        }
+    );
+};
