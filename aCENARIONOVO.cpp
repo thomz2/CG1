@@ -354,10 +354,29 @@ int main ( int argc, char *argv[] ) {
                         break;
                     case SDLK_COMMA:
                         vel /= 2;
+                        cout << "NOVA VELOCIDADE: " << vel << endl;
                         break;
                     case SDLK_PERIOD:
                         vel *= 2;
+                        cout << "NOVA VELOCIDADE: " << vel << endl;
                         break;
+                    case SDLK_m:{
+                        int opcao = 0;
+                        cout << "MENU:\n";
+                        cout << "  [0] FAZER NADA\n";
+                        cout << "  [1] TROCAR DIA/NOITE\n";
+                        cin >> opcao;
+                        switch (opcao)
+                        {
+                        case 1:
+                            camera->tempo = !camera->tempo;
+                            break;
+                        
+                        default:
+                            break;
+                        }
+                        break;
+                    }
                 }
             }
         }

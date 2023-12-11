@@ -47,6 +47,7 @@ class Camera {
 
         Scene* cenario;
         bool isParalel = false;
+        bool tempo = false;
 
         // rotacao de camera
         double pitch = 0;

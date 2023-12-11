@@ -110,5 +110,18 @@ int Mesh::printObj() {
 }
 
 void Mesh::handleChange(int option) {
+	Vec3 aux1;
+	Vec3 aux2;
+	Vec3 aux3;
+	switch (option)
+	{
+	case 0:
+        cout << "DIGITE OS VALORES DE X, Y E Z: ";
+		break;
+	
+	default:
+		break;
+	}
+
 	return;
 }
