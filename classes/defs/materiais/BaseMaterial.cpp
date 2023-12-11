@@ -97,6 +97,46 @@ BaseMaterial BaseMaterial::getMaterial(int option, Vec3 kambiente) {
     }
 }
 
+BaseMaterial BaseMaterial::getMaterial(int option) {
+    switch (option)
+    {
+    case 1:
+    {
+
+        Difuso difuso = Difuso();
+        return difuso;
+    }
+    case 2:
+    {
+
+        Madeira madeira = Madeira();
+        return madeira;
+    }
+    case 3:
+    {
+        Metalico metalico = Metalico();
+        return metalico;
+    }
+    case 4:
+    {
+
+        Pele pele = Pele();
+        return pele;
+    } 
+    case 5:
+    {
+
+        Plastico plastico = Plastico();
+        return plastico;
+    }  
+    default:
+    {
+
+        return BaseMaterial();
+    }
+    }
+}
+
 void BaseMaterial::printMaterial() {
     std::cout << "MATERIAL: " << std::endl;
     std::cout << "  RUGOSIDADE: (" << RUGOSIDADE.x << ", " << RUGOSIDADE.y << ", " << RUGOSIDADE.z << ")" << std::endl;

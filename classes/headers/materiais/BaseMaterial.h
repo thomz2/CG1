@@ -25,6 +25,7 @@ public:
     int offerMaterial();
     Vec3 offerColor();
     BaseMaterial getMaterial(int option, Vec3 kambiente);
+    BaseMaterial getMaterial(int option);
 
     void printMaterial();
 

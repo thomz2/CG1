@@ -190,6 +190,11 @@ Mat4 Transformations::shear(double xy, double xz, double yx, double yz, double z
     );
 };
 
+Mat4 Transformations::shearAroundPoint(double xy, double xz, double yx, double yz, double zx, double zy, Vec3 point) {
+    return translate(point.x, point.y, point.z).apply(shear(xy, xz, yx, yz, zx, zy).apply(translate(-point.x, -point.y, -point.z)));
+};
+
+
 Mat4 Transformations::reflection(Vec3 normal, Vec3 point) {
     normal = normal.norm();
     double a = normal.x, b = normal.y, c = normal.z, d = point.mult(-1).dot(normal);

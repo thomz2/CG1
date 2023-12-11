@@ -6,6 +6,9 @@
 #include "../materiais/MaterialTarefa.h"
 #include "../materiais/BaseMaterial.h"
 #include "../math/Mat4.h"
+#include "../math/Vec3.h"
+#include "../math/Vec4.h"
+#include "../math/Transformations.h"
 
 class Mesh:public ObjetoComposto {
 public:
@@ -18,6 +21,7 @@ public:
 	Mesh(int id);
 	Mesh(int id, vector<Triangulo*> triangulos);
 	Mesh(int id, vector<Objeto*> triangulos);
+	Vec3 getMeshCenter();
 	void gerarTriangulo(std::vector<int> face, int id);
 	void gerarTriangulo(std::vector<int> face, int id, BaseMaterial material);
 	void gerarTriangulo(std::vector<int> face, std::vector<int> uv, int id, BaseMaterial material);

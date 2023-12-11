@@ -1,6 +1,43 @@
 #include "../../headers/primitives/Mesh.h"
 #include "../../headers/primitives/Triangulo.h"
 
+#include "../../miniball/Seb.h"
+typedef double FT;
+typedef Seb::Point<FT> Point;
+typedef std::vector<Point> PointVector;
+typedef Seb::Smallest_enclosing_ball<FT> Miniball;
+
+Miniball getMiniballMesh(vector<Vec3> pontos) {
+
+    PointVector S;
+    vector<double> coords(3);
+    
+    for (int i = 0; i < pontos.size(); ++i) {
+        coords[0] = pontos[i].x;
+        coords[1] = pontos[i].y;
+        coords[2] = pontos[i].z;
+        S.push_back(Point(3, coords.begin()));
+    }
+
+    return Miniball(3, S);
+}
+
+Vec3 Mesh::getMeshCenter() {
+	vector<Vec3> pontos;
+	for (auto t : this->subObjetos) {
+		Triangulo* atual = (Triangulo*)t;
+		Vec3 v1, v2, v3;
+		v1 = atual->V1;
+		v2 = atual->V2;
+		v3 = atual->V3;
+        pontos.push_back(v1);
+        pontos.push_back(v2);
+        pontos.push_back(v3);	
+	}
+	Miniball mb = getMiniballMesh(pontos);
+	return Vec3(mb.center_begin()[0], mb.center_begin()[1], mb.center_begin()[2]);
+}
+
 Mesh::Mesh(int id) : ObjetoComposto(id) {};
 
 Mesh::Mesh(int id, vector<Triangulo*> triangulos) : ObjetoComposto(id) {
@@ -88,6 +125,7 @@ void Mesh::applyMatrix(Mat4 matrix) {
 
 int Mesh::printObj() {
 	cout << "Mesh ID: " << this->id << endl;
+    std::cout << "Mesh Center Point: " << this->getMeshCenter() << std::endl;
 
     // Print the sizes of vectors
     cout << "Number of Vertices: " << vertices.size() << endl;
@@ -110,15 +148,71 @@ int Mesh::printObj() {
 }
 
 void Mesh::handleChange(int option) {
+	double x, y, z;
 	Vec3 aux1;
-	Vec3 aux2;
-	Vec3 aux3;
+	Vec3 eixo;
+	Vec3 ponto;
 	switch (option)
 	{
-	case 0:
-        cout << "DIGITE OS VALORES DE X, Y E Z: ";
+	case 1:
+        cout << "DIGITE OS VALORES DE X, Y E Z PARA TRANSLADAR: ";
+        cin >> x >> y >> z; 
+		this->applyMatrix(Transformations::translate(x, y, z));
 		break;
-	
+	case 2:
+        cout << "DIGITE OS VALORES DE X, Y E Z PARA ESCALAR: ";
+        cin >> x >> y >> z; 
+		cout << "DIGITE UM PONTO DE REFERÊNCIA PARA A ESCALAR: ";
+		cin >> aux1.x >> aux1.y >> aux1.z;
+		this->applyMatrix(Transformations::scaleArroundPoint(x, y, z, aux1));
+		break;
+	case 3:
+		cout << "DIGITE O EIXO DE ROTACAO (X Y Z): ";
+        cin >> x >> y >> z;
+        eixo = Vec3(x,y,z);
+        cout << "DIGITE O PONTO DE REFERENCIA (X Y Z): ";
+        cin >> x >> y >> z;
+        ponto = Vec3(x,y,z);
+        cout << "DIGITE O ANGULO EM GRAUS: ";
+        cin >> x;
+		this->applyMatrix(Transformations::rotateAroundAxisDegrees(x, ponto, eixo));
+		break;
+	case 4:
+	{
+		double xy, xz, yx, yz, zx, zy;
+		cout << "DIGITE OS FATORES DE CISALHAMENTO:\n";
+		cout << "Sxy: "; cin >> xy;
+		cout << "Sxz: "; cin >> xz;
+		cout << "Syx: "; cin >> yx;
+		cout << "Syz: "; cin >> yz;
+		cout << "Szx: "; cin >> zx;
+		cout << "Szy: "; cin >> zy;
+		cout << "DIGITE O PONTO DE REFERENCIA (X Y Z): ";
+        cin >> x >> y >> z;
+        ponto = Vec3(x,y,z);
+		this->applyMatrix(Transformations::shearAroundPoint(xy, xz, yx, yz, zx, zy, ponto));
+		break;
+	}
+	case 5: 
+	{
+		cout << "DIGITE UM PONTO QUE PERTENCE AO PLANO IMAGINARIO DO ESPELHO (X Y Z): ";
+        cin >> x >> y >> z;
+        Vec3 pt = Vec3(x, y, z);
+        cout << "DIGITE A NORMAL DO PLANO IMAGINARIO DO ESPELHO (X Y Z): ";
+        cin >> x >> y >> z;
+        Vec3 normalesp = Vec3(x, y, z);
+		this->applyMatrix(Transformations::reflection(normalesp, pt));
+		break;
+	}
+	case 6:
+	{
+		int novoMatInd = this->material.offerMaterial();
+        this->material = this->material.getMaterial(novoMatInd);
+		for (auto t : this->subObjetos) {
+			t->material = this->material;
+		}
+		break;
+	}
 	default:
 		break;
 	}
