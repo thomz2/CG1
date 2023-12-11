@@ -64,22 +64,25 @@ optional<LPointGetType> Esfera::intersecta(Ray raycaster) {
 
 }
 
-int Esfera::printObj() {
+int Esfera::printObj(bool printMenu) {
     std::cout << "Sphere ID: " << id << std::endl;
     std::cout << "Center (PCentro): (" << PCentro.x << ", " << PCentro.y << ", " << PCentro.z << ")" << std::endl;
     std::cout << "Radius (raio): " << raio << std::endl;
 
     material.printMaterial();
 
-    cout << "Deseja fazer algo?" << endl;
-    cout << "[0] não" << endl;
-    cout << "[1] transladar" << endl;
-    cout << "[2] espelhar" << endl;
-    cout << "[3] alterar raio" << endl;
-    cout << "[4] alterar material" << endl;
-    int opcao = 0;
-    cin >> opcao;
-    return opcao; 
+    if (!printMenu) {
+        cout << "Deseja fazer algo?" << endl;
+        cout << "[0] não" << endl;
+        cout << "[1] transladar" << endl;
+        cout << "[2] espelhar" << endl;
+        cout << "[3] alterar raio" << endl;
+        cout << "[4] alterar material" << endl;
+        int opcao = 0;
+        cin >> opcao;
+        return opcao; 
+    }
+    return 0;
 }
 
 void Esfera::handleChange(int option) {

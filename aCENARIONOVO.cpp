@@ -7,8 +7,10 @@
 #include <utility>
 #include "classes/headers/math/Vec3.h"
 #include "classes/headers/primitives/Esfera.h"
+#include "classes/headers/primitives/EsferaDeLuzSpot.h"
 #include "classes/headers/primitives/Cilindro.h"
 #include "classes/headers/primitives/Cone.h"
+#include "classes/headers/primitives/Arvore.h"
 #include "classes/headers/Canvas.h"
 #include "classes/headers/Ray.h"
 #include "classes/headers/Scene.h"
@@ -99,9 +101,9 @@ int main ( int argc, char *argv[] ) {
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookat(5075, 5017.87, 5121.74);
+    Vec3 lookat(5075.08, 5017.95, 5041.74);
     // Vec3 lookfrom(-30, 60, 90);
-    Vec3 lookfrom(5075.08, 5017.95, 5041.74);
+    Vec3 lookfrom(5075, 5017.87, 5121.74);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.5), camera);
@@ -147,8 +149,6 @@ int main ( int argc, char *argv[] ) {
     ObjMesh* rua = new ObjMesh(12, "assets/rua/rua.obj", "assets/rua/RUA.png", materialMesh);
     rua->applyMatrix(Transformations::scale(200, 20, 80));
     rua->applyMatrix(Transformations::translate(0 + XPOSITIVO, -17 + YPOSITIVO, 210 + ZPOSITIVO));
-
-
     // <========== OBJETOS DO CENARIO ==========>
 
 
@@ -173,10 +173,30 @@ int main ( int argc, char *argv[] ) {
     predioTom->applyMatrix(Transformations::translate(610 + XPOSITIVO, -15 + YPOSITIVO, 500 + ZPOSITIVO));
     // <========== ESTRUTURAS ==========>
 
+    // <========== ARVORES ==========>
+    BaseMaterial materialCone = BaseMaterial(madeira.RUGOSIDADE, madeira.REFLETIVIDADE, Vec3(0, 55.0/255.0, 0), madeira.M);
+    
+    Cilindro* tronco1 = new Cilindro(601, corAzul, Vec3(XPOSITIVO, YPOSITIVO, ZPOSITIVO - 350), Vec3(XPOSITIVO, YPOSITIVO + 140, ZPOSITIVO - 350), 30, madeira);
+    Cone*     cone1   = new Cone(602, corAzul, tronco1->Ct, tronco1->Ct.add(Vec3(0, 200, 0)), 100, materialCone);
+    // <========== ARVORES ==========>
+
+    // <========== POSTES ==========>
+    BaseMaterial materialLampada = BaseMaterial();
+    materialLampada.KAMBIENTE = Vec3(253.0/255.0, 253.0/255.0, 150/255.0);
+
+    Metalico materialPoste = Metalico();
+    materialPoste.KAMBIENTE = Vec3(0, 0, 0); 
+
+    EsferaDeLuzSpot* ilumPost = new EsferaDeLuzSpot(701, corAzul, Vec3(XPOSITIVO + 60, YPOSITIVO + 170, ZPOSITIVO - 20), 20, materialLampada, Vec3(253.0/255.0, 253.0/255.0, 150/255.0), 11);
+    Cilindro*        poste    = new Cilindro(702, corAzul, Vec3(XPOSITIVO + 60, YPOSITIVO - 20, ZPOSITIVO - 20), Vec3(XPOSITIVO + 60, YPOSITIVO + 150, ZPOSITIVO - 20), 6, materialPoste);
+    // <========== POSTES ==========>
+
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", difuso);
     stan->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterStan = new Cluster(stan, 20000, true);
+
+
 
     Esfera* esfStan = new Esfera(1999, corAzul, Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, pele);
     cout << esfStan->PCentro << endl;
@@ -232,6 +252,10 @@ int main ( int argc, char *argv[] ) {
 
     // cenario->objetos.push_back(clusterStan);
     // cenario->objetos.push_back(esfStan);
+    cenario->objetos.push_back(tronco1);
+    cenario->objetos.push_back(cone1);
+    cenario->objetos.push_back(ilumPost);
+    cenario->objetos.push_back(poste);
     // cenario->objetos.push_back(testeEspelho);
     cenario->objetos.push_back(clusterKyle);
     // cenario->objetos.push_back(esfKyle);
@@ -243,7 +267,7 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(chao);
     // cenario->objetos.push_back(montanha1);
     // cenario->objetos.push_back(montanha2);
-    // cenario->objetos.push_back(estacaDaPlaca);
+    cenario->objetos.push_back(estacaDaPlaca);
     // cenario->objetos.push_back(rua);
 
 
@@ -253,8 +277,9 @@ int main ( int argc, char *argv[] ) {
     // cenario->objetos.push_back(predioTom);
 
     // cenario->luzes.push_back(luzDirecional);
-    cenario->luzes.push_back(luzPontual);
+    // cenario->luzes.push_back(luzPontual);
     // cenario->luzes.push_back(luzSpot);
+    cenario->luzes.push_back(ilumPost->luzSpot);
 
     const int nCol = 500;
     const int nLin = 500;

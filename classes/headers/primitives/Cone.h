@@ -25,7 +25,7 @@ class Cone : public Objeto {
     void update(Vec3 Cb, Vec3 Vt, double raio = -1);
     std::optional<LPointGetType> intersectaFace(Ray raycaster);
     std::optional<LPointGetType> intersecta(Ray raycaster) override;
-    int printObj() override;
+    int printObj(bool printMenu = false) override;
     void handleChange(int option) override;
 
 };

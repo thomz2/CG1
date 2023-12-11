@@ -123,7 +123,7 @@ void Mesh::applyMatrix(Mat4 matrix) {
 	}
 }
 
-int Mesh::printObj() {
+int Mesh::printObj(bool printMenu) {
 	cout << "Mesh ID: " << this->id << endl;
     std::cout << "Mesh Center Point: " << this->getMeshCenter() << std::endl;
 

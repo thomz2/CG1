@@ -28,6 +28,6 @@ class Cilindro : public Objeto {
     void update(Vec3 Cb, Vec3 Ct, double raio = -1);
     std::optional<LPointGetType> intersecta(Ray raycaster) override;
     std::optional<LPointGetType> intersectaFace(Ray raycaster);
-    int printObj() override;
+    int printObj(bool printMenu = false) override;
     void handleChange(int option) override;
 };

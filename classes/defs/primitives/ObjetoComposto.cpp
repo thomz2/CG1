@@ -37,7 +37,7 @@ optional<LPointGetType> ObjetoComposto::intersecta(Ray ray) {
 
 }
 
-int ObjetoComposto::printObj() {
+int ObjetoComposto::printObj(bool printMenu) {
     return 0;
 }
 

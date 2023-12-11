@@ -20,7 +20,7 @@ public:
     
     std::optional<LPointGetType> intersecta(Ray ray);
 
-    int printObj() override;
+    int printObj(bool printMenu = false) override;
     void handleChange(int option) override;
 
 };

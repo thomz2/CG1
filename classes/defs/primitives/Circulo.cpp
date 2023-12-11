@@ -33,7 +33,7 @@ optional<LPointGetType> Circulo::intersecta(Ray raycaster) {
 
 };
 
-int Circulo::printObj() {
+int Circulo::printObj(bool printMenu) {
     std::cout << "Circle ID: " << id << std::endl;
     std::cout << "Center: (" << Ppi.x << ", " << Ppi.y << ", " << Ppi.z << ")" << std::endl;
     std::cout << "Normal (n): (" << n.x << ", " << n.y << ", " << n.z << ")" << std::endl;

@@ -24,7 +24,7 @@ class Esfera : public Objeto {
     Vec3 getW(Vec3 Pin); 
     void update(Vec3 c, double raio = -1);
 
-    int printObj() override;
+    int printObj(bool printMenu = false) override;
     void handleChange(int option) override;
 
 };

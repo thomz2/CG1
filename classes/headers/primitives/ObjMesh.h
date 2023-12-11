@@ -18,7 +18,7 @@ class ObjMesh : public Mesh {
 
         bool readFilePath(const string& filepath);
 
-        int printObj() override;
+        int printObj(bool printMenu = false) override;
         void handleChange(int option) override;
 
 };

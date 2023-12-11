@@ -17,7 +17,7 @@ public:
     Cluster(Mesh* malha, int depth, bool first = false);
     void initializeCluster(Mesh* malha, int depth, bool first = false);
     std::optional<LPointGetType> intersecta(Ray ray) override;
-    int printObj() override;
+    int printObj(bool printMenu = false) override;
     void handleChange(int option) override;
 
 };
