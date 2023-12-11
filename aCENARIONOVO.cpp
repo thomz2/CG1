@@ -233,7 +233,7 @@ int main ( int argc, char *argv[] ) {
     // cenario->objetos.push_back(clusterStan);
     // cenario->objetos.push_back(esfStan);
     // cenario->objetos.push_back(testeEspelho);
-    // cenario->objetos.push_back(clusterKyle);
+    cenario->objetos.push_back(clusterKyle);
     // cenario->objetos.push_back(esfKyle);
     // cenario->objetos.push_back(cartman);
     // cenario->objetos.push_back(esfCartman);
@@ -244,10 +244,10 @@ int main ( int argc, char *argv[] ) {
     // cenario->objetos.push_back(montanha1);
     // cenario->objetos.push_back(montanha2);
     // cenario->objetos.push_back(estacaDaPlaca);
-    cenario->objetos.push_back(rua);
+    // cenario->objetos.push_back(rua);
 
 
-    cenario->objetos.push_back(placa);
+    // cenario->objetos.push_back(placa);
     // cenario->objetos.push_back(predioBegeClaro);
     // cenario->objetos.push_back(predioMarrom);
     // cenario->objetos.push_back(predioTom);
