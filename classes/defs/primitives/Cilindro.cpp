@@ -49,7 +49,7 @@ Vec3 Cilindro::getW(Vec3 Pin) {
     return Pin - this->Cb;
 }
 
-void Cilindro::update(Vec3 Cb, Vec3 Ct) {
+void Cilindro::update(Vec3 Cb, Vec3 Ct, double raio) {
     this->Cb = Cb;
     this->Ct = Ct;
 
@@ -58,10 +58,19 @@ void Cilindro::update(Vec3 Cb, Vec3 Ct) {
     this->h = dif.modulo(); // altura = comprimento do vetor diferença
     this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
 
+
     this->circuloTopo->update(Ct, this->d);
     this->circuloBase->update(Cb, dif.mult(-1).norm());
+    if (raio != -1) {
+        this->circuloTopo->setRaio(raio);
+        this->circuloBase->setRaio(raio);
+        this->r = raio;
+    }
+
     this->circuloTopo->setNormal(this->d);
     this->circuloBase->setNormal(dif.mult(-1).norm());
+
+
 }
 
 optional<LPointGetType> Cilindro::intersectaFace(Ray raycaster)
@@ -162,42 +171,6 @@ optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
 
     return ponto;
 
-/*
-    // caso em que o raio intersecta as duas bases -o=o->
-    if (intersectCB.has_value() && intersectCT.has_value()) {
-
-        // circulo da base aparece primeiro?         
-        // se nao aparece, o circulo do topo aparece primeiro
-        return intersectCB.value().tint < intersectCT.value().tint ? intersectCB.value() : intersectCT.value();
-
-    } else {
-        
-        // casos em que possivelmente a face eh intersectada
-        if (!intersectFace.has_value()) return nullopt; // nao intersectou o topo e a base e nem a face, entao nao paro por aqui
-
-        if (intersectCB.has_value()) { // caso em que intersecta base e face
-
-            // circulo da base aparece primeiro?
-            // se nao aparece, a face aparece primeiro
-            return intersectCB.value().tint < intersectFace.value().tint ? intersectCB.value() : intersectFace.value();
-
-        } else if (intersectCT.has_value()) { // caso em que intersecta topo e face
-
-            // circulo do topo aparece primeiro?
-            // se nao aparece, a face aparece primeiro
-            return intersectCT.value().tint < intersectFace.value().tint ? intersectCT.value() : intersectFace.value();
-
-        } else { // caso em que intersecta face apenas
-            return intersectFace.value();
-        }
-
-    } 
-
-    // caso nao de certo, retorna nada (nunca chega aqui)
-    return nullopt;
-*/
-    
-
 }
 
 int Cilindro::printObj() {
@@ -214,7 +187,7 @@ int Cilindro::printObj() {
     cout << "[0] não" << endl;
     cout << "[1] transladar" << endl;
     cout << "[2] rotacionar" << endl;
-    cout << "[3] aumentar altura" << endl;
+    cout << "[3] alterar pontos" << endl;
     cout << "[4] aumentar raio" << endl;
     cout << "[5] mudar material" << endl;
     int opcao = 0;
@@ -223,5 +196,62 @@ int Cilindro::printObj() {
 }
 
 void Cilindro::handleChange(int option) {
+    double x, y, z;
+    Vec4 CbNovo;
+    Vec4 CtNovo;
+    Vec3 ponto;
+    Vec3 eixo;
+    switch (option)
+    {
+    case 0:
+        break;
+    case 1:
+        cout << "DIGITE OS VALORES DE X, Y E Z: ";
+        cin >> x >> y >> z; 
+        CbNovo = Vec4(this->Cb).apply(Transformations::translate(x, y, z));
+        CtNovo = Vec4(this->Ct).apply(Transformations::translate(x, y, z));
+        cout << "DEBUG: " << CbNovo.getVec3() << ' ' << CtNovo.getVec3() << endl;
+        this->update(CbNovo.getVec3(), CtNovo.getVec3());
+        break;
+    case 2:
+        cout << "DIGITE O EIXO DE ROTACAO (X, Y, Z): ";
+        cin >> x >> y >> z;
+        eixo = Vec3(x,y,z);
+        cout << "DIGITE O PONTO DE REFERENCIA (X, Y, Z): ";
+        cin >> x >> y >> z;
+        ponto = Vec3(x,y,z);
+        cout << "DIGITE O ANGULO EM GRAUS: ";
+        cin >> x;
+
+        CbNovo = Vec4(this->Cb).apply(
+            Transformations::rotateAroundAxisDegrees(x, ponto, eixo));
+        CtNovo = Vec4(this->Ct).apply(
+            Transformations::rotateAroundAxisDegrees(x, ponto, eixo));
+
+        this->update(CbNovo.getVec3(), CtNovo.getVec3());
+        break;
+    case 3:
+        {
+
+        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO PONTO DO TOPO (X, Y, Z): ";
+        cin >> x >> y >> z;
+        Vec3 Cbnovo(x, y, z);
+        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO CENTRO DO TOPO (X, Y, Z): ";
+        cin >> x >> y >> z;
+        Vec3 Ctnovo(x, y, z);
+        this->update(Cbnovo, Ctnovo);
+        break;
+        }
+    case 4:
+        {
+
+        cout << "DIGITE O NOVO RAIO: ";
+        cin >> x;
+        this->update(this->Cb, this->Ct, x);
+        break;
+        }
+    default:
+        break;
+    }
 	return;
 }
