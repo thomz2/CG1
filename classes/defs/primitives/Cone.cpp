@@ -44,6 +44,26 @@ Cone::Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double r
     this->base = new Circulo(10000 + id, cor, material, Cb, Cb.sub(Vt).norm(), raio);
 }
 
+void Cone::update(Vec3 Cb, Vec3 Vt, double raio) {
+    this->Cb = Cb;
+    this->Vt = Vt;
+
+    Vec3 dif = Vt - Cb;
+
+    this->h = dif.modulo(); // altura = comprimento do vetor diferença
+    this->d = dif.norm();   // direcao = normalizacao do vetor diferença (unitario aqui)
+
+
+    this->base->update(Cb, dif.mult(-1).norm());
+    if (raio != -1) {
+        this->base->setRaio(raio);
+        this->r = raio;
+    }
+
+    this->base->setNormal(dif.mult(-1).norm());
+
+}
+
 optional<LPointGetType> Cone::intersectaFace(Ray raycaster) {
     Vec3 v = this->Vt.sub(raycaster.Pinicial);
     Vec3 d = raycaster.direcao;
@@ -145,9 +165,9 @@ int Cone::printObj() {
     cout << "[0] não" << endl;
     cout << "[1] transladar" << endl;
     cout << "[2] rotacionar" << endl;
-    cout << "[3] aumentar altura" << endl;
-    cout << "[4] aumentar raio" << endl;
-    cout << "[5] mudar material" << endl;
+    cout << "[3] alterar pontos" << endl;
+    cout << "[4] alterar raio" << endl;
+    cout << "[5] alterar material" << endl;
     int opcao = 0;
     cin >> opcao;
     return opcao;
@@ -155,5 +175,68 @@ int Cone::printObj() {
 }
 
 void Cone::handleChange(int option) {
+	double x, y, z;
+    Vec4 CbNovo;
+    Vec4 VtNovo;
+    Vec3 ponto;
+    Vec3 eixo;
+    switch (option)
+    {
+    case 0:
+        break;
+    case 1:
+        cout << "DIGITE OS VALORES DE X, Y E Z: ";
+        cin >> x >> y >> z; 
+        CbNovo = Vec4(this->Cb).apply(Transformations::translate(x, y, z));
+        VtNovo = Vec4(this->Vt).apply(Transformations::translate(x, y, z));
+        // cout << "DEBUG: " << CbNovo.getVec3() << ' ' << VtNovo.getVec3() << endl;
+        this->update(CbNovo.getVec3(), VtNovo.getVec3());
+        break;
+    case 2:
+        cout << "DIGITE O EIXO DE ROTACAO (X Y Z): ";
+        cin >> x >> y >> z;
+        eixo = Vec3(x,y,z);
+        cout << "DIGITE O PONTO DE REFERENCIA (X Y Z): ";
+        cin >> x >> y >> z;
+        ponto = Vec3(x,y,z);
+        cout << "DIGITE O ANGULO EM GRAUS: ";
+        cin >> x;
+
+        CbNovo = Vec4(this->Cb).apply(
+            Transformations::rotateAroundAxisDegrees(x, ponto, eixo));
+        VtNovo = Vec4(this->Vt).apply(
+            Transformations::rotateAroundAxisDegrees(x, ponto, eixo));
+
+        this->update(CbNovo.getVec3(), VtNovo.getVec3());
+        break;
+    case 3:
+        {
+
+        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO CENTRO DA BASE (X Y Z): ";
+        cin >> x >> y >> z;
+        Vec3 Cbnovo(x, y, z);
+        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO CENTRO DO TOPO (X Y Z): ";
+        cin >> x >> y >> z;
+        Vec3 Vtnovo(x, y, z);
+        this->update(Cbnovo, Vtnovo);
+        break;
+        }
+    case 4:
+        {
+
+        cout << "DIGITE O NOVO RAIO: ";
+        cin >> x;
+        this->update(this->Cb, this->Vt, x);
+        break;
+        }
+    case 5:
+        {
+        int novoMatInd = this->material.offerMaterial();
+        Vec3 novoKambiente = this->material.offerColor();
+        this->material = this->material.getMaterial(novoMatInd, novoKambiente);
+        }
+    default:
+        break;
+    }
 	return;
 }

@@ -214,10 +214,10 @@ void Cilindro::handleChange(int option) {
         this->update(CbNovo.getVec3(), CtNovo.getVec3());
         break;
     case 2:
-        cout << "DIGITE O EIXO DE ROTACAO (X, Y, Z): ";
+        cout << "DIGITE O EIXO DE ROTACAO (X Y Z): ";
         cin >> x >> y >> z;
         eixo = Vec3(x,y,z);
-        cout << "DIGITE O PONTO DE REFERENCIA (X, Y, Z): ";
+        cout << "DIGITE O PONTO DE REFERENCIA (X Y Z): ";
         cin >> x >> y >> z;
         ponto = Vec3(x,y,z);
         cout << "DIGITE O ANGULO EM GRAUS: ";
@@ -233,10 +233,10 @@ void Cilindro::handleChange(int option) {
     case 3:
         {
 
-        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO PONTO DO TOPO (X, Y, Z): ";
+        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO CENTRO DA BASE (X Y Z): ";
         cin >> x >> y >> z;
         Vec3 Cbnovo(x, y, z);
-        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO CENTRO DO TOPO (X, Y, Z): ";
+        cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO CENTRO DO TOPO (X Y Z): ";
         cin >> x >> y >> z;
         Vec3 Ctnovo(x, y, z);
         this->update(Cbnovo, Ctnovo);

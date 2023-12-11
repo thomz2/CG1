@@ -2,6 +2,8 @@
 
 #include <optional>
 #include "../math/Vec3.h"
+#include "../math/Vec4.h"
+#include "../math/Transformations.h"
 #include "./ObjetoComposto.h"
 #include "../Ray.h"
 #include "../types/LPointGetType.h"
@@ -20,6 +22,7 @@ class Cone : public Objeto {
     Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio);
     Cone(int id, SDL_Color cor, Vec3 Cb, Vec3 direcao, double altura, double raio, BaseMaterial material);
 
+    void update(Vec3 Cb, Vec3 Vt, double raio = -1);
     std::optional<LPointGetType> intersectaFace(Ray raycaster);
     std::optional<LPointGetType> intersecta(Ray raycaster) override;
     int printObj() override;
