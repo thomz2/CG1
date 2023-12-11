@@ -14,7 +14,8 @@
 #include "classes/headers/Scene.h"
 #include "classes/headers/materiais/BaseMaterial.h"
 #include "classes/headers/materiais/Difuso.h"
-#include "classes/headers/materiais/Vidro.h"
+#include "classes/headers/materiais/Madeira.h"
+#include "classes/headers/materiais/Pele.h"
 #include "classes/headers/materiais/Metalico.h"
 #include "classes/headers/materiais/Plastico.h"
 #include "classes/headers/materiais/MaterialTarefa.h"
@@ -128,8 +129,11 @@ int main ( int argc, char *argv[] ) {
     Plastico plastico = Plastico();
     plastico.KAMBIENTE = Vec3(1.0, 0.0, 0.0);
 
-    Vidro vidro = Vidro();
-    vidro.KAMBIENTE = Vec3(1.0, 0.0, 0.0);
+    Madeira madeira = Madeira();
+    madeira.KAMBIENTE = Vec3(80.0/255.0, 48.0/255.0, 30.0/255.0);
+
+    Pele pele = Pele();
+    pele.KAMBIENTE = Vec3(179.0/255.0, 139.0/255.0, 109.0/255.0);
 
 
     // <========== OBJETOS DO CENARIO ==========>
@@ -174,27 +178,27 @@ int main ( int argc, char *argv[] ) {
     stan->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterStan = new Cluster(stan, 20000, true);
 
-    Esfera* esfStan = new Esfera(9999, corAzul, Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, difuso);
+    Esfera* esfStan = new Esfera(1999, corAzul, Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, pele);
 
     ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", metalico);
     kyle->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKyle = new Cluster(kyle, 20000, true);
 
-    Esfera* esfKyle= new Esfera(9999, corAzul, Vec3(50 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, metalico);
+    Esfera* esfKyle= new Esfera(2999, corAzul, Vec3(50 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, metalico);
 
 
     ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", plastico);
     cartman->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
 
-    Esfera* esfCartman = new Esfera(9999, corAzul, Vec3(100 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, plastico);
+    Esfera* esfCartman = new Esfera(3999, corAzul, Vec3(100 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, plastico);
 
 
 
-    ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", vidro, false);
+    ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", madeira, false);
     kenny->applyMatrix(Transformations::translate(150 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKenny = new Cluster(kenny, 20000, true);
     
-    Esfera* esfKenny = new Esfera(9999, corAzul, Vec3(150 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, vidro);
+    Esfera* esfKenny = new Esfera(4999, corAzul, Vec3(150 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, madeira);
 
     ObjMesh* dio = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh, true);
     dio->applyMatrix(Transformations::scale(25, 25, 25));
@@ -222,26 +226,26 @@ int main ( int argc, char *argv[] ) {
 
     // cenario->objetos.push_back(clusterDio);
 
-    cenario->objetos.push_back(clusterStan);
+    // cenario->objetos.push_back(clusterStan);
     cenario->objetos.push_back(esfStan);
-    cenario->objetos.push_back(clusterKyle);
-    cenario->objetos.push_back(esfKyle);
-    cenario->objetos.push_back(cartman);
-    cenario->objetos.push_back(esfCartman);
-    cenario->objetos.push_back(clusterKenny);
-    cenario->objetos.push_back(esfKenny);
+    // cenario->objetos.push_back(clusterKyle);
+    // cenario->objetos.push_back(esfKyle);
+    // cenario->objetos.push_back(cartman);
+    // cenario->objetos.push_back(esfCartman);
+    // cenario->objetos.push_back(clusterKenny);
+    // cenario->objetos.push_back(esfKenny);
 
     cenario->objetos.push_back(chao);
     cenario->objetos.push_back(montanha1);
     cenario->objetos.push_back(montanha2);
     cenario->objetos.push_back(estacaDaPlaca);
-    cenario->objetos.push_back(rua);
+    // cenario->objetos.push_back(rua);
 
 
-    cenario->objetos.push_back(placa);
-    cenario->objetos.push_back(predioBegeClaro);
-    cenario->objetos.push_back(predioMarrom);
-    cenario->objetos.push_back(predioTom);
+    // cenario->objetos.push_back(placa);
+    // cenario->objetos.push_back(predioBegeClaro);
+    // cenario->objetos.push_back(predioMarrom);
+    // cenario->objetos.push_back(predioTom);
 
     // cenario->luzes.push_back(luzDirecional);
     cenario->luzes.push_back(luzPontual);

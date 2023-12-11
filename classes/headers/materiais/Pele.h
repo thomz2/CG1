@@ -3,9 +3,9 @@
 #include "../math/Vec3.h"
 #include "./BaseMaterial.h"
 
-class Vidro : public BaseMaterial {
+class Pele : public BaseMaterial {
 
 public:
-    Vidro();
+    Pele();
 
 };

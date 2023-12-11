@@ -250,6 +250,12 @@ void Cilindro::handleChange(int option) {
         this->update(this->Cb, this->Ct, x);
         break;
         }
+    case 5:
+        {
+        int novoMatInd = this->material.offerMaterial();
+        Vec3 novoKambiente = this->material.offerColor();
+        this->material = this->material.getMaterial(novoMatInd, novoKambiente);
+        }
     default:
         break;
     }
