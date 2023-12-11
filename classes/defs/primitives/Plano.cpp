@@ -68,11 +68,15 @@ bool Plano::inside(Vec3 centro, double tamanho) {
     return (Ppi - centro).dot(n) < tamanho;
 }
 
-void Plano::printObj() {
+int Plano::printObj() {
     std::cout << "Plano ID: " << id << std::endl;
     std::cout << "Ppi (Point on the Plane): (" << Ppi.x << ", " << Ppi.y << ", " << Ppi.z << ")" << std::endl;
     std::cout << "Normal (n): (" << n.x << ", " << n.y << ", " << n.z << ")" << std::endl;
 
     material.printMaterial();
-    return;
+    return 0;
+}
+
+void Plano::handleChange(int option) {
+	return;
 }

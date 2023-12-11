@@ -74,6 +74,12 @@ std::optional<LPointGetType> Cluster::intersecta(Ray raio) {
     return this->ObjetoComposto::intersecta(raio);
 };
 
-void Cluster::printObj() {
-    return this->malha->printObj();
+int Cluster::printObj() {
+    if (this->malha != nullptr)
+        return this->malha->printObj();
+    return 0;
+}
+
+void Cluster::handleChange(int option) {
+	return;
 }

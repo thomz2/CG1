@@ -200,7 +200,7 @@ optional<LPointGetType> Cilindro::intersecta(Ray raycaster) {
 
 }
 
-void Cilindro::printObj() {
+int Cilindro::printObj() {
     cout << "Cilindro ID: " << id << endl;
     cout << "Base Center (Cb): (" << Cb.x << ", " << Cb.y << ", " << Cb.z << ")" << endl;
     cout << "Top Center (Ct): (" << Ct.x << ", " << Ct.y << ", " << Ct.z << ")" << endl;
@@ -219,5 +219,9 @@ void Cilindro::printObj() {
     cout << "[5] mudar material" << endl;
     int opcao = 0;
     cin >> opcao;
-    if (opcao == 0) return; 
+    return opcao; 
+}
+
+void Cilindro::handleChange(int option) {
+	return;
 }

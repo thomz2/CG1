@@ -106,6 +106,10 @@ bool ObjMesh::readFilePath(const string& filepath) {
     return true;
 }
 
-void ObjMesh::printObj() {
+int ObjMesh::printObj() {
     return Mesh::printObj();
+}
+
+void ObjMesh::handleChange(int option) {
+	return;
 }

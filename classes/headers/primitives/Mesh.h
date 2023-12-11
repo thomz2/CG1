@@ -24,5 +24,7 @@ public:
 	void renderizar();
 	void applyMatrix(Mat4 matrix);
 
-	void printObj() override;
+	int printObj() override;
+    void handleChange(int option) override;
+
 };

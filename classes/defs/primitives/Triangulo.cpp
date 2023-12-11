@@ -94,7 +94,7 @@ std::optional<LPointGetType> Triangulo::intersecta(Ray raio) {
 	return std::nullopt;
 }
 
-void Triangulo::printObj() {
+int Triangulo::printObj() {
 	std::cout << "Triangulo ID: " << id << std::endl;
     std::cout << "V1: (" << V1.x << ", " << V1.y << ", " << V1.z << ")" << std::endl;
     std::cout << "V2: (" << V2.x << ", " << V2.y << ", " << V2.z << ")" << std::endl;
@@ -104,4 +104,9 @@ void Triangulo::printObj() {
     
 	material.printMaterial();
 
+	return 0;
+}
+
+void Triangulo::handleChange(int option) {
+	return;
 }

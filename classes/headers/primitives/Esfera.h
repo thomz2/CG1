@@ -21,5 +21,7 @@ class Esfera : public Objeto {
     // Pin = olho observador
     Vec3 getW(Vec3 Pin); 
 
-    void printObj() override;
+    int printObj() override;
+    void handleChange(int option) override;
+
 };

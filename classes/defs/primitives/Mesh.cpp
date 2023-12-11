@@ -86,12 +86,12 @@ void Mesh::applyMatrix(Mat4 matrix) {
 	}
 }
 
-void Mesh::printObj() {
+int Mesh::printObj() {
 	cout << "Mesh ID: " << this->id << endl;
 
     // Print the sizes of vectors
     cout << "Number of Vertices: " << vertices.size() << endl;
-    cout << "Number of Faces: " << faces.size() << endl;
+    cout << "Number of Faces: " << subObjetos.size() << endl;
     cout << "Number of UVs: " << uvs.size() << endl;
 
 	material.printMaterial();
@@ -106,5 +106,9 @@ void Mesh::printObj() {
     cout << "[6] mudar material" << endl;
 	int opcao = 0;
     cin >> opcao;
-    if (opcao == 0) return; 
+    return opcao; 
+}
+
+void Mesh::handleChange(int option) {
+	return;
 }

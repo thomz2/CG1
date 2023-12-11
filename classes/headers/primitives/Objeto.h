@@ -23,6 +23,7 @@ public:
 
     virtual std::optional<LPointGetType> intersecta(Ray raycaster) = 0;
     // virtual Vec3 getNormalByPoint(Ray raycaster) = 0;
-    virtual void printObj() = 0;
+    virtual int printObj() = 0;
+    virtual void handleChange(int option) = 0;
 };
 

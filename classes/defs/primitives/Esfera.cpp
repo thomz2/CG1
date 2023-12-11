@@ -58,7 +58,7 @@ optional<LPointGetType> Esfera::intersecta(Ray raycaster) {
 
 }
 
-void Esfera::printObj() {
+int Esfera::printObj() {
     std::cout << "Sphere ID: " << id << std::endl;
     std::cout << "Center (PCentro): (" << PCentro.x << ", " << PCentro.y << ", " << PCentro.z << ")" << std::endl;
     std::cout << "Radius (raio): " << raio << std::endl;
@@ -72,5 +72,9 @@ void Esfera::printObj() {
     cout << "[3] mudar material" << endl;
     int opcao = 0;
     cin >> opcao;
-    if (opcao == 0) return; 
+    return opcao; 
+}
+
+void Esfera::handleChange(int option) {
+	return;
 }

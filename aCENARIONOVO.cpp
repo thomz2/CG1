@@ -99,7 +99,7 @@ int main ( int argc, char *argv[] ) {
     Vec3 lookfrom(5075.08, 5017.95, 5041.74);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.9, 0.9, 0.9), camera);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.5), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
     // camera->changeCamera();
@@ -108,12 +108,11 @@ int main ( int argc, char *argv[] ) {
     SDL_Color corVerde = {0, 255, 0, 255};
     SDL_Color corAzul = {0, 0, 255, 255};
 
-    Texture* textura = new Texture("assets/snow.png", true);
-    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20 + YPOSITIVO, 0), Vec3(0, 1, 0), textura);
-
-
     BaseMaterial materialMesh = BaseMaterial();
     materialMesh.REFLETIVIDADE = Vec3(0.2, 0.2, 0.2);
+    
+    Texture* textura = new Texture("assets/snow.png", true);
+    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20 + YPOSITIVO, 0), Vec3(0, 1, 0), textura);
 
     // <========== OBJETOS DO CENARIO ==========>
     Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-30 + XPOSITIVO, -20 + YPOSITIVO, -26 + ZPOSITIVO), Vec3(-30 + XPOSITIVO, 75 + YPOSITIVO, -26 + ZPOSITIVO), 3, BaseMaterial(Vec3(88.0, 57.0, 39.0), 1));
@@ -122,9 +121,35 @@ int main ( int argc, char *argv[] ) {
     placa->applyMatrix(Transformations::shear());
     placa->applyMatrix(Transformations::rotateYAroundPointDegrees(90, Vec3(0, 1, 0)));
     placa->applyMatrix(Transformations::translate(-30 + XPOSITIVO, 70 + YPOSITIVO, -26 + ZPOSITIVO));
-    Cone* montanha1 = new Cone(8, corAzul, Vec3(-500 + XPOSITIVO, -20 + YPOSITIVO, -2400 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
-    Cone* montanha2 = new Cone(9, corAzul, Vec3(500 + XPOSITIVO, -20 + YPOSITIVO, -2350 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 153.0/255.0, 51.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    
+    ObjMesh* rua = new ObjMesh(12, "assets/rua/rua.obj", "assets/rua/RUA.png", materialMesh);
+    rua->applyMatrix(Transformations::scale(200, 20, 80));
+    rua->applyMatrix(Transformations::translate(0 + XPOSITIVO, -17 + YPOSITIVO, 210 + ZPOSITIVO));
+
+
     // <========== OBJETOS DO CENARIO ==========>
+
+
+    Cone* montanha1 = new Cone(8, corAzul, Vec3(-500 + XPOSITIVO, -20 + YPOSITIVO, -2400 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha2 = new Cone(9, corAzul, Vec3(500 + XPOSITIVO, -20 + YPOSITIVO, -2350 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+
+
+    // <========== ESTRUTURAS ==========>
+    ObjMesh* predioBegeClaro = new ObjMesh(100, "assets/predios/predioroxo.obj", "assets/predios/predioroxo.png", materialMesh);
+    predioBegeClaro->applyMatrix(Transformations::rotateYByDegree(180));
+    predioBegeClaro->applyMatrix(Transformations::scale(50, 50, 50));
+    predioBegeClaro->applyMatrix(Transformations::translate(-50 + XPOSITIVO, -15 + YPOSITIVO, 500 + ZPOSITIVO));
+
+    ObjMesh* predioMarrom = new ObjMesh(101, "assets/predios/predioamarelo.obj", "assets/predios/predioamarelo.png", materialMesh);
+    predioMarrom->applyMatrix(Transformations::rotateYByDegree(180));
+    predioMarrom->applyMatrix(Transformations::scale(50, 50, 50));
+    predioMarrom->applyMatrix(Transformations::translate(250 + XPOSITIVO, -15 + YPOSITIVO, 500 + ZPOSITIVO));
+
+    ObjMesh* predioTom = new ObjMesh(101, "assets/predios/prediotom.obj", "assets/predios/prediotom.png", materialMesh);
+    predioTom->applyMatrix(Transformations::rotateYByDegree(180));
+    predioTom->applyMatrix(Transformations::scale(50, 50, 50));
+    predioTom->applyMatrix(Transformations::translate(610 + XPOSITIVO, -15 + YPOSITIVO, 500 + ZPOSITIVO));
+    // <========== ESTRUTURAS ==========>
 
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", materialMesh);
@@ -156,7 +181,7 @@ int main ( int argc, char *argv[] ) {
 
     LuzPontual* luzPontual = new LuzPontual(Vec3(-250 + XPOSITIVO, 125 + YPOSITIVO, 0 + ZPOSITIVO), Vec3(0.2, 0.2, 0.2));
     LuzSpot* luzSpot = new LuzSpot(Vec3(-15 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.3, 0.3, 0.3), Vec3(0, -1, 0).norm(), 60);
-    LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.15, 0.1, 0.1), Vec3(-1, -1, 0).norm());
+    LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.1, 0.1, 0.2), Vec3(-1, -1, 0).norm());
 
     // Esfera* esferaTeste = new Esfera(100, corAzul, Vec3(30, 30, -30), 15, BaseMaterial(Vec3(0.8, 0.2, 0.2), Vec3(0.2, 0.2, 0.8), Vec3(0.2, 0.8, 0.2), 10));
     // ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", "assets/uv_test.png", materialMesh, 1);
@@ -177,8 +202,14 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(montanha1);
     cenario->objetos.push_back(montanha2);
     cenario->objetos.push_back(estacaDaPlaca);
+    cenario->objetos.push_back(rua);
+
+
     cenario->objetos.push_back(placa);
-         
+    cenario->objetos.push_back(predioBegeClaro);
+    cenario->objetos.push_back(predioMarrom);
+    cenario->objetos.push_back(predioTom);
+
     cenario->luzes.push_back(luzDirecional);
     // cenario->luzes.push_back(luzPontual);
     // cenario->luzes.push_back(luzSpot);
@@ -193,6 +224,7 @@ int main ( int argc, char *argv[] ) {
     bool retrato = false;
     double i = 0;
     double res = 10;
+    double vel = 5;
     while (rodando) {
         SDL_Event windowEvent;
         while ( SDL_PollEvent(&windowEvent) ) {
@@ -218,40 +250,40 @@ int main ( int argc, char *argv[] ) {
                         break;
                     case SDLK_w:
                         // Lógica para mover a câmera para cima
-                        camera->moveForward(5);
+                        camera->moveForward(vel);
                         break;
                     case SDLK_s:
                         // Lógica para mover a câmera para baixo
-                        camera->moveBackward(5);
+                        camera->moveBackward(vel);
                         break;
                     case SDLK_a:
                         // Lógica para mover a câmera para a esquerda
-                        camera->moveLeft(5);
+                        camera->moveLeft(vel);
                         break;
                     case SDLK_d:
                         // Lógica para mover a câmera para a direita
-                        camera->moveRight(5);
+                        camera->moveRight(vel);
                         break;
                     case SDLK_LSHIFT:
-                        camera->moveDown(5);
+                        camera->moveDown(vel);
                         break;
                     case SDLK_RSHIFT:
-                        camera->moveDown(5);
+                        camera->moveDown(vel);
                         break;
                     case SDLK_SPACE:
-                        camera->moveUp(5);
+                        camera->moveUp(vel);
                         break;
                     case SDLK_LEFT:
-                        camera->lookLeft(5);
+                        camera->lookLeft(vel);
                         break;
                     case SDLK_RIGHT:
-                        camera->lookRight(5);
+                        camera->lookRight(vel);
                         break;
                     case SDLK_UP:
-                        camera->lookUp(5);
+                        camera->lookUp(vel);
                         break;
                     case SDLK_DOWN:
-                        camera->lookDown(5);
+                        camera->lookDown(vel);
                         break;
                     case SDLK_c:
                         camera->changeCamera();
@@ -276,30 +308,38 @@ int main ( int argc, char *argv[] ) {
                         break;
                     case SDLK_r:
                         retrato = !retrato;
+                        cout << "MODO RETRATO " << (retrato? "LIGADO" : "DESLIGADO") << endl;
+                        break;
+                    case SDLK_COMMA:
+                        vel /= 2;
+                        break;
+                    case SDLK_PERIOD:
+                        vel *= 2;
                         break;
                 }
             }
         }
 
-         std::chrono::steady_clock::time_point timerStart;
+        std::chrono::steady_clock::time_point timerStart;
 
-    if (!retrato){
+        if (!retrato){
 
-    // Inicia o temporizador
-    startTimer(timerStart);
-
-    // Alguma lógica de aplicação aqui...
+            // Inicia o temporizador
+            startTimer(timerStart);
 
 
-        camera->update();
-        camera->renderAndPaintCanvasThread(4, res);
-        colorirCenario(renderer, cenario, nLin, nCol);
 
-    // Obtém o tempo decorrido
-    long elapsedTime = getElapsedTime(timerStart);
-    // std::cout << "Tempo decorrido: " << elapsedTime << " ms\n";
-    }
+            camera->update();
+            camera->renderAndPaintCanvasThread(4, res);
+            colorirCenario(renderer, cenario, nLin, nCol);
+
+            // Obtém o tempo decorrido
+            long elapsedTime = getElapsedTime(timerStart);
+            // std::cout << "Tempo decorrido: " << elapsedTime << " ms\n";
+        }
         i+= 2;
+
+        // renderText(renderer, font, "Hello, SDL!", 100, 100, textColor);
         
         SDL_RenderPresent(renderer); // usar para pintar
         if ( window = nullptr ) {

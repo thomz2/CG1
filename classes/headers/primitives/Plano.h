@@ -23,6 +23,8 @@ public:
     std::optional<LPointGetType> intersecta(Ray raycaster) override;
     bool inside(Vec3 centro, double tamanho);
 
-    void printObj() override;
+    int printObj() override;
+    void handleChange(int option) override;
+
 
 };

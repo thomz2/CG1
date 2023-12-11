@@ -158,7 +158,8 @@ SDL_Color Camera::renderPixel(int l, int c) {
 
     // return {100, 100, 100, 255};
     auto a = (raycaster.direcao.y + 1.0) * 0.5;
-    Vec3 cor =  (Vec3(1.0, 1.0, 1.0).mult(1.0 - a).add( Vec3(0.5, 0.7, 1.0).mult(a) )).mult(255);
+    // Vec3 cor =  (Vec3(1.0, 1.0, 1.0).mult(1.0 - a).sub( Vec3(0.5, 0.7, 1.0).mult(a) )).mult(255);
+    Vec3 cor = (Vec3(0.0, 0.0, 0.0).mult(1.0 - a).add(Vec3(0.0, 0.0, 0.3).mult(a))).mult(255);
     if (l == 250 && c == 250)
         cout << cor << endl;
     return {

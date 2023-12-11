@@ -37,6 +37,10 @@ optional<LPointGetType> ObjetoComposto::intersecta(Ray ray) {
 
 }
 
-void ObjetoComposto::printObj() {
-    return;
+int ObjetoComposto::printObj() {
+    return 0;
+}
+
+void ObjetoComposto::handleChange(int option) {
+	return;
 }

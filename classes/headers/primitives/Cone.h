@@ -22,5 +22,7 @@ class Cone : public Objeto {
 
     std::optional<LPointGetType> intersectaFace(Ray raycaster);
     std::optional<LPointGetType> intersecta(Ray raycaster) override;
-    void printObj() override;
+    int printObj() override;
+    void handleChange(int option) override;
+
 };
