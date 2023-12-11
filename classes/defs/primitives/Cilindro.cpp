@@ -187,9 +187,10 @@ int Cilindro::printObj() {
     cout << "[0] não" << endl;
     cout << "[1] transladar" << endl;
     cout << "[2] rotacionar" << endl;
-    cout << "[3] alterar pontos" << endl;
-    cout << "[4] alterar raio" << endl;
-    cout << "[5] alterar material" << endl;
+    cout << "[3] refletir" << endl;
+    cout << "[4] alterar pontos" << endl;
+    cout << "[5] alterar raio" << endl;
+    cout << "[6] alterar material" << endl;
     int opcao = 0;
     cin >> opcao;
     return opcao; 
@@ -231,6 +232,20 @@ void Cilindro::handleChange(int option) {
         this->update(CbNovo.getVec3(), CtNovo.getVec3());
         break;
     case 3:
+    {
+        cout << "DIGITE UM PONTO QUE PERTENCE AO PLANO IMAGINARIO DO ESPELHO (X Y Z): ";
+        cin >> x >> y >> z;
+        Vec3 pt = Vec3(x, y, z);
+        cout << "DIGITE A NORMAL DO PLANO IMAGINARIO DO ESPELHO (X Y Z): ";
+        cin >> x >> y >> z;
+        Vec3 normalesp = Vec3(x, y, z);
+        CbNovo = Vec4(this->Cb).apply(Transformations::reflection(normalesp, pt));
+        CtNovo = Vec4(this->Ct).apply(Transformations::reflection(normalesp, pt));
+        this->update(CbNovo.getVec3(), CtNovo.getVec3());
+        break;
+
+    }
+    case 4:
         {
 
         cout << "DIGITE AS COORDENADAS DE MUNDO DO NOVO CENTRO DA BASE (X Y Z): ";
@@ -242,7 +257,7 @@ void Cilindro::handleChange(int option) {
         this->update(Cbnovo, Ctnovo);
         break;
         }
-    case 4:
+    case 5:
         {
 
         cout << "DIGITE O NOVO RAIO: ";
@@ -250,7 +265,7 @@ void Cilindro::handleChange(int option) {
         this->update(this->Cb, this->Ct, x);
         break;
         }
-    case 5:
+    case 6:
         {
         int novoMatInd = this->material.offerMaterial();
         Vec3 novoKambiente = this->material.offerColor();
