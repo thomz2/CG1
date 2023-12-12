@@ -180,15 +180,23 @@ int main ( int argc, char *argv[] ) {
     predioTom->applyMatrix(Transformations::translate(435 + XPOSITIVO, -15 + YPOSITIVO, 550 + ZPOSITIVO));
     // <========== ESTRUTURAS ==========>
 
-    // <========== ARVORES ==========>
-    BaseMaterial materialCone = BaseMaterial(madeira.RUGOSIDADE, madeira.REFLETIVIDADE, Vec3(0, 55.0/255.0, 0), madeira.M);
-    
-    Cilindro* tronco1 = new Cilindro(601, corAzul, Vec3(XPOSITIVO, YPOSITIVO - 20, ZPOSITIVO - 250), Vec3(XPOSITIVO, YPOSITIVO + 140, ZPOSITIVO - 250), 30, madeira);
-    Cone*     cone1   = new Cone(602, corAzul, tronco1->Ct, tronco1->Ct.add(Vec3(0, 200, 0)), 100, materialCone);
-    
-    cenario->objetos.push_back(tronco1);
-    cenario->objetos.push_back(cone1);
-    // <========== ARVORES ==========>
+    // <========== SNOWMAN ==========>
+    BaseMaterial materialCenoura = BaseMaterial(madeira.RUGOSIDADE, madeira.REFLETIVIDADE, Vec3(1.0, 165.0/255.0, 0), madeira.M);
+    BaseMaterial materialNeve = BaseMaterial(madeira.RUGOSIDADE, madeira.REFLETIVIDADE, Vec3(0, 55.0/255.0, 0), madeira.M);
+    BaseMaterial materialOlho = BaseMaterial(madeira.RUGOSIDADE, madeira.REFLETIVIDADE, Vec3(0, 0, 0), madeira.M);
+
+    Esfera* bolaBaixo = new Esfera(601, corAzul, Vec3(XPOSITIVO - 300, YPOSITIVO + 10, ZPOSITIVO - 250), 30);
+    Esfera* bolaCima  = new Esfera(602, corAzul, Vec3(XPOSITIVO - 300, YPOSITIVO + 55, ZPOSITIVO - 250), 17);
+    Cone*   cenoura   = new Cone(603, corAzul, Vec3(XPOSITIVO - 300, YPOSITIVO + 55, ZPOSITIVO - 235), Vec3(XPOSITIVO - 300, YPOSITIVO + 55, ZPOSITIVO - 221), 3, materialCenoura);
+    Esfera* olhoEsq   = new Esfera(604, corAzul, Vec3(XPOSITIVO -307, YPOSITIVO + 63, ZPOSITIVO - 238), 3, materialOlho);
+    Esfera* olhoDir   = new Esfera(604, corAzul, Vec3(XPOSITIVO -293, YPOSITIVO + 61, ZPOSITIVO - 238), 3, materialOlho);
+
+    cenario->objetos.push_back(bolaBaixo);
+    cenario->objetos.push_back(bolaCima);
+    cenario->objetos.push_back(cenoura);
+    cenario->objetos.push_back(olhoEsq);
+    cenario->objetos.push_back(olhoDir);
+    // <========== SNOWMAN ==========>
 
     // <========== POSTES ==========>
     BaseMaterial materialLampada = BaseMaterial();
@@ -257,7 +265,7 @@ int main ( int argc, char *argv[] ) {
     // <========== PERSONAGENS ==========>
     
     // <========== LUZES ==========>
-    LuzPontual* luzPontual = new LuzPontual(Vec3(50 + XPOSITIVO, 100 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.8, 0.8, 0.8));
+    LuzPontual* luzPontual = new LuzPontual(Vec3(-550 + XPOSITIVO, 7500 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.2, 0.2, 0.2));
     LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.1, 0.1, 0.1), Vec3(-1, -1, 0).norm());
 
     luzPontual->ignorar = true;
@@ -400,7 +408,7 @@ int main ( int argc, char *argv[] ) {
                         case 1:
                             camera->tempo = !camera->tempo;
                             if (camera->tempo) {
-                                luzPontual->ignorar = true;
+                                luzPontual->ignorar = false;
                                 cenario->luzAmbiente = Vec3(0.7, 0.7, 0.79);
 
                                 ilumPost1->luzSpot->ignorar = true;
@@ -409,7 +417,7 @@ int main ( int argc, char *argv[] ) {
                                 ilumPost4->luzSpot->ignorar = true;
                                 luzDirecional->ignorar = true;
                             } else {
-                                luzPontual->ignorar = false;
+                                luzPontual->ignorar = true;
 
                                 cenario->luzAmbiente = Vec3(0.5, 0.5, 0.6);
                                 ilumPost1->luzSpot->ignorar = false;
