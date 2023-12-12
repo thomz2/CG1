@@ -7,7 +7,7 @@ using namespace std;
 LuzPontual::LuzPontual(Vec3 posicao, Vec3 intensidade) : Luz(posicao, intensidade) {}
 
 Vec3 LuzPontual::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray raycaster, BaseMaterial material) {
-
+    if (ignorar) return Vec3(0, 0, 0);
     Vec3 ponto_mais_prox = retorno.posContato;
     Vec3 normal          = retorno.normalContato.norm();
     double tint          = retorno.tint;

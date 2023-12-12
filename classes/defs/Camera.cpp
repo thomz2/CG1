@@ -70,7 +70,7 @@ void Camera::update() {
         this->hJanela = 2 * h * focal_length;
         this->wJanela = hJanela * (imageWidth/imageHeight);
     }
-    // cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
+    cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     this->w = lookfrom.sub(lookat).norm(); // tras

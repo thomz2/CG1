@@ -70,21 +70,6 @@ long getElapsedTime(const std::chrono::steady_clock::time_point& startTime) {
     return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 }
 
-// Miniball getMiniball(vector<Vec3> pontos) {
-
-//     PointVector S;
-//     vector<double> coords(3);
-    
-//     for (int i = 0; i < pontos.size(); ++i) {
-//         coords[0] = pontos[i].x;
-//         coords[1] = pontos[i].y;
-//         coords[2] = pontos[i].z;
-//         S.push_back(Point(3, coords.begin()));
-//     }
-
-//     return Miniball(3, S);
-// }
-
 int main ( int argc, char *argv[] ) {
 
     SDL_Window *window; // = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, wJanela, hJanela, SDL_WINDOW_ALLOW_HIGHDPI );
@@ -101,12 +86,12 @@ int main ( int argc, char *argv[] ) {
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookat(5075.08, 5017.95, 5041.74);
+    Vec3 lookfrom(4997.69, 5969.87, 5762.77);
     // Vec3 lookfrom(-30, 60, 90);
-    Vec3 lookfrom(5075, 5017.87, 5121.74);
+    Vec3 lookat(4997.74, 5904.38, 5716.82);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.5), camera);
+    Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.6), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
     // camera->changeCamera();
@@ -119,9 +104,6 @@ int main ( int argc, char *argv[] ) {
     materialMesh.REFLETIVIDADE = Vec3(0.2, 0.2, 0.2);
     materialMesh.RUGOSIDADE = Vec3(0.1, 0.1, 0.1);
     
-    Texture* textura = new Texture("assets/snow.png", true);
-    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20 + YPOSITIVO, 0), Vec3(0, 1, 0), textura);
-
     Difuso difuso = Difuso();
     difuso.KAMBIENTE = Vec3(1.0, 0.0, 0.0);
 
@@ -137,47 +119,75 @@ int main ( int argc, char *argv[] ) {
     Pele pele = Pele();
     pele.KAMBIENTE = Vec3(179.0/255.0, 139.0/255.0, 109.0/255.0);
 
+    // <========== CHAO ==========>
+    Texture* textura = new Texture("assets/snow.png", true);
+    Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20 + YPOSITIVO, 0), Vec3(0, 1, 0), textura);
+    cenario->objetos.push_back(chao);
+    // <========== CHAO ==========>
 
     // <========== OBJETOS DO CENARIO ==========>
-    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-30 + XPOSITIVO, -20 + YPOSITIVO, -26 + ZPOSITIVO), Vec3(-30 + XPOSITIVO, 75 + YPOSITIVO, -26 + ZPOSITIVO), 3, metalico);
-    ObjMesh*  placa         = new ObjMesh(11, "assets/placaAmarela/placa_amarela.obj", "assets/placaAmarela/placa.png", materialMesh);
+    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-80 + XPOSITIVO, -20 + YPOSITIVO, -26 + ZPOSITIVO), Vec3(-80 + XPOSITIVO, 75 + YPOSITIVO, -26 + ZPOSITIVO), 3, madeira);
+    ObjMesh*  placa         = new ObjMesh(11, "assets/placaAmarela/placa_amarela.obj", "assets/placaAmarela/placa.png", metalico);
     placa->applyMatrix(Transformations::scale(30, 30, 30));
-    placa->applyMatrix(Transformations::shear());
     placa->applyMatrix(Transformations::rotateYAroundPointDegrees(90, Vec3(0, 1, 0)));
-    placa->applyMatrix(Transformations::translate(-30 + XPOSITIVO, 70 + YPOSITIVO, -26 + ZPOSITIVO));
+    placa->applyMatrix(Transformations::translate(-80 + XPOSITIVO, 70 + YPOSITIVO, -26 + ZPOSITIVO));
     
-    ObjMesh* rua = new ObjMesh(12, "assets/rua/rua.obj", "assets/rua/RUA.png", materialMesh);
-    rua->applyMatrix(Transformations::scale(200, 20, 80));
+    cenario->objetos.push_back(estacaDaPlaca);
+    cenario->objetos.push_back(placa);
+
+    ObjMesh* rua = new ObjMesh(12, "assets/rua/rua.obj", "assets/rua/RUA.png", difuso);
+    rua->applyMatrix(Transformations::scale(242, 20, 80));
     rua->applyMatrix(Transformations::translate(0 + XPOSITIVO, -17 + YPOSITIVO, 210 + ZPOSITIVO));
+    
+    cenario->objetos.push_back(rua);
     // <========== OBJETOS DO CENARIO ==========>
 
-
+    // <========== MONTANHAS ==========>
     Cone* montanha1 = new Cone(8, corAzul, Vec3(-500 + XPOSITIVO, -20 + YPOSITIVO, -2400 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
-    Cone* montanha2 = new Cone(9, corAzul, Vec3(500 + XPOSITIVO, -20 + YPOSITIVO, -2350 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha2 = new Cone(9, corAzul, Vec3(500 + XPOSITIVO, -20 + YPOSITIVO, -2275 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha3 = new Cone(9, corAzul, Vec3(700 + XPOSITIVO, -20 + YPOSITIVO, 2550 + ZPOSITIVO), Vec3(0, 1, 0), 2300, 1800, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha4 = new Cone(9, corAzul, Vec3(-600 + XPOSITIVO, -20 + YPOSITIVO, 2450 + ZPOSITIVO), Vec3(0, 1, 0), 2300, 1800, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
 
+    Cone* montanha5 = new Cone(9, corAzul, Vec3(3700 - 1300 + XPOSITIVO, -20 + YPOSITIVO, -1200 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha6 = new Cone(9, corAzul, Vec3(-3700 + 1250 + XPOSITIVO, -20 + YPOSITIVO, -1350 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha7 = new Cone(9, corAzul, Vec3(3700 - 1100 + XPOSITIVO, -20 + YPOSITIVO, 1200 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+    Cone* montanha8 = new Cone(9, corAzul, Vec3(-3800 + 1300 + XPOSITIVO, -20 + YPOSITIVO, 1200 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
+
+    cenario->objetos.push_back(montanha1);
+    cenario->objetos.push_back(montanha2);
+    cenario->objetos.push_back(montanha3);
+    cenario->objetos.push_back(montanha4);
+    cenario->objetos.push_back(montanha5);
+    cenario->objetos.push_back(montanha6);
+    cenario->objetos.push_back(montanha7);
+    cenario->objetos.push_back(montanha8);
+    // <========== MONTANHAS ==========>
 
     // <========== ESTRUTURAS ==========>
-    ObjMesh* predioBegeClaro = new ObjMesh(100, "assets/predios/predioroxo.obj", "assets/predios/predioroxo.png", materialMesh);
+    ObjMesh* predioBegeClaro = new ObjMesh(100, "assets/predios/predioroxo.obj", "assets/predios/predioroxo.png", difuso);
     predioBegeClaro->applyMatrix(Transformations::rotateYByDegree(180));
     predioBegeClaro->applyMatrix(Transformations::scale(50, 50, 50));
-    predioBegeClaro->applyMatrix(Transformations::translate(-50 + XPOSITIVO, -15 + YPOSITIVO, 500 + ZPOSITIVO));
+    predioBegeClaro->applyMatrix(Transformations::translate(-275 + XPOSITIVO, -15 + YPOSITIVO, 550 + ZPOSITIVO));
 
-    ObjMesh* predioMarrom = new ObjMesh(101, "assets/predios/predioamarelo.obj", "assets/predios/predioamarelo.png", materialMesh);
+    ObjMesh* predioMarrom = new ObjMesh(101, "assets/predios/predioamarelo.obj", "assets/predios/predioamarelo.png", difuso);
     predioMarrom->applyMatrix(Transformations::rotateYByDegree(180));
     predioMarrom->applyMatrix(Transformations::scale(50, 50, 50));
-    predioMarrom->applyMatrix(Transformations::translate(250 + XPOSITIVO, -15 + YPOSITIVO, 500 + ZPOSITIVO));
+    predioMarrom->applyMatrix(Transformations::translate(75 + XPOSITIVO, -15 + YPOSITIVO, 550 + ZPOSITIVO));
 
-    ObjMesh* predioTom = new ObjMesh(101, "assets/predios/prediotom.obj", "assets/predios/prediotom.png", materialMesh);
+    ObjMesh* predioTom = new ObjMesh(101, "assets/predios/prediotom.obj", "assets/predios/prediotom.png", difuso);
     predioTom->applyMatrix(Transformations::rotateYByDegree(180));
     predioTom->applyMatrix(Transformations::scale(50, 50, 50));
-    predioTom->applyMatrix(Transformations::translate(610 + XPOSITIVO, -15 + YPOSITIVO, 500 + ZPOSITIVO));
+    predioTom->applyMatrix(Transformations::translate(435 + XPOSITIVO, -15 + YPOSITIVO, 550 + ZPOSITIVO));
     // <========== ESTRUTURAS ==========>
 
     // <========== ARVORES ==========>
     BaseMaterial materialCone = BaseMaterial(madeira.RUGOSIDADE, madeira.REFLETIVIDADE, Vec3(0, 55.0/255.0, 0), madeira.M);
     
-    Cilindro* tronco1 = new Cilindro(601, corAzul, Vec3(XPOSITIVO, YPOSITIVO, ZPOSITIVO - 350), Vec3(XPOSITIVO, YPOSITIVO + 140, ZPOSITIVO - 350), 30, madeira);
+    Cilindro* tronco1 = new Cilindro(601, corAzul, Vec3(XPOSITIVO, YPOSITIVO - 20, ZPOSITIVO - 250), Vec3(XPOSITIVO, YPOSITIVO + 140, ZPOSITIVO - 250), 30, madeira);
     Cone*     cone1   = new Cone(602, corAzul, tronco1->Ct, tronco1->Ct.add(Vec3(0, 200, 0)), 100, materialCone);
+    
+    cenario->objetos.push_back(tronco1);
+    cenario->objetos.push_back(cone1);
     // <========== ARVORES ==========>
 
     // <========== POSTES ==========>
@@ -187,99 +197,92 @@ int main ( int argc, char *argv[] ) {
     Metalico materialPoste = Metalico();
     materialPoste.KAMBIENTE = Vec3(0, 0, 0); 
 
-    EsferaDeLuzSpot* ilumPost = new EsferaDeLuzSpot(701, corAzul, Vec3(XPOSITIVO + 60, YPOSITIVO + 170, ZPOSITIVO - 20), 20, materialLampada, Vec3(253.0/255.0, 253.0/255.0, 150/255.0), 11);
-    Cilindro*        poste    = new Cilindro(702, corAzul, Vec3(XPOSITIVO + 60, YPOSITIVO - 20, ZPOSITIVO - 20), Vec3(XPOSITIVO + 60, YPOSITIVO + 150, ZPOSITIVO - 20), 6, materialPoste);
+    EsferaDeLuzSpot* ilumPost1 = new EsferaDeLuzSpot(701, corAzul, Vec3(XPOSITIVO - 400, YPOSITIVO + 170, ZPOSITIVO + 15), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
+    Cilindro*        poste1    = new Cilindro(702, corAzul, Vec3(XPOSITIVO - 400, YPOSITIVO - 20, ZPOSITIVO + 15), Vec3(XPOSITIVO - 400, YPOSITIVO + 150, ZPOSITIVO + 15), 6, materialPoste);
+
+    cenario->objetos.push_back(ilumPost1);
+    cenario->objetos.push_back(poste1);
+    cenario->luzes.push_back(ilumPost1->luzSpot);
+
+    Vec3 pontEspelho2 = Vec4(Vec3(XPOSITIVO - 400, YPOSITIVO - 20, ZPOSITIVO + 15)).apply(Transformations::reflection(Vec3(0, 0, -1), Vec3(XPOSITIVO, 4983, 5210))).getVec3();
+    cout << pontEspelho2 << endl;
+
+    EsferaDeLuzSpot* ilumPost2 = new EsferaDeLuzSpot(703, corAzul, pontEspelho2.add(Vec3(0, 190, 0)), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
+    Cilindro*        poste2    = new Cilindro(704, corAzul, pontEspelho2, pontEspelho2.add(Vec3(0, 170, 0)), 6, materialPoste);
+
+    cenario->objetos.push_back(ilumPost2);
+    cenario->objetos.push_back(poste2);
+    cenario->luzes.push_back(ilumPost2->luzSpot);
+
+    Vec3 pontEspelho3 = Vec4(pontEspelho2).apply(Transformations::reflection(Vec3(-1, 0, 0), Vec3(5000, 4983, 5210))).getVec3();
+    EsferaDeLuzSpot* ilumPost3 = new EsferaDeLuzSpot(703, corAzul, pontEspelho3.add(Vec3(100, 190, 0)), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
+    Cilindro*        poste3    = new Cilindro(704, corAzul, pontEspelho3.add(Vec3(100, 0, 0)), pontEspelho3.add(Vec3(100, 170, 0)), 6, materialPoste);
+
+    cenario->objetos.push_back(ilumPost3);
+    cenario->objetos.push_back(poste3);
+    cenario->luzes.push_back(ilumPost3->luzSpot);
+
+    Vec3 pontEspelho4 = Vec4(Vec3(XPOSITIVO - 400, YPOSITIVO - 20, ZPOSITIVO + 15)).apply(Transformations::reflection(Vec3(-1, 0, 0), Vec3(5000, 4983, 5210))).getVec3();
+    EsferaDeLuzSpot* ilumPost4 = new EsferaDeLuzSpot(703, corAzul, pontEspelho4.add(Vec3(100, 190, 0)), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
+    Cilindro*        poste4    = new Cilindro(704, corAzul, pontEspelho4.add(Vec3(100, 0, 0)), pontEspelho4.add(Vec3(100, 170, 0)), 6, materialPoste);
+
+    cenario->objetos.push_back(ilumPost4);
+    cenario->objetos.push_back(poste4);
+    cenario->luzes.push_back(ilumPost4->luzSpot);
     // <========== POSTES ==========>
 
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", difuso);
-    stan->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    stan->applyMatrix(Transformations::translate(-40 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterStan = new Cluster(stan, 20000, true);
-
-
-
-    Esfera* esfStan = new Esfera(1999, corAzul, Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, pele);
-    cout << esfStan->PCentro << endl;
-    Esfera* testeEspelho = new Esfera(1998, corAzul, 
-        Vec4(esfStan->PCentro).apply(Transformations::reflection(Vec3(0, 0, -1), Vec3(10 + XPOSITIVO, 50 + YPOSITIVO, 20 + ZPOSITIVO ))).getVec3(), 20, pele );
-    cout << testeEspelho->PCentro << endl;
+    cenario->objetos.push_back(clusterStan);
 
     ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", metalico);
-    kyle->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    kyle->applyMatrix(Transformations::translate(0 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKyle = new Cluster(kyle, 20000, true);
-
-    Esfera* esfKyle= new Esfera(2999, corAzul, Vec3(50 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, metalico);
-
+    cenario->objetos.push_back(clusterKyle);
 
     ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", plastico);
-    cartman->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
-
-    Esfera* esfCartman = new Esfera(3999, corAzul, Vec3(100 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, plastico);
-
-
+    cartman->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    cenario->objetos.push_back(cartman);
 
     ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", madeira, false);
-    kenny->applyMatrix(Transformations::translate(150 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    kenny->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKenny = new Cluster(kenny, 20000, true);
+    cenario->objetos.push_back(clusterKenny);
     
-    Esfera* esfKenny = new Esfera(4999, corAzul, Vec3(150 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), 20, madeira);
-
     ObjMesh* dio = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh, true);
     dio->applyMatrix(Transformations::scale(25, 25, 25));
     Cluster* clusterDio = new Cluster(dio, 20000, true);
     // <========== PERSONAGENS ==========>
     
+    // <========== LUZES ==========>
+    LuzPontual* luzPontual = new LuzPontual(Vec3(50 + XPOSITIVO, 100 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.8, 0.8, 0.8));
+    LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.1, 0.1, 0.1), Vec3(-1, -1, 0).norm());
 
+    luzPontual->ignorar = true;
 
-
-    // megaman->applyMatrix();
-
-    // mesh2->textura->testColors();
-
-    LuzPontual* luzPontual = new LuzPontual(Vec3(50 + XPOSITIVO, 325 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.8, 0.8, 0.8));
-    LuzSpot* luzSpot = new LuzSpot(Vec3(-15 + XPOSITIVO, 50 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.3, 0.3, 0.3), Vec3(0, -1, 0).norm(), 60);
-    LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.1, 0.1, 0.2), Vec3(-1, -1, 0).norm());
-
-    // Esfera* esferaTeste = new Esfera(100, corAzul, Vec3(30, 30, -30), 15, BaseMaterial(Vec3(0.8, 0.2, 0.2), Vec3(0.2, 0.2, 0.8), Vec3(0.2, 0.8, 0.2), 10));
-    // ObjMesh* cubo = new ObjMesh(8, "assets/cube/cube.obj", "assets/uv_test.png", materialMesh, 1);
-    // cubo->applyMatrix(Transformations::scale(50, 50, 50));
-    // cubo->applyMatrix(Transformations::translate(10 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
-    // cubo->applyMatrix(Transformations::shear(0, 0, 0, 0, -1, 0));
-    // cenario->objetos.push_back(cubo);
+    cenario->luzes.push_back(luzDirecional);
+    cenario->luzes.push_back(luzPontual);
+    // <========== LUZES ==========>
 
 
     // cenario->objetos.push_back(clusterDio);
 
-    // cenario->objetos.push_back(clusterStan);
     // cenario->objetos.push_back(esfStan);
-    cenario->objetos.push_back(tronco1);
-    cenario->objetos.push_back(cone1);
-    cenario->objetos.push_back(ilumPost);
-    cenario->objetos.push_back(poste);
     // cenario->objetos.push_back(testeEspelho);
-    cenario->objetos.push_back(clusterKyle);
     // cenario->objetos.push_back(esfKyle);
-    // cenario->objetos.push_back(cartman);
     // cenario->objetos.push_back(esfCartman);
-    // cenario->objetos.push_back(clusterKenny);
     // cenario->objetos.push_back(esfKenny);
 
-    cenario->objetos.push_back(chao);
-    // cenario->objetos.push_back(montanha1);
-    // cenario->objetos.push_back(montanha2);
-    cenario->objetos.push_back(estacaDaPlaca);
-    // cenario->objetos.push_back(rua);
 
 
-    // cenario->objetos.push_back(placa);
-    // cenario->objetos.push_back(predioBegeClaro);
-    // cenario->objetos.push_back(predioMarrom);
-    // cenario->objetos.push_back(predioTom);
 
-    // cenario->luzes.push_back(luzDirecional);
-    // cenario->luzes.push_back(luzPontual);
-    // cenario->luzes.push_back(luzSpot);
-    cenario->luzes.push_back(ilumPost->luzSpot);
+
+    cenario->objetos.push_back(predioBegeClaro);
+    cenario->objetos.push_back(predioMarrom);
+    cenario->objetos.push_back(predioTom);
+
 
     const int nCol = 500;
     const int nLin = 500;
@@ -289,6 +292,7 @@ int main ( int argc, char *argv[] ) {
 
     bool rodando = true;
     bool retrato = false;
+    bool temporizer = false;
     double i = 0;
     double res = 10;
     double vel = 5;
@@ -395,12 +399,35 @@ int main ( int argc, char *argv[] ) {
                         {
                         case 1:
                             camera->tempo = !camera->tempo;
+                            if (camera->tempo) {
+                                luzPontual->ignorar = true;
+                                cenario->luzAmbiente = Vec3(0.7, 0.7, 0.79);
+
+                                ilumPost1->luzSpot->ignorar = true;
+                                ilumPost2->luzSpot->ignorar = true;
+                                ilumPost3->luzSpot->ignorar = true;
+                                ilumPost4->luzSpot->ignorar = true;
+                                luzDirecional->ignorar = true;
+                            } else {
+                                luzPontual->ignorar = false;
+
+                                cenario->luzAmbiente = Vec3(0.5, 0.5, 0.6);
+                                ilumPost1->luzSpot->ignorar = false;
+                                ilumPost2->luzSpot->ignorar = false;
+                                ilumPost3->luzSpot->ignorar = false;
+                                ilumPost4->luzSpot->ignorar = false;
+                                luzDirecional->ignorar = false;
+                            }
                             break;
                         
                         default:
                             break;
                         }
                         break;
+                    }
+                    case SDLK_t: {
+                        temporizer = !temporizer;
+                        cout << "TEMPORIZADOR " << (retrato? "LIGADO" : "DESLIGADO") << endl;
                     }
                 }
             }
@@ -421,11 +448,11 @@ int main ( int argc, char *argv[] ) {
 
             // Obtém o tempo decorrido
             long elapsedTime = getElapsedTime(timerStart);
-            // std::cout << "Tempo decorrido: " << elapsedTime << " ms\n";
+            if (temporizer)
+                std::cout << "Tempo de renderizacao: " << elapsedTime << " ms\n";
         }
         i+= 2;
 
-        // renderText(renderer, font, "Hello, SDL!", 100, 100, textColor);
         
         SDL_RenderPresent(renderer); // usar para pintar
         if ( window = nullptr ) {
@@ -434,19 +461,6 @@ int main ( int argc, char *argv[] ) {
         }
     }
     
-    // while (rodando) {
-        // for (int i = -100; i <= 0 ; i+=5) {
-
-            // SDL_Event windowEvent;
-            // while ( SDL_PollEvent(&windowEvent) ) {
-            //     if (SDL_QUIT == windowEvent.type) { 
-            //         rodando = false;
-            //         break;  
-            //     }
-            // }
-    
-
-
     SDL_DestroyWindow( window );
     SDL_Quit();
 

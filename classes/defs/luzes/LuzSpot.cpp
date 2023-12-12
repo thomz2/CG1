@@ -8,6 +8,7 @@ LuzSpot::LuzSpot(Vec3 posicao, Vec3 intensidade, Vec3 direcao, double GRAUS)
     : LuzPontual(posicao, intensidade), direcao(direcao), theta(GRAUS * (M_PI/180)) {}
 
 Vec3 LuzSpot::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray raycaster, BaseMaterial material) {
+    if (ignorar) return Vec3(0, 0, 0);
     double cosine = cos(theta);
     Vec3 lv = (this->posicao.sub(retorno.posContato)).norm();
 

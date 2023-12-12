@@ -13,6 +13,7 @@ class Luz {
 public:
     Vec3 posicao;
     Vec3 intensidade;
+    bool ignorar = false;
 
     Luz(Vec3 posicao, Vec3 intensidade);
     virtual Vec3 calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray raycaster, BaseMaterial material) = 0;

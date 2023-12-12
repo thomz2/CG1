@@ -8,7 +8,7 @@ using namespace std;
 LuzDirecional::LuzDirecional(Vec3 intensidade, Vec3 direcao) : Luz(Vec3(0, 0, 0), intensidade), direcao(direcao) {}
 
 Vec3 LuzDirecional::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray raycaster, BaseMaterial material) {
-
+    if (ignorar) return Vec3(0, 0, 0);
     Vec3 ponto_mais_prox = retorno.posContato;
     Vec3 normal          = retorno.normalContato.norm();
     double tint          = retorno.tint;
