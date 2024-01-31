@@ -1,5 +1,5 @@
 # Renderizador C++ Personalizado
-Este repositório contém um renderizador gráfico desenvolvido totalmente em C++, com uso mínimo de bibliotecas externas (foram utilizadas o SDL, para pintar pixels na tela, e uma biblioteca para carregar imagens como textura). O objetivo principal deste projeto é proporcionar uma compreensão profunda dos fundamentos de computação gráfica, bem como servir como uma base para expansões e experimentações.
+Este repositório contém um renderizador gráfico desenvolvido totalmente em C++, através de ferramentas da algebra linear, algoritmos de renderização e o uso mínimo de bibliotecas externas (foram utilizadas o SDL, para pintar pixels na tela, e uma biblioteca para carregar imagens como textura). O objetivo principal deste projeto é proporcionar uma compreensão profunda dos fundamentos de computação gráfica, bem como servir como uma base para expansões e experimentações.
 
 ### Resultados:
 
