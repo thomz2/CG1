@@ -103,17 +103,21 @@ void Camera::initializeRenderAndWindow(int width, int height, SDL_Renderer **ren
 }
 
 SDL_Color Camera::renderPixel(int l, int c) {
+    // return renderPixelRec(l, c, 5);
     Vec3 pixel_center = pixel00_loc.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
     Vec3 v = pixel_center - lookfrom;
     Vec3 direcao = v.norm(); // vetor unitario aki
     Ray raycaster(lookfrom, direcao);
+
+    return renderPixelRec(l, c, raycaster, 5);
+
+    /*
     if (isParalel) {
         pixel_center = pixel00_loc2.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
         direcao = v.norm();
         raycaster = Ray(pixel_center, direcao);
     }
 
-    // TODO: refatorar funcao firstObj dps
     optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
 
     if (par.has_value()) {
@@ -215,6 +219,93 @@ SDL_Color Camera::renderPixel(int l, int c) {
     } else {
         cor = (Vec3(0.0, 0.0, 0.0).mult(1.0 - a).add(Vec3(0.0, 0.0, 0.3).mult(a))).mult(255);
     }
+    return {
+        (unsigned char)cor.x,
+        (unsigned char)cor.y,
+        (unsigned char)cor.z,
+        255
+    };
+    */
+
+}
+
+SDL_Color Camera::renderPixelRec(int l, int c, Ray raycaster, int profundidade) {
+    if (profundidade <= 0) {
+        // Limite da profundidade de recursão atingido, retorna uma cor padrão (preto ou fundo)
+        return {0, 0, 0, 255};
+    }
+
+    // TODO: Refatorar função firstObj depois
+    optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
+
+    if (par.has_value()) {
+        Objeto* maisPerto = par.value().first;
+        LPointGetType retorno = par.value().second;
+
+        if (maisPerto != nullptr) {
+            Vec3 ponto_mais_prox = retorno.posContato;
+            Vec3 normal = retorno.normalContato.norm();
+            double tint = retorno.tint;
+
+            // Se o objeto é reflexivo, calcula a reflexão
+            if (maisPerto->ehReflexivo) {
+                // A fórmula é v - 2 * (v . n) * n
+                Vec3 v = raycaster.direcao;
+                float multiplicacao = (2 * v.dot(normal));
+                Vec3 multiplicacao2 = (normal * multiplicacao);
+                Vec3 reflexao = v - multiplicacao2;
+
+                // Define o ponto de partida e direção do novo raio
+                Vec3 ponto_de_partida = ponto_mais_prox.add(normal.mult(1.0001));
+                Vec3 direcao_reflexao = reflexao.norm();
+                Ray raycaster_reflexao(ponto_de_partida, direcao_reflexao);
+
+                // Chama recursivamente renderPixel para calcular a cor da reflexão
+                return renderPixelRec(l, c, raycaster_reflexao, profundidade - 1);
+            }
+
+            // Processa o material do objeto mais próximo
+            BaseMaterial material = maisPerto->material;
+            if (retorno.material.has_value()) {
+                material = retorno.material.value();
+            }
+
+            // Multiplica cada membro por outro e retorna um vetor
+            Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
+
+            // Calcula a intensidade da luz
+            for (Luz* luz: cenario->luzes) {
+                intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno, raycaster, material));
+
+                // Limita a intensidade da cor para o intervalo de [0, 1]
+                intensidadeCor.x = min(intensidadeCor.x, 1.0);
+                intensidadeCor.y = min(intensidadeCor.y, 1.0);
+                intensidadeCor.z = min(intensidadeCor.z, 1.0);
+            }
+
+            // Converte a intensidade da cor para valores RGB de 0 a 255
+            Vec3 corNova = intensidadeCor * 255;
+
+            SDL_Color corNovaPintar = {
+                (Uint8)corNova.x,
+                (Uint8)corNova.y,
+                (Uint8)corNova.z,
+                255 // Ver isso depois
+            };
+
+            return corNovaPintar;
+        }
+    }
+
+    // Se não há interseção, retorna a cor do céu ou fundo
+    auto a = (raycaster.direcao.y + 1.0) * 0.5;
+    Vec3 cor;
+    if (tempo) {
+        cor = (Vec3(1.0, 1.0, 1.0).mult(1.0 - a).add(Vec3(0.5, 0.7, 1.0).mult(a))).mult(255);
+    } else {
+        cor = (Vec3(0.0, 0.0, 0.0).mult(1.0 - a).add(Vec3(0.0, 0.0, 0.3).mult(a))).mult(255);
+    }
+
     return {
         (unsigned char)cor.x,
         (unsigned char)cor.y,

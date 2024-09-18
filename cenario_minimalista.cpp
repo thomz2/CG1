@@ -119,12 +119,20 @@ int main ( int argc, char *argv[] ) {
     cenario->objetos.push_back(chao);
     // <========== CHAO ==========>
 
-    // <========== Espelho ==========>
+    // <========== Espelhos ==========>
     // Esfera* espelho = new Esfera(601, corAzul, Vec3(-40 + XPOSITIVO, 35 + YPOSITIVO, -18 + ZPOSITIVO), 30);
     Esfera* espelho = new Esfera(601, corAzul, Vec3(0 + XPOSITIVO, 35 + YPOSITIVO, 0 + ZPOSITIVO), 30);
     espelho->ehReflexivo = true;
     cenario->objetos.push_back(espelho);
-    // <========== Espelho ==========>
+
+    Esfera* espelho2 = new Esfera(601, corAzul, Vec3(-90 + XPOSITIVO, 75 + YPOSITIVO, 0 + ZPOSITIVO), 30, difuso);
+    espelho2->ehReflexivo = true;
+    cenario->objetos.push_back(espelho2);
+
+    Esfera* espelho3 = new Esfera(601, corAzul, Vec3(-30 + XPOSITIVO, 123 + YPOSITIVO, 29 + ZPOSITIVO), 30, difuso);
+    espelho3->ehReflexivo = true;
+    cenario->objetos.push_back(espelho3);
+    // <========== Espelhos ==========>
 
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", difuso);
@@ -135,10 +143,13 @@ int main ( int argc, char *argv[] ) {
     // <========== PERSONAGENS ==========>
     
     // <========== LUZES ==========>
-    LuzPontual* luzPontual = new LuzPontual(Vec3(-550 + XPOSITIVO, 7500 + YPOSITIVO, -18 + ZPOSITIVO), Vec3(0.2, 0.2, 0.2));
+    LuzPontual* luzPontual = new LuzPontual(
+        Vec3(-40 + XPOSITIVO, 7500 + YPOSITIVO, -18 + ZPOSITIVO),
+        Vec3(0.2, 0.2, 0.2)
+    );
     LuzDirecional* luzDirecional = new LuzDirecional(Vec3(0.1, 0.1, 0.1), Vec3(-1, -1, 0).norm());
 
-    luzPontual->ignorar = true;
+    // luzPontual->ignorar = true;
 
     cenario->luzes.push_back(luzDirecional);
     cenario->luzes.push_back(luzPontual);

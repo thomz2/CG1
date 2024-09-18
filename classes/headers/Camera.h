@@ -22,6 +22,7 @@ class Camera {
         void update();
         void initializeRenderAndWindow(int width, int height, SDL_Renderer **renderer, SDL_Window **window);
         SDL_Color renderPixel(int l, int c);
+        SDL_Color renderPixelRec(int l, int c, Ray raycaster, int profundidade);
         void renderAndPaintCanvas(int resScale = 1);
         void renderAndPaintCanvasThread(int numThreads, int resScale = 1);
         void changeFov(double vFov);
