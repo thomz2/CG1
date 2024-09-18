@@ -81,10 +81,11 @@ int main ( int argc, char *argv[] ) {
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookfrom(4959.57, 5025.9, 5093.83);
-    Vec3 lookat(4959.17, 5025.9, 5013.86);
+    Vec3 lookfrom(4927.45, 5025.9, 5033.80);
+    Vec3 lookat(4983.5, 5018.93, 4977.27);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
+    camera->tempo = true;
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.6), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
@@ -140,7 +141,7 @@ int main ( int argc, char *argv[] ) {
     luzPontual->ignorar = true;
 
     cenario->luzes.push_back(luzDirecional);
-    // cenario->luzes.push_back(luzPontual);
+    cenario->luzes.push_back(luzPontual);
     // <========== LUZES ==========>
 
     const int nCol = 500;

@@ -133,10 +133,11 @@ SDL_Color Camera::renderPixel(int l, int c) {
                 Vec3 multiplicacao2 = (normal * multiplicacao);
                 Vec3 reflexao = v - multiplicacao2;
                 
-                direcao = reflexao.norm();
-                raycaster = Ray(ponto_mais_prox, direcao);
+                Vec3 ponto_de_partida = ponto_mais_prox.add(normal.mult(1.0001));
+                Vec3 direcao2 = reflexao.norm();
+                Ray raycaster2(ponto_de_partida, direcao2);
 
-                optional<pair<Objeto*, LPointGetType>> par2 = cenario->firstObj2(raycaster);
+                optional<pair<Objeto*, LPointGetType>> par2 = cenario->firstObj2(raycaster2);
 
                 if (par2.has_value()) {
                     // basicamente copiei codigo
@@ -153,7 +154,7 @@ SDL_Color Camera::renderPixel(int l, int c) {
                     Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
 
                     for (Luz* luz: cenario->luzes) {
-                        intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno2, raycaster, material));
+                        intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno2, raycaster2, material));
 
                         if (intensidadeCor.x > 1) intensidadeCor.x = 1;
                         if (intensidadeCor.y > 1) intensidadeCor.y = 1;
