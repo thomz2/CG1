@@ -109,6 +109,8 @@ SDL_Color Camera::renderPixel(int l, int c) {
     if (isParalel) {
         pixel_center = pixel00_loc2.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
         direcao = (lookat - lookfrom).norm();
+        // direcao.x = -direcao.z;
+        // direcao.y = 0;
         raycaster = Ray(pixel_center, direcao);
     }
 
@@ -324,7 +326,7 @@ void Camera::moveUp(float speed) {
 }
 
 void Camera::lookLeft(float degrees) {
-    this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(degrees, this->lookfrom, v))).getVec3();
+    this->lookat = Transformations::rotateAroundAxisDegrees(degrees, this->lookfrom, v).apply(Vec4(this->lookat)).getVec3();
 }
 void Camera::lookRight(float degrees) {
     this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(-degrees, this->lookfrom, v))).getVec3();
@@ -335,7 +337,6 @@ void Camera::lookDown(float degrees) {
         pitch = -89.0f;
         return;
     }
-    cout << pitch << endl;
     this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(-degrees, this->lookfrom, u))).getVec3();
     // this->vup = (Vec4(this->vup).apply(Transformations::rotateAroundAxisDegrees(degrees, this->lookfrom, u))).getVec3();
 }
@@ -345,7 +346,6 @@ void Camera::lookUp(float degrees) {
         pitch = 89.0f;
         return;
     } 
-    cout << pitch << endl;
     this->lookat = (Vec4(this->lookat).apply(Transformations::rotateAroundAxisDegrees(degrees, this->lookfrom, u))).getVec3();
     // this->vup = (Vec4(this->vup).apply(Transformations::rotateAroundAxisDegrees(-degrees, this->lookfrom, u))).getVec3();
 }

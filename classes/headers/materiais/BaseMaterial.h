@@ -2,10 +2,14 @@
 #pragma once
 
 #include "../math/Vec3.h"
+#include <string>
+
+using namespace std;
 
 class BaseMaterial {
  
 public:
+    string tipo;
     Vec3 RUGOSIDADE;
     Vec3 REFLETIVIDADE;
     Vec3 KAMBIENTE;

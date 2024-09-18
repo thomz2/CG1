@@ -86,8 +86,8 @@ int main ( int argc, char *argv[] ) {
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookfrom(4929.17, 5050.9, 5498.83);
-    Vec3 lookat(5009.17, 5050.9, 5498.91);
+    Vec3 lookfrom(4694, 5035.9, 4849.83);
+    Vec3 lookat(4701.17, 5035.9, 4769.36);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.6), camera);
@@ -131,14 +131,14 @@ int main ( int argc, char *argv[] ) {
     placa->applyMatrix(Transformations::rotateYAroundPointDegrees(90, Vec3(0, 1, 0)));
     placa->applyMatrix(Transformations::translate(-80 + XPOSITIVO, 70 + YPOSITIVO, -26 + ZPOSITIVO));
     
-    cenario->objetos.push_back(estacaDaPlaca);
-    cenario->objetos.push_back(placa);
+    // cenario->objetos.push_back(estacaDaPlaca);
+    // cenario->objetos.push_back(placa);
 
     ObjMesh* rua = new ObjMesh(12, "assets/rua/rua.obj", "assets/rua/RUA.png", difuso);
     rua->applyMatrix(Transformations::scale(242, 20, 80));
     rua->applyMatrix(Transformations::translate(0 + XPOSITIVO, -17 + YPOSITIVO, 210 + ZPOSITIVO));
     
-    cenario->objetos.push_back(rua);
+    // cenario->objetos.push_back(rua);
     // <========== OBJETOS DO CENARIO ==========>
 
     // <========== MONTANHAS ==========>
@@ -152,14 +152,14 @@ int main ( int argc, char *argv[] ) {
     Cone* montanha7 = new Cone(9, corAzul, Vec3(3700 - 1100 + XPOSITIVO, -20 + YPOSITIVO, 1200 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
     Cone* montanha8 = new Cone(9, corAzul, Vec3(-3800 + 1300 + XPOSITIVO, -20 + YPOSITIVO, 1200 + ZPOSITIVO), Vec3(0, 1, 0), 2500, 2000, BaseMaterial(Vec3(0, 53.0/255.0, 1.0/255.0), Vec3(0, 0, 0), Vec3(0, 153.0/255.0, 51.0/255.0), 1));
 
-    cenario->objetos.push_back(montanha1);
-    cenario->objetos.push_back(montanha2);
-    cenario->objetos.push_back(montanha3);
-    cenario->objetos.push_back(montanha4);
-    cenario->objetos.push_back(montanha5);
-    cenario->objetos.push_back(montanha6);
-    cenario->objetos.push_back(montanha7);
-    cenario->objetos.push_back(montanha8);
+    // cenario->objetos.push_back(montanha1);
+    // cenario->objetos.push_back(montanha2);
+    // cenario->objetos.push_back(montanha3);
+    // cenario->objetos.push_back(montanha4);
+    // cenario->objetos.push_back(montanha5);
+    // cenario->objetos.push_back(montanha6);
+    // cenario->objetos.push_back(montanha7);
+    // cenario->objetos.push_back(montanha8);  
     // <========== MONTANHAS ==========>
 
     // <========== ESTRUTURAS ==========>
@@ -207,8 +207,8 @@ int main ( int argc, char *argv[] ) {
     EsferaDeLuzSpot* ilumPost1 = new EsferaDeLuzSpot(701, corAzul, Vec3(XPOSITIVO - 400, YPOSITIVO + 170, ZPOSITIVO + 15), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
     Cilindro*        poste1    = new Cilindro(702, corAzul, Vec3(XPOSITIVO - 400, YPOSITIVO - 20, ZPOSITIVO + 15), Vec3(XPOSITIVO - 400, YPOSITIVO + 150, ZPOSITIVO + 15), 6, materialPoste);
 
-    cenario->objetos.push_back(ilumPost1);
-    cenario->objetos.push_back(poste1);
+    // cenario->objetos.push_back(ilumPost1);
+    // cenario->objetos.push_back(poste1);
     cenario->luzes.push_back(ilumPost1->luzSpot);
 
     Vec3 pontEspelho2 = Vec4(Vec3(XPOSITIVO - 400, YPOSITIVO - 20, ZPOSITIVO + 15)).apply(Transformations::reflection(Vec3(0, 0, -1), Vec3(XPOSITIVO, 4983, 5210))).getVec3();
@@ -217,24 +217,24 @@ int main ( int argc, char *argv[] ) {
     EsferaDeLuzSpot* ilumPost2 = new EsferaDeLuzSpot(703, corAzul, pontEspelho2.add(Vec3(0, 190, 0)), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
     Cilindro*        poste2    = new Cilindro(704, corAzul, pontEspelho2, pontEspelho2.add(Vec3(0, 170, 0)), 6, materialPoste);
 
-    cenario->objetos.push_back(ilumPost2);
-    cenario->objetos.push_back(poste2);
+    // cenario->objetos.push_back(ilumPost2);
+    // cenario->objetos.push_back(poste2);
     cenario->luzes.push_back(ilumPost2->luzSpot);
 
     Vec3 pontEspelho3 = Vec4(pontEspelho2).apply(Transformations::reflection(Vec3(-1, 0, 0), Vec3(5000, 4983, 5210))).getVec3();
     EsferaDeLuzSpot* ilumPost3 = new EsferaDeLuzSpot(703, corAzul, pontEspelho3.add(Vec3(100, 190, 0)), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
     Cilindro*        poste3    = new Cilindro(704, corAzul, pontEspelho3.add(Vec3(100, 0, 0)), pontEspelho3.add(Vec3(100, 170, 0)), 6, materialPoste);
 
-    cenario->objetos.push_back(ilumPost3);
-    cenario->objetos.push_back(poste3);
+    // cenario->objetos.push_back(ilumPost3);
+    // cenario->objetos.push_back(poste3);
     cenario->luzes.push_back(ilumPost3->luzSpot);
 
     Vec3 pontEspelho4 = Vec4(Vec3(XPOSITIVO - 400, YPOSITIVO - 20, ZPOSITIVO + 15)).apply(Transformations::reflection(Vec3(-1, 0, 0), Vec3(5000, 4983, 5210))).getVec3();
     EsferaDeLuzSpot* ilumPost4 = new EsferaDeLuzSpot(703, corAzul, pontEspelho4.add(Vec3(100, 190, 0)), 20, materialLampada, Vec3(0.3, 0.3, 0.3), 11);
     Cilindro*        poste4    = new Cilindro(704, corAzul, pontEspelho4.add(Vec3(100, 0, 0)), pontEspelho4.add(Vec3(100, 170, 0)), 6, materialPoste);
 
-    cenario->objetos.push_back(ilumPost4);
-    cenario->objetos.push_back(poste4);
+    // cenario->objetos.push_back(ilumPost4);
+    // cenario->objetos.push_back(poste4);
     cenario->luzes.push_back(ilumPost4->luzSpot);
     // <========== POSTES ==========>
 
@@ -242,21 +242,21 @@ int main ( int argc, char *argv[] ) {
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", difuso);
     stan->applyMatrix(Transformations::translate(-40 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterStan = new Cluster(stan, 20000, true);
-    cenario->objetos.push_back(clusterStan);
+    // cenario->objetos.push_back(clusterStan);
 
     ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", metalico);
     kyle->applyMatrix(Transformations::translate(0 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKyle = new Cluster(kyle, 20000, true);
-    cenario->objetos.push_back(clusterKyle);
+    // cenario->objetos.push_back(clusterKyle);
 
     ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", plastico);
     cartman->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
-    cenario->objetos.push_back(cartman);
+    // cenario->objetos.push_back(cartman);
 
     ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", madeira, false);
     kenny->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
     Cluster* clusterKenny = new Cluster(kenny, 20000, true);
-    cenario->objetos.push_back(clusterKenny);
+    // cenario->objetos.push_back(clusterKenny);
     
     ObjMesh* dio = new ObjMesh(7, "assets/dio/DIO.obj", "assets/dio/DIO1.png", materialMesh, true);
     dio->applyMatrix(Transformations::scale(25, 25, 25));
@@ -272,24 +272,6 @@ int main ( int argc, char *argv[] ) {
     cenario->luzes.push_back(luzDirecional);
     cenario->luzes.push_back(luzPontual);
     // <========== LUZES ==========>
-
-
-    // cenario->objetos.push_back(clusterDio);
-
-    // cenario->objetos.push_back(esfStan);
-    // cenario->objetos.push_back(testeEspelho);
-    // cenario->objetos.push_back(esfKyle);
-    // cenario->objetos.push_back(esfCartman);
-    // cenario->objetos.push_back(esfKenny);
-
-
-
-
-
-    cenario->objetos.push_back(predioBegeClaro);
-    cenario->objetos.push_back(predioMarrom);
-    cenario->objetos.push_back(predioTom);
-
 
     const int nCol = 500;
     const int nLin = 500;
