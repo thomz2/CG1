@@ -36,11 +36,6 @@ Vec3 LuzPontual::calcIntensity(vector<Objeto*> objs, LPointGetType retorno, Ray 
     Vec3 aux1 = ((material.getRugosidade()) * f_dif);
     Vec3 aux2 = ((material.getRefletividade()) * f_esp);
 
-
-    // fator de distancia
-    // TODO: melhorar eficiencia na classe vec3
-    // double distanceDecayFactor = 100000.0 / pow(((luz->posicao.sub(raycaster.Pinicial))).modulo(), 2);
-    
     // fim fator distancia
 
     Vec3 iDif = luz->intensidade | aux1;

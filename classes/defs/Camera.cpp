@@ -104,13 +104,12 @@ void Camera::initializeRenderAndWindow(int width, int height, SDL_Renderer **ren
 
 SDL_Color Camera::renderPixel(int l, int c) {
     Vec3 pixel_center = pixel00_loc.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
-    Vec3 direcao = (pixel_center - lookfrom).norm(); // vetor unitario aki
+    Vec3 v = pixel_center - lookfrom;
+    Vec3 direcao = v.norm(); // vetor unitario aki
     Ray raycaster(lookfrom, direcao);
     if (isParalel) {
         pixel_center = pixel00_loc2.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
-        direcao = (lookat - lookfrom).norm();
-        // direcao.x = -direcao.z;
-        // direcao.y = 0;
+        direcao = v.norm();
         raycaster = Ray(pixel_center, direcao);
     }
 
@@ -128,12 +127,61 @@ SDL_Color Camera::renderPixel(int l, int c) {
             Vec3 normal          = retorno.normalContato.norm();
             double tint          = retorno.tint;
 
+            if (maisPerto->ehReflexivo) {
+                // a formula eh v - 2 * v . n * n
+                float multiplicacao = (2 * v.dot(normal));
+                Vec3 multiplicacao2 = (normal * multiplicacao);
+                Vec3 reflexao = v - multiplicacao2;
+                
+                direcao = reflexao.norm();
+                raycaster = Ray(ponto_mais_prox, direcao);
+
+                optional<pair<Objeto*, LPointGetType>> par2 = cenario->firstObj2(raycaster);
+
+                if (par2.has_value()) {
+                    // basicamente copiei codigo
+
+                    Objeto* maisPerto2 = par2.value().first;
+                    LPointGetType retorno2 = par2.value().second;
+
+                    BaseMaterial material = maisPerto2->material;
+                    if (retorno2.material.has_value()) {
+                        material = retorno2.material.value();
+                    }
+
+                    // multiplica cada membro por outro e retorna um vetor
+                    Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
+
+                    for (Luz* luz: cenario->luzes) {
+                        intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno2, raycaster, material));
+
+                        if (intensidadeCor.x > 1) intensidadeCor.x = 1;
+                        if (intensidadeCor.y > 1) intensidadeCor.y = 1;
+                        if (intensidadeCor.z > 1) intensidadeCor.z = 1;
+                    }
+
+                    Vec3 corNova = intensidadeCor * 255;
+
+                    SDL_Color corNovaPintar = {
+                        (Uint8)corNova.x,
+                        (Uint8)corNova.y,
+                        (Uint8)corNova.z,
+                        255 // ver isso dps
+                    };
+
+                    return corNovaPintar;
+
+                } else {
+                    // se n tem maisPerto2, quer dizer que n tem reflexao e posso retornar uma cor padrao
+                }
+            }
+
             BaseMaterial material = maisPerto->material;
-            // cout << retorno.material.value().KAMBIENTE << " PROVANDO QUE TEM\n";
             if (retorno.material.has_value()) {
                 material = retorno.material.value();
             }
 
+            // multiplica cada membro por outro e retorna um vetor
             Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
 
             for (Luz* luz: cenario->luzes) {

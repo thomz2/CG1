@@ -12,6 +12,7 @@ class Objeto {
 public:
 
     int id;
+    bool ehReflexivo = false;
     std::optional<SDL_Color> cor;
     BaseMaterial material;
 

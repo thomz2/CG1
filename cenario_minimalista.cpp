@@ -119,13 +119,16 @@ int main ( int argc, char *argv[] ) {
     // <========== CHAO ==========>
 
     // <========== Espelho ==========>
-    Esfera* espelho = new Esfera(601, corAzul, Vec3(-40 + XPOSITIVO, 75 + YPOSITIVO, -18 + ZPOSITIVO), 30);
+    // Esfera* espelho = new Esfera(601, corAzul, Vec3(-40 + XPOSITIVO, 35 + YPOSITIVO, -18 + ZPOSITIVO), 30);
+    Esfera* espelho = new Esfera(601, corAzul, Vec3(0 + XPOSITIVO, 35 + YPOSITIVO, 0 + ZPOSITIVO), 30);
+    espelho->ehReflexivo = true;
     cenario->objetos.push_back(espelho);
     // <========== Espelho ==========>
 
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", difuso);
     stan->applyMatrix(Transformations::translate(-40 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    stan->ehReflexivo = true;
     Cluster* clusterStan = new Cluster(stan, 20000, true);
     cenario->objetos.push_back(clusterStan);
     // <========== PERSONAGENS ==========>
@@ -137,7 +140,7 @@ int main ( int argc, char *argv[] ) {
     luzPontual->ignorar = true;
 
     cenario->luzes.push_back(luzDirecional);
-    cenario->luzes.push_back(luzPontual);
+    // cenario->luzes.push_back(luzPontual);
     // <========== LUZES ==========>
 
     const int nCol = 500;
