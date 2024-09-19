@@ -81,12 +81,12 @@ int main ( int argc, char *argv[] ) {
     const double rEsfera = 40;
     const double zCentroEsfera = - (dJanela + rEsfera) - 50; // sempre diminuindo um valor
 
-    Vec3 lookfrom(4927.45, 5025.9, 5033.80);
-    Vec3 lookat(4983.5, 5018.93, 4977.27);
+    Vec3 lookfrom(4976.55, 5116.45, 4840.26);
+    Vec3 lookat(4989.8, 5096.92, 4916.61);
 
     Camera *camera = new Camera(lookfrom, lookat, Vec3(0, 1, 0), 90, WINDOW_WIDTH, WINDOW_HEIGHT);
     camera->tempo = true;
-    camera->glossy = false;
+    camera->glossy = true;
     Scene *cenario = new Scene(&window, &renderer, WINDOW_WIDTH, WINDOW_HEIGHT, Vec3(0.5, 0.5, 0.6), camera);
     const double wJanela = camera->wJanela, hJanela = camera->hJanela;
     camera->cenario = cenario;
@@ -115,25 +115,28 @@ int main ( int argc, char *argv[] ) {
     pele.KAMBIENTE = Vec3(179.0/255.0, 139.0/255.0, 109.0/255.0);
 
     // <========== CHAO ==========>
-    Texture* textura = new Texture("assets/green.png", true);
+    Texture* textura = new Texture("assets/snow.png", true);
     Plano* chao = new Plano(5, corAzul, BaseMaterial(Vec3(0.2, 0.7, 0.2), Vec3(0, 0, 0), Vec3(0.2, 0.7, 0.2), 1), Vec3(0, -20 + YPOSITIVO, 0), Vec3(0, 1, 0), textura);
     cenario->objetos.push_back(chao);
     // <========== CHAO ==========>
 
     // <========== Espelhos ==========>
     // Esfera* espelho = new Esfera(601, corAzul, Vec3(-40 + XPOSITIVO, 35 + YPOSITIVO, -18 + ZPOSITIVO), 30);
-    Esfera* espelho = new Esfera(601, corAzul, Vec3(0 + XPOSITIVO, 35 + YPOSITIVO, 0 + ZPOSITIVO), 30);
+    Esfera* espelho = new Esfera(601, corAzul, Vec3(0 + XPOSITIVO, 75 + YPOSITIVO, 180 + ZPOSITIVO), 170);
     espelho->ehReflexivo = true;
     cenario->objetos.push_back(espelho);
-
-    Esfera* espelho2 = new Esfera(601, corAzul, Vec3(-90 + XPOSITIVO, 75 + YPOSITIVO, 0 + ZPOSITIVO), 35);
-    espelho2->ehReflexivo = true;
-    cenario->objetos.push_back(espelho2);
-
-    Esfera* espelho3 = new Esfera(601, corAzul, Vec3(-30 + XPOSITIVO, 123 + YPOSITIVO, 29 + ZPOSITIVO), 40);
-    espelho3->ehReflexivo = true;
-    cenario->objetos.push_back(espelho3);
     // <========== Espelhos ==========>
+
+    // <========== OBJS DO CENARIO ==========>
+    Cilindro* estacaDaPlaca = new Cilindro(10, corAzul, Vec3(-80 + XPOSITIVO, -20 + YPOSITIVO, -26 + ZPOSITIVO), Vec3(-80 + XPOSITIVO, 75 + YPOSITIVO, -26 + ZPOSITIVO), 3, madeira);
+    ObjMesh*  placa         = new ObjMesh(11, "assets/placaAmarela/placa_amarela.obj", "assets/placaAmarela/placa.png", metalico);
+    placa->applyMatrix(Transformations::scale(30, 30, 30));
+    placa->applyMatrix(Transformations::rotateYAroundPointDegrees(90, Vec3(0, 1, 0)));
+    placa->applyMatrix(Transformations::translate(-80 + XPOSITIVO, 70 + YPOSITIVO, -26 + ZPOSITIVO));
+    
+    cenario->objetos.push_back(estacaDaPlaca);
+    cenario->objetos.push_back(placa);
+    // <========== OBJS DO CENARIO ==========>
 
     // <========== PERSONAGENS ==========>
     ObjMesh* stan = new ObjMesh(6, "assets/stan/stan.obj", "assets/stan/stan_all.png", difuso);
@@ -141,6 +144,20 @@ int main ( int argc, char *argv[] ) {
     stan->ehReflexivo = true;
     Cluster* clusterStan = new Cluster(stan, 20000, true);
     cenario->objetos.push_back(clusterStan);
+
+    ObjMesh* kyle = new ObjMesh(7, "assets/kyle/kyle.obj", "assets/kyle/kyle_all.png", metalico);
+    kyle->applyMatrix(Transformations::translate(0 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    Cluster* clusterKyle = new Cluster(kyle, 20000, true);
+    cenario->objetos.push_back(clusterKyle);
+
+    ObjMesh* cartman = new ObjMesh(8, "assets/Cartman/cartman2.obj", "assets/Cartman/cartman_all.png", plastico);
+    cartman->applyMatrix(Transformations::translate(50 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    cenario->objetos.push_back(cartman);
+
+    ObjMesh* kenny = new ObjMesh(9, "assets/kenny/kenny.obj", "assets/kenny/kenny_all.png", madeira, false);
+    kenny->applyMatrix(Transformations::translate(100 + XPOSITIVO, -20 + YPOSITIVO, -18 + ZPOSITIVO));
+    Cluster* clusterKenny = new Cluster(kenny, 20000, true);
+    cenario->objetos.push_back(clusterKenny);
     // <========== PERSONAGENS ==========>
     
     // <========== LUZES ==========>

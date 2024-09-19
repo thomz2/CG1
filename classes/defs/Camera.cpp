@@ -72,7 +72,8 @@ void Camera::update() {
         this->hJanela = 2 * h * focal_length;
         this->wJanela = hJanela * (imageWidth/imageHeight);
     }
-    // cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
+
+    cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     this->w = lookfrom.sub(lookat).norm(); // tras
@@ -120,8 +121,7 @@ SDL_Color Camera::renderPixel(int l, int c) {
     Ray raycaster(lookfrom, direcao);
 
     // AQUI EU TROCO O TIPO DE RAYTRACING
-    return renderPixelGlossyRec(l, c, raycaster, 5, 0.05, 3);
-    // return renderPixelRec(l, c, raycaster, 5);
+    return glossy ? renderPixelGlossyRec(l, c, raycaster, 5, 0.26, 5) : renderPixelRec(l, c, raycaster, 5);
 
     /*
     if (isParalel) {
@@ -242,12 +242,9 @@ SDL_Color Camera::renderPixel(int l, int c) {
 }
 
 SDL_Color Camera::renderPixelGlossyRec(int l, int c, Ray raycaster, int profundidade, double tangentedetheta, int qtdRays) {
-    if (profundidade <= 0) {
-        // Limite da profundidade de recursão atingido, retorna uma cor padrão (preto ou fundo)
+    if (profundidade <= 0)
         return {0, 0, 0, 255};
-    }
 
-    // TODO: Refatorar função firstObj depois
     optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
 
     if (par.has_value()) {
@@ -296,16 +293,13 @@ SDL_Color Camera::renderPixelGlossyRec(int l, int c, Ray raycaster, int profundi
                         LPointGetType retorno2 = objetoEPonto.value().second;
 
                         BaseMaterial material = maisPerto2->material;
-                        if (retorno2.material.has_value()) {
-                            material = retorno2.material.value();
-                        }
+                        if (retorno2.material.has_value()) { material = retorno2.material.value(); }
 
                         // multiplica cada membro por outro e retorna um vetor
                         Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
 
                         for (Luz* luz: cenario->luzes) {
                             intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno2, raioReflexao, material));
-
                             if (intensidadeCor.x > 1) intensidadeCor.x = 1;
                             if (intensidadeCor.y > 1) intensidadeCor.y = 1;
                             if (intensidadeCor.z > 1) intensidadeCor.z = 1;
@@ -313,7 +307,6 @@ SDL_Color Camera::renderPixelGlossyRec(int l, int c, Ray raycaster, int profundi
 
                         soma = soma.add(intensidadeCor);
                     } else {
-                        // ctz dog?
                         // Se não há interseção, retorna a cor do céu (fundo)
                         auto a = (raycaster.direcao.y + 1.0) * 0.5;
                         Vec3 cor;
