@@ -28,6 +28,8 @@ class Vec3 {
     double dot(Vec3& other); // prod escalar
     double modulo(); // comprimento do vetor
 
+    Vec3 ortogonal();
+
     Vec3 norm();
     
 };

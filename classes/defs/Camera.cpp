@@ -19,6 +19,8 @@ inline double random_double() {
 
 Camera::Camera(Vec3 lookfrom, Vec3 lookat, Vec3 vup, double vFov, double imageWidth, double imageHeight) 
  : lookfrom(lookfrom), lookat(lookat), vup(vup), vFov(vFov), imageWidth(imageWidth), imageHeight(imageHeight) {
+    // Inicializa o seed do gerador de números aleatórios
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); // Seed baseado no tempo atual
     this->initialize2(lookfrom, lookat, vup, vFov, imageWidth, imageHeight);
 }
 
@@ -70,7 +72,7 @@ void Camera::update() {
         this->hJanela = 2 * h * focal_length;
         this->wJanela = hJanela * (imageWidth/imageHeight);
     }
-    cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
+    // cout << "NOVOS VALORES: LOOKFROM: " << this->lookfrom << ", LOOKAT: " << this->lookat << endl;
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     this->w = lookfrom.sub(lookat).norm(); // tras
@@ -102,6 +104,14 @@ void Camera::initializeRenderAndWindow(int width, int height, SDL_Renderer **ren
     );
 }
 
+double random0to1() {
+    double randomN = 2.0 * (static_cast<double>(std::rand()) / RAND_MAX) - 1.0;
+    // cout << "NUMERO RANDOM: " << randomN << endl;
+
+    // Gera um número entre 0 e 1 e transforma para -1 a 1
+    return randomN;
+}
+
 SDL_Color Camera::renderPixel(int l, int c) {
     // return renderPixelRec(l, c, 5);
     Vec3 pixel_center = pixel00_loc.add(pixel_delta_u.mult(c)).add(pixel_delta_v.mult(l));
@@ -109,7 +119,9 @@ SDL_Color Camera::renderPixel(int l, int c) {
     Vec3 direcao = v.norm(); // vetor unitario aki
     Ray raycaster(lookfrom, direcao);
 
-    return renderPixelRec(l, c, raycaster, 5);
+    // AQUI EU TROCO O TIPO DE RAYTRACING
+    return renderPixelGlossyRec(l, c, raycaster, 5, 0.05, 3);
+    // return renderPixelRec(l, c, raycaster, 5);
 
     /*
     if (isParalel) {
@@ -229,6 +241,155 @@ SDL_Color Camera::renderPixel(int l, int c) {
 
 }
 
+SDL_Color Camera::renderPixelGlossyRec(int l, int c, Ray raycaster, int profundidade, double tangentedetheta, int qtdRays) {
+    if (profundidade <= 0) {
+        // Limite da profundidade de recursão atingido, retorna uma cor padrão (preto ou fundo)
+        return {0, 0, 0, 255};
+    }
+
+    // TODO: Refatorar função firstObj depois
+    optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
+
+    if (par.has_value()) {
+        Objeto* maisPerto = par.value().first;
+        LPointGetType retorno = par.value().second;
+
+        if (maisPerto != nullptr) {
+            Vec3 ponto_mais_prox = retorno.posContato;
+            Vec3 normal = retorno.normalContato.norm();
+            double tint = retorno.tint;
+
+            // Se o objeto é reflexivo, calcula a reflexão
+            if (maisPerto->ehReflexivo) {
+                // A fórmula é v - 2 * (v . n) * n
+                Vec3 v = raycaster.direcao;
+                float multiplicacao = (2 * v.dot(normal));
+                Vec3 multiplicacao2 = (normal * multiplicacao);
+                Vec3 reflexao = v - multiplicacao2;
+
+                // call do geaga
+                vector<Ray> raiosReflexoes = {};
+
+                for (int indRay = 0; indRay < qtdRays; indRay++) {                    
+                    Vec3 eixoX = reflexao.ortogonal();
+                    Vec3 eixoY = eixoX.cross(reflexao);
+
+                    Vec3 vetd = eixoX.mult(random0to1())
+                        .add(eixoY.mult(random0to1()))
+                        .mult(tangentedetheta);
+
+                    Vec3 reflexaoFinal = reflexao.add(vetd);
+
+                    Vec3 ponto_de_partida = ponto_mais_prox.add(normal.mult(1.0001));
+
+                    Ray raioDaReflexao(ponto_de_partida, reflexaoFinal);
+                    raiosReflexoes.push_back(raioDaReflexao);
+                }
+
+                Vec3 soma = Vec3(0, 0, 0);
+
+                for (auto raioReflexao : raiosReflexoes) {
+                    optional<pair<Objeto*, LPointGetType>> objetoEPonto = cenario->firstObj2(raioReflexao);
+
+                    if (objetoEPonto.has_value()) {
+                        Objeto* maisPerto2 = objetoEPonto.value().first;
+                        LPointGetType retorno2 = objetoEPonto.value().second;
+
+                        BaseMaterial material = maisPerto2->material;
+                        if (retorno2.material.has_value()) {
+                            material = retorno2.material.value();
+                        }
+
+                        // multiplica cada membro por outro e retorna um vetor
+                        Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
+
+                        for (Luz* luz: cenario->luzes) {
+                            intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno2, raioReflexao, material));
+
+                            if (intensidadeCor.x > 1) intensidadeCor.x = 1;
+                            if (intensidadeCor.y > 1) intensidadeCor.y = 1;
+                            if (intensidadeCor.z > 1) intensidadeCor.z = 1;
+                        }
+
+                        soma = soma.add(intensidadeCor);
+                    } else {
+                        // ctz dog?
+                        // Se não há interseção, retorna a cor do céu (fundo)
+                        auto a = (raycaster.direcao.y + 1.0) * 0.5;
+                        Vec3 cor;
+                        if (tempo) {
+                            cor = (Vec3(1.0, 1.0, 1.0).mult(1.0 - a).add(Vec3(0.5, 0.7, 1.0).mult(a)));
+                        } else {
+                            cor = (Vec3(0.0, 0.0, 0.0).mult(1.0 - a).add(Vec3(0.0, 0.0, 0.3).mult(a)));
+                        }
+
+                        // soma = soma.add(cenario->luzAmbiente);
+                        soma = soma.add(cor);
+                    }
+                }
+
+                Vec3 media = soma.div(raiosReflexoes.size());
+                Vec3 corNova = media * 255;
+
+                return {
+                    (Uint8)corNova.x,
+                    (Uint8)corNova.y,
+                    (Uint8)corNova.z,
+                    255
+                };
+                // call do geaga
+            }
+
+            // Processa o material do objeto mais próximo
+            BaseMaterial material = maisPerto->material;
+            if (retorno.material.has_value()) {
+                material = retorno.material.value();
+            }
+
+            // Multiplica cada membro por outro e retorna um vetor
+            Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
+
+            // Calcula a intensidade da luz
+            for (Luz* luz: cenario->luzes) {
+                intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno, raycaster, material));
+
+                // Limita a intensidade da cor para o intervalo de [0, 1]
+                intensidadeCor.x = min(intensidadeCor.x, 1.0);
+                intensidadeCor.y = min(intensidadeCor.y, 1.0);
+                intensidadeCor.z = min(intensidadeCor.z, 1.0);
+            }
+
+            // Converte a intensidade da cor para valores RGB de 0 a 255
+            Vec3 corNova = intensidadeCor * 255;
+
+            SDL_Color corNovaPintar = {
+                (Uint8)corNova.x,
+                (Uint8)corNova.y,
+                (Uint8)corNova.z,
+                255 // Ver isso depois
+            };
+
+            return corNovaPintar;
+        }
+    }
+
+    // Se não há interseção, retorna a cor do céu ou fundo
+    auto a = (raycaster.direcao.y + 1.0) * 0.5;
+    Vec3 cor;
+    if (tempo) {
+        cor = (Vec3(1.0, 1.0, 1.0).mult(1.0 - a).add(Vec3(0.5, 0.7, 1.0).mult(a))).mult(255);
+    } else {
+        cor = (Vec3(0.0, 0.0, 0.0).mult(1.0 - a).add(Vec3(0.0, 0.0, 0.3).mult(a))).mult(255);
+    }
+
+    return {
+        (unsigned char)cor.x,
+        (unsigned char)cor.y,
+        (unsigned char)cor.z,
+        255
+    };
+}
+
 SDL_Color Camera::renderPixelRec(int l, int c, Ray raycaster, int profundidade) {
     if (profundidade <= 0) {
         // Limite da profundidade de recursão atingido, retorna uma cor padrão (preto ou fundo)
@@ -297,7 +458,7 @@ SDL_Color Camera::renderPixelRec(int l, int c, Ray raycaster, int profundidade) 
         }
     }
 
-    // Se não há interseção, retorna a cor do céu ou fundo
+    // Se não há interseção, retorna a cor do céu (fundo)
     auto a = (raycaster.direcao.y + 1.0) * 0.5;
     Vec3 cor;
     if (tempo) {

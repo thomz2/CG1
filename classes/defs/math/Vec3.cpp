@@ -66,6 +66,18 @@ double Vec3::modulo() {
     return sqrt(pow(x,2)+pow(y,2)+pow(z,2));
 }
 
+Vec3 Vec3::ortogonal() {
+    Vec3 a = Vec3(1, 0, 0);
+    Vec3 thisNorm = (*this).norm();
+    double sentido = a.dot(thisNorm);
+    if (sentido == 1 || sentido == -1) {
+        a = Vec3(0, 1, 0);
+    }
+    Vec3 n = (*this).cross(a).norm();
+    Vec3 b = n.cross((*this));
+    return b;
+}
+
 // vetor unitario
 Vec3 Vec3::norm() {
     // double mod = this->modulo()

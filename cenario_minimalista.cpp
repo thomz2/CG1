@@ -125,11 +125,11 @@ int main ( int argc, char *argv[] ) {
     espelho->ehReflexivo = true;
     cenario->objetos.push_back(espelho);
 
-    Esfera* espelho2 = new Esfera(601, corAzul, Vec3(-90 + XPOSITIVO, 75 + YPOSITIVO, 0 + ZPOSITIVO), 30, difuso);
+    Esfera* espelho2 = new Esfera(601, corAzul, Vec3(-90 + XPOSITIVO, 75 + YPOSITIVO, 0 + ZPOSITIVO), 35);
     espelho2->ehReflexivo = true;
     cenario->objetos.push_back(espelho2);
 
-    Esfera* espelho3 = new Esfera(601, corAzul, Vec3(-30 + XPOSITIVO, 123 + YPOSITIVO, 29 + ZPOSITIVO), 30, difuso);
+    Esfera* espelho3 = new Esfera(601, corAzul, Vec3(-30 + XPOSITIVO, 123 + YPOSITIVO, 29 + ZPOSITIVO), 40);
     espelho3->ehReflexivo = true;
     cenario->objetos.push_back(espelho3);
     // <========== Espelhos ==========>
