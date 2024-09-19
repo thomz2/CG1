@@ -105,7 +105,7 @@ void Camera::initializeRenderAndWindow(int width, int height, SDL_Renderer **ren
     );
 }
 
-double random0to1() {
+double random1to1() {
     double randomN = 2.0 * (static_cast<double>(std::rand()) / RAND_MAX) - 1.0;
     // cout << "NUMERO RANDOM: " << randomN << endl;
 
@@ -271,8 +271,8 @@ SDL_Color Camera::renderPixelGlossyRec(int l, int c, Ray raycaster, int profundi
                     Vec3 eixoX = reflexao.ortogonal();
                     Vec3 eixoY = eixoX.cross(reflexao);
 
-                    Vec3 vetd = eixoX.mult(random0to1())
-                        .add(eixoY.mult(random0to1()))
+                    Vec3 vetd = eixoX.mult(random1to1())
+                        .add(eixoY.mult(random1to1()))
                         .mult(tangentedetheta);
 
                     Vec3 reflexaoFinal = reflexao.add(vetd);
@@ -385,7 +385,6 @@ SDL_Color Camera::renderPixelGlossyRec(int l, int c, Ray raycaster, int profundi
 
 SDL_Color Camera::renderPixelRec(int l, int c, Ray raycaster, int profundidade) {
     if (profundidade <= 0) {
-        // Limite da profundidade de recursão atingido, retorna uma cor padrão (preto ou fundo)
         return {0, 0, 0, 255};
     }
 
@@ -401,7 +400,6 @@ SDL_Color Camera::renderPixelRec(int l, int c, Ray raycaster, int profundidade) 
             Vec3 normal = retorno.normalContato.norm();
             double tint = retorno.tint;
 
-            // Se o objeto é reflexivo, calcula a reflexão
             if (maisPerto->ehReflexivo) {
                 // A fórmula é v - 2 * (v . n) * n
                 Vec3 v = raycaster.direcao;
@@ -409,29 +407,23 @@ SDL_Color Camera::renderPixelRec(int l, int c, Ray raycaster, int profundidade) 
                 Vec3 multiplicacao2 = (normal * multiplicacao);
                 Vec3 reflexao = v - multiplicacao2;
 
-                // Define o ponto de partida e direção do novo raio
                 Vec3 ponto_de_partida = ponto_mais_prox.add(normal.mult(1.0001));
                 Vec3 direcao_reflexao = reflexao.norm();
                 Ray raycaster_reflexao(ponto_de_partida, direcao_reflexao);
 
-                // Chama recursivamente renderPixel para calcular a cor da reflexão
                 return renderPixelRec(l, c, raycaster_reflexao, profundidade - 1);
             }
 
-            // Processa o material do objeto mais próximo
             BaseMaterial material = maisPerto->material;
             if (retorno.material.has_value()) {
                 material = retorno.material.value();
             }
 
-            // Multiplica cada membro por outro e retorna um vetor
             Vec3 intensidadeCor = material.getKAmbiente() | cenario->luzAmbiente;
 
-            // Calcula a intensidade da luz
             for (Luz* luz: cenario->luzes) {
                 intensidadeCor = intensidadeCor.add(luz->calcIntensity(cenario->objetos, retorno, raycaster, material));
 
-                // Limita a intensidade da cor para o intervalo de [0, 1]
                 intensidadeCor.x = min(intensidadeCor.x, 1.0);
                 intensidadeCor.y = min(intensidadeCor.y, 1.0);
                 intensidadeCor.z = min(intensidadeCor.z, 1.0);
