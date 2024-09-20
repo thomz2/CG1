@@ -388,7 +388,6 @@ SDL_Color Camera::renderPixelRec(int l, int c, Ray raycaster, int profundidade) 
         return {0, 0, 0, 255};
     }
 
-    // TODO: Refatorar função firstObj depois
     optional<pair<Objeto*, LPointGetType>> par = cenario->firstObj2(raycaster);
 
     if (par.has_value()) {
